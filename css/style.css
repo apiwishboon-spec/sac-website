@@ -365,6 +365,127 @@ footer {
     box-shadow: 0 0 10px var(--primary-glow);
 }
 
+/* Org Chart Tree Structure */
+.org-container {
+    padding: 2rem 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    min-width: 1000px;
+    /* Ensure lines don't break on resize */
+    padding-bottom: 2rem;
+}
+
+.tree-node {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    padding: 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    position: relative;
+    width: 220px;
+    transition: var(--transition);
+}
+
+.tree-node:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tree-node h4 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.tree-node p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.tree-role {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+/* Connection Lines */
+.tree-level {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    position: relative;
+}
+
+.tree-level::before {
+    content: '';
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 1.5rem;
+    background: var(--glass-border);
+}
+
+.tree-level-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+}
+
+.line-horizontal {
+    content: '';
+    position: absolute;
+    top: -1.5rem;
+    left: 110px;
+    /* Half of node width */
+    right: 110px;
+    height: 2px;
+    background: var(--glass-border);
+}
+
+/* Specialized Node Styles */
+.node-president {
+    border-color: var(--primary);
+    background: rgba(79, 70, 229, 0.1);
+}
+
+.node-cpo {
+    border-color: #eab308;
+}
+
+.node-cfo {
+    border-color: #ec4899;
+}
+
+.node-coo {
+    border-color: #0ea5e9;
+}
+
+.node-staff {
+    border-color: var(--accent);
+}
+
+@media (max-width: 1024px) {
+    .org-container {
+        justify-content: flex-start;
+    }
+}
+
+
 /* Base Responsive Adjustments */
 @media (max-width: 1024px) {
     .container {

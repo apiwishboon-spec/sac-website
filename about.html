@@ -105,102 +105,103 @@
                 <div id="administration" style="margin-bottom: 6rem;">
                     <h2 class="section-title">Administrative <span>Structure</span></h2>
 
-                    <!-- Core Leadership -->
-                    <div
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
-                        <!-- Chief Advisor -->
-                        <div
-                            style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2.5rem; text-align: center;">
-                            <div
-                                style="width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 100%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--secondary);"></i>
+                    <div class="org-container">
+                        <div class="tree">
+                            <!-- Level 0: Advisor -->
+                            <div class="tree-node" style="border-color: var(--secondary);">
+                                <div class="tree-role" style="color: var(--secondary);">Chief Adviser</div>
+                                <h4>นายธวัชชัย สุขล้อม</h4>
+                                <p>Head of Sirindhorn Planetarium</p>
                             </div>
-                            <h3 style="margin-bottom: 0.5rem; color: var(--secondary);">Chief Adviser</h3>
-                            <h4 style="margin-bottom: 1rem;">นายธวัชชัย สุขล้อม</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">
-                                ครูที่ปรึกษาชุมนุมดาราศาสตร์ และหัวหน้างานท้องฟ้าจำลอง</p>
-                        </div>
 
-                        <!-- President -->
-                        <div
-                            style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2.5rem; text-align: center; border-color: var(--primary);">
-                            <div
-                                style="width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 100%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-crown" style="font-size: 3rem; color: var(--primary);"></i>
-                            </div>
-                            <h3 style="margin-bottom: 0.5rem; color: var(--primary);">President (CEO)</h3>
-                            <h4 style="margin-bottom: 1rem;">นายอัฑฒกร จงผาติวุฒิ</h4>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">
-                                ประธานชุมนุมดาราศาสตร์ ปีการศึกษา 2569</p>
-                        </div>
+                            <!-- Level 1: President -->
+                            <div class="tree-level-wrap">
+                                <div class="tree-node node-president">
+                                    <div class="tree-role">President (CEO)</div>
+                                    <h4>นายอัฑฒกร จงผาติวุฒิ</h4>
+                                    <p>Academic Year 2026</p>
+                                </div>
 
-                        <!-- IT Support -->
-                        <div
-                            style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2.5rem; text-align: center;">
-                            <div
-                                style="width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 100%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-code" style="font-size: 3rem; color: var(--accent);"></i>
-                            </div>
-                            <h3 style="margin-bottom: 0.5rem; color: var(--accent);">IT Support</h3>
-                            <div style="margin-bottom: 1rem;">
-                                <h4 style="margin-bottom: 0.25rem;">เด็กชายอภิวิชญ์ อนุตรวณิชกุล</h4>
-                                <h4 style="margin-bottom: 0.25rem;">เด็กชายญาณพัทธ์ วงษ์สวัสดิ์</h4>
-                            </div>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Informaton
-                                Technology Support</p>
-                        </div>
-                    </div>
+                                <!-- Level 2: VPs -->
+                                <div class="tree-level">
+                                    <div class="line-horizontal"></div>
 
-                    <!-- Departmental Structure (from provided diagram) -->
-                    <div
-                        style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 3rem;">
-                        <h3
-                            style="text-align: center; margin-bottom: 3rem; text-transform: uppercase; letter-spacing: 2px;">
-                            Departmental <span>Structure</span></h3>
-                        <div
-                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-                            <!-- CPO -->
-                            <div
-                                style="padding: 1.5rem; border-left: 2px solid #eab308; background: rgba(234, 179, 8, 0.05); border-radius: 0 12px 12px 0;">
-                                <h4 style="color: #eab308; margin-bottom: 1rem;">CPO (Product)</h4>
-                                <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted);">
-                                    <li>Content Creators</li>
-                                    <li>Graphic Designers</li>
-                                    <li>On-site Arts</li>
-                                    <li>Public Relations</li>
-                                    <li>Activity Creators</li>
-                                </ul>
+                                    <!-- CPO -->
+                                    <div class="tree-level-wrap">
+                                        <div class="tree-node node-cpo">
+                                            <div class="tree-role" style="color: #eab308;">CPO (Product)</div>
+                                            <h4>Vice President</h4>
+                                            <p>Production & Media</p>
+                                        </div>
+                                        <div class="tree-level">
+                                            <div class="tree-node">
+                                                <div class="tree-role">Departments</div>
+                                                <ul
+                                                    style="list-style: none; font-size: 0.8rem; color: var(--text-muted); padding: 0;">
+                                                    <li>Content & Art</li>
+                                                    <li>Public Relations</li>
+                                                    <li>Activity Creators</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- CFO -->
+                                    <div class="tree-level-wrap">
+                                        <div class="tree-node node-cfo">
+                                            <div class="tree-role" style="color: #ec4899;">CFO (Finance)</div>
+                                            <h4>Vice President</h4>
+                                            <p>Account & Supplies</p>
+                                        </div>
+                                        <div class="tree-level">
+                                            <div class="tree-node">
+                                                <div class="tree-role">Departments</div>
+                                                <ul
+                                                    style="list-style: none; font-size: 0.8rem; color: var(--text-muted); padding: 0;">
+                                                    <li>Accounting</li>
+                                                    <li>Financial Planning</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- COO -->
+                                    <div class="tree-level-wrap">
+                                        <div class="tree-node node-coo">
+                                            <div class="tree-role" style="color: #0ea5e9;">COO (Operations)</div>
+                                            <h4>Vice President</h4>
+                                            <p>HR & Systems</p>
+                                        </div>
+                                        <div class="tree-level">
+                                            <div class="tree-level-wrap" style="gap: 1.5rem;">
+                                                <div class="tree-node">
+                                                    <div class="tree-role">HR & General</div>
+                                                    <p>Human Resources</p>
+                                                </div>
+                                                <div class="tree-node"
+                                                    style="border-style: dashed; border-color: var(--accent);">
+                                                    <div class="tree-role" style="color: var(--accent);">IT Support
+                                                    </div>
+                                                    <h4 style="font-size: 0.85rem;">อภิวิชญ์ อนุตรวณิชกุล</h4>
+                                                    <h4 style="font-size: 0.85rem;">ญาณพัทธ์ วงษ์สวัสดิ์</h4>
+                                                    <p>System Maintenance</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- CFO -->
-                            <div
-                                style="padding: 1.5rem; border-left: 2px solid #ec4899; background: rgba(236, 72, 153, 0.05); border-radius: 0 12px 12px 0;">
-                                <h4 style="color: #ec4899; margin-bottom: 1rem;">CFO (Finance)</h4>
-                                <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted);">
-                                    <li>Accounting</li>
-                                    <li>Financial Planning</li>
-                                    <li>Supplies Management</li>
-                                </ul>
-                            </div>
-                            <!-- COO -->
-                            <div
-                                style="padding: 1.5rem; border-left: 2px solid #0ea5e9; background: rgba(14, 165, 233, 0.05); border-radius: 0 12px 12px 0;">
-                                <h4 style="color: #0ea5e9; margin-bottom: 1rem;">COO (Operations)</h4>
-                                <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted);">
-                                    <li>Human Resources</li>
-                                    <li>General Affairs</li>
-                                    <li>IT Support / Systems</li>
-                                </ul>
-                            </div>
-                            <!-- Others -->
-                            <div
-                                style="padding: 1.5rem; border-left: 2px solid var(--accent); background: rgba(245, 158, 11, 0.05); border-radius: 0 12px 12px 0;">
-                                <h4 style="color: var(--accent); margin-bottom: 1rem;">Other Units</h4>
-                                <ul style="list-style: none; font-size: 0.9rem; color: var(--text-muted);">
-                                    <li>Chief of Staff</li>
-                                    <li>Secretary</li>
-                                    <li>Urgent Response Team</li>
-                                    <li>Special Project Teams</li>
-                                </ul>
+
+                            <!-- Helpers outside the flow -->
+                            <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+                                <div class="tree-node node-staff">
+                                    <div class="tree-role">Secretary</div>
+                                    <p>Administrative Support</p>
+                                </div>
+                                <div class="tree-node node-staff" style="background: rgba(245, 158, 11, 0.1);">
+                                    <div class="tree-role">Urgent Team</div>
+                                    <p>Crisis Management</p>
+                                </div>
                             </div>
                         </div>
                     </div>
