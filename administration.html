@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Org Structure | Suankularb Astronomy Club</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-meteor"></i> SAC
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </a>
+                <button class="mobile-nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section style="padding-top: 140px; min-height: 100vh;">
+            <div class="container">
+                <h1 class="section-title">Administrative <span>Structure</span></h1>
+                <p style="text-align: center; color: var(--text-muted); margin-top: -2rem; margin-bottom: 4rem;">
+                    The organizational map of the Suankularb Astronomy Club team.
+                </p>
+
+                <div class="org-container">
+                    <div class="tree">
+                        <!-- Level 0: Advisor -->
+                        <div class="tree-node" style="border-color: var(--secondary);">
+                            <div class="tree-role" style="color: var(--secondary);">Chief Adviser</div>
+                            <div class="node-img">
+                                <img src="images/Administrative%20structure/teacher.png" alt="Adviser">
+                            </div>
+                            <h4 style="font-size: 0.95rem;">นายธวัชชัย สุขล้อม</h4>
+                            <p>Head of Sirindhorn Planetarium</p>
+                        </div>
+
+                        <!-- Level 1: President -->
+                        <div class="tree-level-wrap">
+                            <div class="tree-node node-president">
+                                <div class="tree-role">President (CEO)</div>
+                                <div class="node-img">
+                                    <i class="fas fa-crown" style="color: var(--primary);"></i>
+                                </div>
+                                <h4 style="font-size: 0.95rem;">นายอัฑฒกร จงผาติวุฒิ</h4>
+                                <p>Academic Year 2026</p>
+                            </div>
+
+                            <!-- Level 2: VPs -->
+                            <div class="tree-level">
+                                <div class="line-horizontal"></div>
+
+                                <!-- CPO -->
+                                <div class="tree-level-wrap">
+                                    <div class="tree-node node-cpo">
+                                        <div class="tree-role" style="color: #eab308;">CPO (Product)</div>
+                                        <div class="node-img">
+                                            <i class="fas fa-palette" style="color: #eab308;"></i>
+                                        </div>
+                                        <h4>Vice President</h4>
+                                        <p>Production & Media</p>
+                                    </div>
+                                    <div class="tree-level">
+                                        <div class="tree-node">
+                                            <div class="tree-role">Departments</div>
+                                            <ul
+                                                style="list-style: none; font-size: 0.8rem; color: var(--text-muted); padding: 0;">
+                                                <li>Content & Art</li>
+                                                <li>Public Relations</li>
+                                                <li>Activity Creators</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CFO -->
+                                <div class="tree-level-wrap">
+                                    <div class="tree-node node-cfo">
+                                        <div class="tree-role" style="color: #ec4899;">CFO (Finance)</div>
+                                        <div class="node-img">
+                                            <i class="fas fa-wallet" style="color: #ec4899;"></i>
+                                        </div>
+                                        <h4>Vice President</h4>
+                                        <p>Account & Supplies</p>
+                                    </div>
+                                    <div class="tree-level">
+                                        <div class="tree-node">
+                                            <div class="tree-role">Departments</div>
+                                            <ul
+                                                style="list-style: none; font-size: 0.8rem; color: var(--text-muted); padding: 0;">
+                                                <li>Accounting</li>
+                                                <li>Financial Planning</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- COO -->
+                                <div class="tree-level-wrap">
+                                    <div class="tree-node node-coo">
+                                        <div class="tree-role" style="color: #0ea5e9;">COO (Operations)</div>
+                                        <div class="node-img">
+                                            <i class="fas fa-cog" style="color: #0ea5e9;"></i>
+                                        </div>
+                                        <h4>Vice President</h4>
+                                        <p>HR & Systems</p>
+                                    </div>
+                                    <div class="tree-level">
+                                        <div class="tree-level-wrap" style="gap: 1.5rem;">
+                                            <div class="tree-node">
+                                                <div class="tree-role">HR & General</div>
+                                                <p>Human Resources</p>
+                                            </div>
+                                            <div class="tree-node"
+                                                style="border-style: dashed; border-color: var(--accent);">
+                                                <div class="tree-role" style="color: var(--accent);">IT Support</div>
+                                                <div
+                                                    style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem;">
+                                                    <div class="node-img" style="margin: 0; width: 45px; height: 45px;">
+                                                        <img src="images/Administrative%20structure/it1.png" alt="IT 1">
+                                                    </div>
+                                                    <div class="node-img" style="margin: 0; width: 45px; height: 45px;">
+                                                        <i class="fas fa-user-circle"></i>
+                                                    </div>
+                                                </div>
+                                                <h4 style="font-size: 0.8rem;">อภิวิชญ์ อนุตรวณิชกุล</h4>
+                                                <h4 style="font-size: 0.8rem;">ญาณพัทธ์ วงษ์สวัสดิ์</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Helpers outside the flow -->
+                        <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+                            <div class="tree-node node-staff">
+                                <div class="tree-role">Secretary</div>
+                                <p>Administrative Support</p>
+                            </div>
+                            <div class="tree-node node-staff" style="background: rgba(245, 158, 11, 0.1);">
+                                <div class="tree-role">Urgent Team</div>
+                                <p>Crisis Management</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 4rem;">
+                    <a href="about.html" class="btn btn-outline" style="gap: 0.5rem;">
+                        <i class="fas fa-arrow-left"></i> Back to About
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-meteor"></i> Suankularb Astronomy Club
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย<br>
+                        88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="news.html">News</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="get-involved.html#join">Join Staff</a></li>
+                        <li><a href="get-involved.html#donate">Donate</a></li>
+                        <li><a href="about.html#alumni">Alumni</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="https://www.facebook.com/skastronomy.club" target="_blank"
+                            title="Suankularb Astronomy Club"><i class="fab fa-facebook fa-xl"></i></a>
+                        <a href="https://www.instagram.com/skastronomy_official" target="_blank"
+                            title="skastronomy_official"><i class="fab fa-instagram fa-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 Suankularb Astronomy Club. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js" type="module"></script>
+</body>
+
+</html>
