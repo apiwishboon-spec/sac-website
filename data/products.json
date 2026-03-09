@@ -1,26 +1,26 @@
 [
     {
-        "id": "shirt01",
-        "name": "SKA Astronomy T-Shirt",
-        "price": 250,
-        "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800",
-        "description": "Premium cotton t-shirt featuring the SKA Club constellation logo.",
+        "id": "shirt_repeat_2022",
+        "name": "เสื้อยืด SKA Repeat 2022",
+        "price": 200,
+        "image": "https://www.skastronomy.club/_/rsrc/1651563229864/news/%E0%B9%80%E0%B8%AA%E0%B8%AD%E0%B8%A2%E0%B8%94-repeat-2022/shirt.jpg",
+        "description": "เสื้อยืดที่แข็งแกร่งที่สุดในปฐพี เนื้อผ้า Cotton เกรดพรีเมียม สกรีนลายดาราศาสตร์สวนกุหลาบ",
+        "stock": 100
+    },
+    {
+        "id": "mask_ska",
+        "name": "หน้ากากอนามัย SKA Mask",
+        "price": 40,
+        "image": "https://www.skastronomy.club/_/rsrc/1652077983050/news/%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%82%E0%B8%A1%E0%B8%8A%E0%B8%99%E0%B9%80%E0%B8%9B%E0%B8%94%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A1/mask.jpg",
+        "description": "หน้ากากผ้า SKA ลายลิมิเต็ด สีน้ำเงิน-ชมพู พร้อมสายคล้อง",
         "stock": 50
     },
     {
-        "id": "hoodie01",
-        "name": "Nebula Hoodie",
-        "price": 650,
-        "image": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800",
-        "description": "Stay warm during night observations with our heavyweight nebula hoodie.",
-        "stock": 25
-    },
-    {
-        "id": "sticker01",
-        "name": "Astro Sticker Pack",
-        "price": 50,
-        "image": "https://images.unsplash.com/photo-1583241800698-e8ab01c85b27?auto=format&fit=crop&q=80&w=800",
-        "description": "5 durable vinyl stickers with space-themed designs.",
-        "stock": 100
+        "id": "keychain_moon",
+        "name": "พวงกุญแจดวงจันทร์ (Moon Keychain)",
+        "price": 60,
+        "image": "https://www.skastronomy.club/_/rsrc/1652077983050/news/%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%82%E0%B8%A1%E0%B8%8A%E0%B8%99%E0%B9%80%E0%B8%9B%E0%B8%94%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A1/keychain.jpg",
+        "description": "พวงกุญแจลายพื้นผิวดวงจันทร์ สวยงาม ทนทาน สำหรับชาวดาราศาสตร์",
+        "stock": 30
     }
 ]

@@ -1,29 +1,62 @@
 [
     {
-        "id": "news001",
-        "title": "SPICA Astronomy Camp 2025",
-        "date": "2025-05-12",
+        "id": "news_royal_opening",
+        "title": "กรมสมเด็จพระเทพฯ เสด็จพระราชดำเนินทรงเปิดท้องฟ้าจำลองสิรินธร",
+        "date": "2024-01-15",
         "author": "SKA Club",
-        "thumbnail": "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=800",
-        "content": "Join us for the annual SPICA Astronomy Camp where we explore the night sky, learn about celestial navigation, and build our own telescopes.",
-        "tags": ["event", "camp"]
+        "thumbnail": "https://www.skastronomy.club/_/rsrc/1649914716766/news/%E0%B8%81%E0%B8%A3%E0%B8%A1%E0%B8%AA%E0%B8%A1%E0%B9%80%E0%B8%94%E0%B8%88%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%AF-%E0%B9%80%E0%B8%AA%E0%B8%94%E0%B8%88%E0%B9%80%E0%B8%9B%E0%B8%94%E0%B8%97%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%B2%E0%B8%88%E0%B8%B3%E0%B8%A5%E0%B8%AD%E0%B8%87/DSC_0001.JPG?height=200&width=300",
+        "content": "สมเด็จพระกนิษฐาธิราชเจ้า กรมสมเด็จพระเทพรัตนราชสุดาฯ สยามบรมราชกุมารี เสด็จพระราชดำเนินทรงเปิดท้องฟ้าจำลองสิรินธร ณ โรงเรียนสวนกุหลาบวิทยาลัย",
+        "tags": [
+            "royal",
+            "event"
+        ]
     },
     {
-        "id": "news002",
-        "title": "New Telescope Equipment Arrival",
-        "date": "2025-06-05",
+        "id": "news_spiica_2024",
+        "title": "การแข่งขันอัจฉริยภาพทางด้านดาราศาสตร์ ครั้งที่ 2 (SPIICA 2024)",
+        "date": "2024-05-20",
         "author": "SKA Club",
-        "thumbnail": "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?auto=format&fit=crop&q=80&w=800",
-        "content": "The SKA Club has just received a brand new automated equatorial mount and an 8-inch Schmidt-Cassegrain telescope to enhance our observation sessions.",
-        "tags": ["equipment", "news"]
+        "thumbnail": "https://www.skastronomy.club/_/rsrc/1711200000000/news/spiica/SPIICA.png",
+        "content": "การแข่งขันอัจฉริยภาพทางด้านดาราศาสตร์ ครั้งที่ 2 (The 2nd Suankularb Pinnacle Intellectual Competition on Astronomy) ประจำปีการศึกษา 2567",
+        "tags": [
+            "competition",
+            "event"
+        ]
     },
     {
-        "id": "news003",
-        "title": "Meteor Shower Observation Night",
-        "date": "2025-08-12",
+        "id": "news_prakai_petch",
+        "title": "ชุมนุมดาราศาสตร์รับรางวัลเยาวชนดีเด่นกรุงเทพมหานคร (ประกายเพชร)",
+        "date": "2023-12-01",
         "author": "SKA Club",
-        "thumbnail": "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&q=80&w=800",
-        "content": "Prepare for the Perseid meteor shower! We will be hosting an observation session at the school field starting from 8:00 PM.",
-        "tags": ["event", "observation"]
+        "thumbnail": "https://www.skastronomy.club/_/rsrc/1660000000000/news/%E0%B9%80%E0%B8%A2%E0%B8%B2%E0%B8%A7%E0%B8%8A%E0%B8%99%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%8A%E0%B8%A3/award.jpg",
+        "content": "ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย ได้รับรางวัลเยาวชนดีเด่นกรุงเทพมหานคร (ประกายเพชร) ด้านนวัตกรรมทางวิทยาศาสตร์และสิ่งแวดล้อม",
+        "tags": [
+            "award",
+            "achievement"
+        ]
+    },
+    {
+        "id": "news_astro_camp_4",
+        "title": "ค่ายเด็กสวนฯ ชวนดูดาว ครั้งที่ 4 ณ จังหวัดเชียงใหม่",
+        "date": "2022-10-18",
+        "author": "SKA Club",
+        "thumbnail": "https://www.skastronomy.club/_/rsrc/1666000000000/news/%E0%B8%84%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%94%E0%B8%81%E0%B8%AA%E0%B8%A7%E0%B8%99%E0%B8%AF-%E0%B8%8A%E0%B8%A7%E0%B8%99%E0%B8%94%E0%B8%94%E0%B8%B2%E0%B8%A7-4/chiangmai.jpg",
+        "content": "ศึกษาหาความรู้ทางด้านดาราศาสตร์ ตามหาทางช้างเผือกบนดอยอินทนนท์ และเยี่ยมชมสถาบันวิจัยดาราศาสตร์แห่งชาติ (NARIT)",
+        "tags": [
+            "camp",
+            "event"
+        ]
+    },
+    {
+        "id": "news_taikonauts",
+        "title": "หว่านเมล็ดแห่งฝัน สังสรรค์กับมนุษย์อวกาศ (Talk with Taikonauts)",
+        "date": "2023-08-15",
+        "author": "SKA Club",
+        "thumbnail": "https://www.skastronomy.club/_/rsrc/1690000000000/news/%E0%B8%AB%E0%B8%B4%E0%B8%A7%E0%B8%B2%E0%B8%99%E0%B9%80%E0%B8%A1%E0%B8%A5%E0%B8%94%E0%B9%81%E0%B8%AF/talk.jpg",
+        "content": "กิจกรรมแลกเปลี่ยนความรู้และประสบการณ์กับมนุษย์อวกาศชาวจีน (Taikonauts) ณ ท้องฟ้าจำลองสิรินธร",
+        "tags": [
+            "international",
+            "event"
+        ]
     }
 ]

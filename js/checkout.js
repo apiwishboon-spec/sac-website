@@ -1,6 +1,6 @@
 import { cart } from './cart.js';
 
-const IMGBB_API_KEY = 'YOUR_IMGBB_API_KEY'; // User will need to replace this
+const IMGBB_API_KEY = '53fa14ae2f0767e183d1c2d9ee8f51a6'; // User provided key
 const GAS_WEB_APP_URL = 'YOUR_GAS_WEB_APP_URL'; // User will need to replace this
 
 export async function uploadToImgBB(file) {

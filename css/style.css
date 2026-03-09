@@ -53,12 +53,20 @@ body::before {
 }
 
 @keyframes move-stars {
-    from { background-position: 0 0; }
-    to { background-position: -10000px 5000px; }
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -10000px 5000px;
+    }
 }
 
 /* Typography */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     font-weight: 700;
     letter-spacing: -0.02em;
 }
@@ -106,6 +114,7 @@ nav {
     font-weight: 800;
     background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     display: flex;
     align-items: center;
@@ -118,7 +127,7 @@ nav {
     list-style: none;
 }
 
-.nav-links > li {
+.nav-links>li {
     position: relative;
 }
 
@@ -128,7 +137,8 @@ nav {
     color: var(--text-muted);
 }
 
-.nav-links a:hover, .nav-links a.active {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--text-main);
 }
 
@@ -147,7 +157,7 @@ nav {
     transform: translateY(10px);
     transition: var(--transition);
     padding: 0.5rem 0;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .nav-links li:hover .dropdown-content {
@@ -213,6 +223,7 @@ section {
 .section-title span {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
