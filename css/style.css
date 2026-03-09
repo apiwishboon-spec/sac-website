@@ -383,23 +383,24 @@ footer {
 }
 
 .tree-node {
-    background: var(--bg-card);
-    border: 1px solid var(--glass-border);
-    padding: 1.5rem;
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    padding: 2.5rem 1.5rem;
+    border-radius: 20px;
     text-align: center;
     position: relative;
-    width: 220px;
+    width: 280px;
     transition: var(--transition);
+    backdrop-filter: blur(10px);
 }
 
 .node-img {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 1rem;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1.5rem;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid var(--glass-border);
+    border: 5px solid var(--glass-border);
     background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
@@ -414,7 +415,7 @@ footer {
 }
 
 .node-img i {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     color: var(--text-muted);
 }
 
@@ -425,8 +426,9 @@ footer {
 }
 
 .tree-node h4 {
-    font-size: 1rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
 }
 
 .tree-node p {
@@ -435,12 +437,11 @@ footer {
 }
 
 .tree-role {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--secondary);
-    margin-bottom: 0.5rem;
-    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.75rem;
+    font-weight: 800;
 }
 
 /* Connection Lines */
@@ -475,33 +476,37 @@ footer {
     content: '';
     position: absolute;
     top: -1.5rem;
-    left: 110px;
-    /* Half of node width */
-    right: 110px;
+    left: 140px;
+    /* Half of node width (280px) */
+    right: 140px;
     height: 2px;
     background: var(--glass-border);
 }
 
 /* Specialized Node Styles */
 .node-president {
-    border-color: var(--primary);
-    background: rgba(79, 70, 229, 0.1);
+    border-color: var(--primary) !important;
+    background: rgba(79, 70, 229, 0.08);
 }
 
 .node-cpo {
-    border-color: #eab308;
+    border-color: #eab308 !important;
+    background: rgba(234, 179, 8, 0.08);
 }
 
 .node-cfo {
-    border-color: #ec4899;
+    border-color: #ec4899 !important;
+    background: rgba(236, 72, 153, 0.08);
 }
 
 .node-coo {
-    border-color: #0ea5e9;
+    border-color: #0ea5e9 !important;
+    background: rgba(14, 165, 233, 0.08);
 }
 
 .node-staff {
-    border-color: var(--accent);
+    border-color: var(--secondary) !important;
+    background: rgba(14, 165, 233, 0.04);
 }
 
 @media (max-width: 1024px) {
