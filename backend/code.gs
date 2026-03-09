@@ -9,7 +9,8 @@
  * 5. Replace "YOUR_GAS_WEB_APP_URL" in js/checkout.js with the deployment URL.
  */
 
-const TURNSTILE_SECRET = "0x4AAAAAAACoVB1YJTL-5_UymIf5_rkv1Svo";
+// Use Script Properties to store sensitive keys securely
+const TURNSTILE_SECRET = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET'); 
 
 function doPost(e) {
   try {
