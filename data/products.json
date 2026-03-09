@@ -3,7 +3,7 @@
         "id": "shirt_repeat_2022",
         "name": "เสื้อยืด SKA Repeat 2022",
         "price": 200,
-        "image": "https://www.skastronomy.club/_/rsrc/1651563229864/news/%E0%B9%80%E0%B8%AA%E0%B8%AD%E0%B8%A2%E0%B8%94-repeat-2022/shirt.jpg",
+        "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800",
         "description": "เสื้อยืดที่แข็งแกร่งที่สุดในปฐพี เนื้อผ้า Cotton เกรดพรีเมียม สกรีนลายดาราศาสตร์สวนกุหลาบ",
         "stock": 100
     },
@@ -11,7 +11,7 @@
         "id": "mask_ska",
         "name": "หน้ากากอนามัย SKA Mask",
         "price": 40,
-        "image": "https://www.skastronomy.club/_/rsrc/1652077983050/news/%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%82%E0%B8%A1%E0%B8%8A%E0%B8%99%E0%B9%80%E0%B8%9B%E0%B8%94%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A1/mask.jpg",
+        "image": "https://images.unsplash.com/photo-1586942511414-b4a11b0e2511?auto=format&fit=crop&q=80&w=800",
         "description": "หน้ากากผ้า SKA ลายลิมิเต็ด สีน้ำเงิน-ชมพู พร้อมสายคล้อง",
         "stock": 50
     },
@@ -19,7 +19,7 @@
         "id": "keychain_moon",
         "name": "พวงกุญแจดวงจันทร์ (Moon Keychain)",
         "price": 60,
-        "image": "https://www.skastronomy.club/_/rsrc/1652077983050/news/%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%82%E0%B8%A1%E0%B8%8A%E0%B8%99%E0%B9%80%E0%B8%9B%E0%B8%94%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A1/keychain.jpg",
+        "image": "https://images.unsplash.com/photo-1582142839970-2b9e04b60f25?auto=format&fit=crop&q=80&w=800",
         "description": "พวงกุญแจลายพื้นผิวดวงจันทร์ สวยงาม ทนทาน สำหรับชาวดาราศาสตร์",
         "stock": 30
     }
