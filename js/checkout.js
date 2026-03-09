@@ -1,21 +1,25 @@
 import { cart } from './cart.js';
 
-const IMGBB_API_KEY = '53fa14ae2f0767e183d1c2d9ee8f51a6'; // User provided key
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyVB6KZbhWLdP_qb0F68fTFWZp3aX1CsWUC3A9Z9-ax9vh_WZbkFaJES7cgwxSMuDa5/exec'; // User provided URL
 
 export async function uploadToImgBB(file) {
-    const formData = new FormData();
-    formData.append('image', file);
+    const base64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+    });
 
-    const response = await fetch(`https://api.imgbb.com/1/upload?expiration=5184000&key=${IMGBB_API_KEY}`, {
+    const response = await fetch(GAS_WEB_APP_URL, {
         method: 'POST',
-        body: formData
+        body: JSON.stringify({ action: 'uploadImage', base64Image: base64 })
     });
 
     if (!response.ok) throw new Error('Slip upload failed');
 
     const result = await response.json();
-    return result.data.url;
+    if (result.result === 'error') throw new Error(result.error);
+
+    return result.url;
 }
 
 export async function sendOTP(email) {

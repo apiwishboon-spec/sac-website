@@ -11,6 +11,7 @@
 
 // Use Script Properties to store sensitive keys securely
 const TURNSTILE_SECRET = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET'); 
+const IMGBB_API_KEY = PropertiesService.getScriptProperties().getProperty('IMGBB_API_KEY');
 
 function doPost(e) {
   try {
@@ -21,6 +22,8 @@ function doPost(e) {
       return handleSendOTP(data.email);
     } else if (action === "verifyOTP") {
       return handleVerifyOTP(data.email, data.otp);
+    } else if (action === "uploadImage") {
+      return handleUploadImage(data.base64Image);
     } else {
       // Default: submitOrder
       return handleSubmitOrder(data);
@@ -108,6 +111,29 @@ function handleSubmitOrder(data) {
 
 function createResponse(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function handleUploadImage(base64Image) {
+  if (!IMGBB_API_KEY) {
+    return createResponse({ "result": "error", "error": "IMGBB_API_KEY not configured in backend." });
+  }
+
+  // ImgBB Expects a base64 string without the data URI prefix
+  var rawBase64 = base64Image.split(',')[1] || base64Image;
+
+  var response = UrlFetchApp.fetch("https://api.imgbb.com/1/upload?expiration=5184000&key=" + IMGBB_API_KEY, {
+    method: "POST",
+    payload: {
+      image: rawBase64
+    }
+  });
+
+  var result = JSON.parse(response.getContentText());
+  if (result.success) {
+    return createResponse({ "result": "success", "url": result.data.url });
+  } else {
+    return createResponse({ "result": "error", "error": "ImgBB upload failed" });
+  }
 }
 
 function sendConfirmationEmail(order) {
