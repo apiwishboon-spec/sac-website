@@ -394,16 +394,17 @@ footer {
 }
 
 .node-img {
-    width: 65px;
-    height: 65px;
-    margin: 0 auto 0.75rem;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid var(--glass-border);
+    border: 3px solid var(--glass-border);
     background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: var(--transition);
 }
 
 .node-img img {
