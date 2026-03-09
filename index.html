@@ -46,9 +46,12 @@
                 <li><a href="contact.html">Contact</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
                     <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
                 </a>
+                <button class="mobile-nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -69,7 +72,7 @@
                 <p
                     style="font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2.5rem; opacity: 0; animation: fadeInUp 0.8s 0.4s forwards;">
                     Cultivating the next generation of astronomers and space explorers at the heart of Suankularb.</p>
-                <div
+                <div class="flex-group"
                     style="display: flex; gap: 1rem; justify-content: center; opacity: 0; animation: fadeInUp 0.8s 0.6s forwards;">
                     <a href="news.html" class="btn btn-primary">Latest News</a>
                     <a href="about.html" class="btn btn-outline">Explore More</a>
@@ -82,7 +85,7 @@
             <div class="container">
                 <h2 class="section-title">Latest <span>Updates</span></h2>
                 <div id="news-preview-grid" class="news-grid"
-                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
                     <!-- News items will be loaded via JS -->
                     <div class="loading">Loading news...</div>
                 </div>
