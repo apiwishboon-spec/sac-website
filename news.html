@@ -25,7 +25,7 @@
                 <li><a href="contact.html">Contact</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
                     <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
                 </a>
             </div>
@@ -63,11 +63,49 @@
 
     <footer>
         <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-meteor"></i> Suankularb Astronomy Club
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย<br>
+                        88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="news.html">News</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="get-involved.html#join">Join Staff</a></li>
+                        <li><a href="get-involved.html#donate">Donate</a></li>
+                        <li><a href="about.html#alumni">Alumni</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="https://www.facebook.com/skastronomy.club" target="_blank"
+                            title="Suankularb Astronomy Club"><i class="fab fa-facebook fa-xl"></i></a>
+                        <a href="https://www.instagram.com/skastronomy_official" target="_blank"
+                            title="skastronomy_official"><i class="fab fa-instagram fa-xl"></i></a>
+                    </div>
+                </div>
+            </div>
             <div class="footer-bottom">
                 &copy; 2026 Suankularb Astronomy Club. All rights reserved.
             </div>
         </div>
     </footer>
+    <script src="js/main.js" type="module"></script>
 
     <script type="module">
         import { fetchNews, renderNewsItem, initNewsEvents } from './js/news.js';

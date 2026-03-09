@@ -1,10 +1,14 @@
 import { initNewsPreview } from './news.js';
 import { initShopPreview } from './shop.js';
+import { cart } from './cart.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Preview Sections
-    initNewsPreview('news-preview-grid', 3);
-    initShopPreview('product-preview-grid', 4);
+    // Initialize Preview Sections if they exist
+    const newsGrid = document.getElementById('news-preview-grid');
+    if (newsGrid) initNewsPreview('news-preview-grid', 3);
+
+    const shopGrid = document.getElementById('product-preview-grid');
+    if (shopGrid) initShopPreview('product-preview-grid', 4);
 
     // Smooth Scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
