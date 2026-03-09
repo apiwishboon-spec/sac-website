@@ -7,6 +7,7 @@
     <title>Checkout | Suankularb Astronomy Club</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
 <body>
@@ -91,8 +92,8 @@
                             </div>
 
                             <!-- Cloudflare Turnstile -->
-                            <div class="cf-turnstile" data-sitekey="0x4AAAAAAACoVByFvUgOp76Cm"
-                                style="margin-bottom: 2rem;"></div>
+                            <div class="cf-turnstile" data-sitekey="0x4AAAAAACoVByFvUgOp76Cm" data-theme="dark"
+                                style="margin-bottom: 2rem; min-height: 65px;"></div>
 
                             <button type="submit" id="submit-btn" class="btn btn-primary"
                                 style="width: 100%; padding: 1rem;">
@@ -121,7 +122,6 @@
         </section>
     </main>
 
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <div id="success-overlay"
         style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 3000; display: none; align-items: center; justify-content: center; text-align: center;">
@@ -221,9 +221,16 @@
             const submitBtn = document.getElementById('submit-btn');
 
             // 0. Verify Turnstile
-            const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]').value;
+            const turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
+
+            if (!turnstileInput) {
+                alert('Security check (Turnstile) failed to load. Please refresh the page or check your internet connection.');
+                return;
+            }
+
+            const turnstileResponse = turnstileInput.value;
             if (!turnstileResponse) {
-                alert('Please complete the security check.');
+                alert('Please complete the security check (I am not a robot).');
                 return;
             }
 

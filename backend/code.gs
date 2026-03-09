@@ -10,6 +10,9 @@
  */
 
 // Use Script Properties to store sensitive keys securely
+// SETUP: Go to Project Settings (Gear Icon) -> Script Properties
+// Add 'TURNSTILE_SECRET' = 0x4AAAAAACoVB1YJTL-5_UymIf5_rkv1Svo
+// Add 'IMGBB_API_KEY' = (Your ImgBB Key)
 const TURNSTILE_SECRET = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET'); 
 const IMGBB_API_KEY = PropertiesService.getScriptProperties().getProperty('IMGBB_API_KEY');
 
