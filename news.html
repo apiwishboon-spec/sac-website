@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News | Suankularb Astronomy Club</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-meteor"></i> SKA CLUB
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="news.html" class="active">News</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section style="padding-top: 140px;">
+            <div class="container">
+                <h1 class="section-title">Latest <span>Astronomy News</span></h1>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar"
+                    style="display: flex; gap: 1rem; margin-bottom: 3rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-outline filter-btn active" data-tag="all">All</button>
+                    <button class="btn btn-outline filter-btn" data-tag="event">Events</button>
+                    <button class="btn btn-outline filter-btn" data-tag="camp">Camps</button>
+                    <button class="btn btn-outline filter-btn" data-tag="news">General</button>
+                    <button class="btn btn-outline filter-btn" data-tag="observation">Observation</button>
+                </div>
+
+                <div id="news-container" class="news-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem;">
+                    <!-- News items will be loaded via JS -->
+                    <div class="loading">Loading news...</div>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" style="display: flex; justify-content: center; gap: 1rem; margin-top: 4rem;">
+                    <!-- Pagination buttons will be loaded via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                &copy; 2026 Suankularb Astronomy Club. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { fetchNews, renderNewsItem } from './js/news.js';
+
+        const ITEMS_PER_PAGE = 6;
+        let currentPage = 1;
+        let currentTag = 'all';
+        let allNews = [];
+
+        async function init() {
+            allNews = await fetchNews();
+            render();
+
+            // Filter listeners
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelector('.filter-btn.active').classList.remove('active');
+                    btn.classList.add('active');
+                    currentTag = btn.dataset.tag;
+                    currentPage = 1;
+                    render();
+                };
+            });
+        }
+
+        function render() {
+            const container = document.getElementById('news-container');
+            const pagination = document.getElementById('pagination');
+
+            const filteredNews = currentTag === 'all'
+                ? allNews
+                : allNews.filter(n => n.tags.includes(currentTag));
+
+            const totalPages = Math.ceil(filteredNews.length / ITEMS_PER_PAGE);
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageNews = filteredNews.slice(start, end);
+
+            container.innerHTML = pageNews.length > 0
+                ? pageNews.map(item => renderNewsItem(item)).join('')
+                : '<p style="text-align: center; grid-column: 1/-1;">No news found in this category.</p>';
+
+            // Pagination logic
+            pagination.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `btn ${i === currentPage ? 'btn-primary' : 'btn-outline'}`;
+                btn.textContent = i;
+                btn.onclick = () => {
+                    currentPage = i;
+                    render();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                pagination.appendChild(btn);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

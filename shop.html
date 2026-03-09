@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Suankularb Astronomy Club</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-meteor"></i> SKA CLUB
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="shop.html" class="active">Shop</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="cart-btn" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section style="padding-top: 140px;">
+            <div class="container">
+                <h1 class="section-title">Club <span>Store</span></h1>
+
+                <div id="shop-container" class="product-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                    <!-- Products will be loaded via JS -->
+                    <div class="loading">Loading products...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer"
+        style="position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #0f111a; border-left: 1px solid var(--glass-border); z-index: 2000; transition: var(--transition); padding: 2rem; box-shadow: -10px 0 30px rgba(0,0,0,0.5); display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>Your Cart</h2>
+            <button id="close-cart"
+                style="background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;"><i
+                    class="fas fa-times"></i></button>
+        </div>
+        <div id="cart-items" style="flex: 1; overflow-y: auto; margin-bottom: 2rem;">
+            <!-- Cart items will be rendered here -->
+        </div>
+        <div style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
+            <div
+                style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">
+                <span>Total:</span>
+                <span id="cart-total">฿0</span>
+            </div>
+            <a href="checkout.html" id="checkout-btn" class="btn btn-primary" style="width: 100%;">Proceed to
+                Checkout</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { fetchProducts, renderProductItem, initShopPreview } from './js/shop.js';
+        import { cart } from './js/cart.js';
+
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCart = document.getElementById('close-cart');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+
+        async function init() {
+            const products = await fetchProducts();
+            const container = document.getElementById('shop-container');
+            container.innerHTML = products.map(p => renderProductItem(p)).join('');
+
+            // Add events
+            container.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.onclick = () => {
+                    const id = btn.dataset.id;
+                    const product = products.find(p => p.id === id);
+                    if (product) {
+                        cart.add(product);
+                        openDrawer();
+                    }
+                };
+            });
+        }
+
+        function openDrawer() {
+            cartDrawer.style.right = '0';
+        }
+
+        function closeDrawer() {
+            cartDrawer.style.right = '-400px';
+        }
+
+        function renderCartItems() {
+            if (cart.items.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin-top: 2rem;">Your cart is empty.</p>';
+                document.getElementById('checkout-btn').style.pointerEvents = 'none';
+                document.getElementById('checkout-btn').style.opacity = '0.5';
+                return;
+            }
+
+            document.getElementById('checkout-btn').style.pointerEvents = 'auto';
+            document.getElementById('checkout-btn').style.opacity = '1';
+
+            cartItemsContainer.innerHTML = cart.items.map(item => `
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; background: var(--bg-card); padding: 1rem; border-radius: 12px; align-items: center;">
+                    <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 0.95rem; margin-bottom: 0.25rem;">${item.name}</h4>
+                        <p style="color: var(--secondary); font-size: 0.9rem;">฿${item.price}</p>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem;">
+                            <button class="qty-btn" onclick="updateQty('${item.id}', -1)" style="background: var(--glass-border); border: none; color: white; width: 24px; height: 24px; border-radius: 4px; cursor: pointer;">-</button>
+                            <span style="font-size: 0.9rem;">${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateQty('${item.id}', 1)" style="background: var(--glass-border); border: none; color: white; width: 24px; height: 24px; border-radius: 4px; cursor: pointer;">+</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            cartTotal.textContent = `฿${cart.getTotal()}`;
+        }
+
+        window.updateQty = (id, delta) => {
+            cart.updateQuantity(id, delta);
+            renderCartItems();
+        };
+
+        cartBtn.onclick = openDrawer;
+        closeCart.onclick = closeDrawer;
+
+        window.addEventListener('cartUpdated', renderCartItems);
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            renderCartItems();
+        });
+    </script>
+</body>
+
+</html>

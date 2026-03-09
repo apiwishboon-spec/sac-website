@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suankularb Astronomy Club | SKA Club</title>
+    <meta name="description" content="Official website of the Suankularb Astronomy Club (SKA). Exploring the wonders of the universe since our foundation.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-meteor"></i> SKA CLUB
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li>
+                    <a href="about.html">About <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></a>
+                    <div class="dropdown-content">
+                        <a href="about.html#planetarium">Sirindhorn Planetarium</a>
+                        <a href="about.html#history" style="padding-left: 2.5rem; font-size: 0.85rem;">- History</a>
+                        <a href="about.html#who-we-are" style="padding-left: 2.5rem; font-size: 0.85rem;">- Who We Are</a>
+                        <a href="about.html#actions" style="padding-left: 2.5rem; font-size: 0.85rem;">- Our Actions</a>
+                        <a href="about.html#alumni">Our Alumni</a>
+                        <a href="about.html#osac6" style="padding-left: 2.5rem; font-size: 0.85rem;">- OSAC6</a>
+                    </div>
+                </li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li>
+                    <a href="get-involved.html">Get Involved <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></a>
+                    <div class="dropdown-content">
+                        <a href="get-involved.html#join">Join Staff</a>
+                        <a href="get-involved.html#donate">Donate</a>
+                    </div>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" style="height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; margin-top: 0; padding-top: 80px;">
+            <div class="container">
+                <h4 style="color: var(--secondary); text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 1rem; opacity: 0; animation: fadeInDown 0.8s forwards;">Suankularb Wittayalai School</h4>
+                <h1 style="font-size: 4.5rem; margin-bottom: 1.5rem; line-height: 1.1; opacity: 0; animation: fadeInUp 0.8s 0.2s forwards;">To the <span style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Stars</span> and Beyond</h1>
+                <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2.5rem; opacity: 0; animation: fadeInUp 0.8s 0.4s forwards;">Cultivating the next generation of astronomers and space explorers at the heart of Suankularb.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; opacity: 0; animation: fadeInUp 0.8s 0.6s forwards;">
+                    <a href="news.html" class="btn btn-primary">Latest News</a>
+                    <a href="about.html" class="btn btn-outline">Explore More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Preview -->
+        <section id="latest-news">
+            <div class="container">
+                <h2 class="section-title">Latest <span>Updates</span></h2>
+                <div id="news-preview-grid" class="news-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <!-- News items will be loaded via JS -->
+                    <div class="loading">Loading news...</div>
+                </div>
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="news.html" class="btn btn-outline">View All News</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop Preview -->
+        <section id="shop-preview" style="background: rgba(255,255,255,0.02);">
+            <div class="container">
+                <h2 class="section-title">Club <span>Merchandise</span></h2>
+                <div id="product-preview-grid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <!-- Products will be loaded via JS -->
+                    <div class="loading">Loading products...</div>
+                </div>
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="shop.html" class="btn btn-primary">Visit the Shop</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-meteor"></i> SKA CLUB
+                    </div>
+                    <p style="color: var(--text-muted);">Bringing the wonders of the cosmos to Suankularb seekers since then.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="news.html">News</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="get-involved.html#join">Join Staff</a></li>
+                        <li><a href="get-involved.html#donate">Donate</a></li>
+                        <li><a href="about.html#alumni">Alumni</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#"><i class="fab fa-facebook fa-xl"></i></a>
+                        <a href="#"><i class="fab fa-instagram fa-xl"></i></a>
+                        <a href="#"><i class="fab fa-twitter fa-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 Suankularb Astronomy Club. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

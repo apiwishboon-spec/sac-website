@@ -1,0 +1,29 @@
+[
+    {
+        "id": "news001",
+        "title": "SPICA Astronomy Camp 2025",
+        "date": "2025-05-12",
+        "author": "SKA Club",
+        "thumbnail": "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=800",
+        "content": "Join us for the annual SPICA Astronomy Camp where we explore the night sky, learn about celestial navigation, and build our own telescopes.",
+        "tags": ["event", "camp"]
+    },
+    {
+        "id": "news002",
+        "title": "New Telescope Equipment Arrival",
+        "date": "2025-06-05",
+        "author": "SKA Club",
+        "thumbnail": "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?auto=format&fit=crop&q=80&w=800",
+        "content": "The SKA Club has just received a brand new automated equatorial mount and an 8-inch Schmidt-Cassegrain telescope to enhance our observation sessions.",
+        "tags": ["equipment", "news"]
+    },
+    {
+        "id": "news003",
+        "title": "Meteor Shower Observation Night",
+        "date": "2025-08-12",
+        "author": "SKA Club",
+        "thumbnail": "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&q=80&w=800",
+        "content": "Prepare for the Perseid meteor shower! We will be hosting an observation session at the school field starting from 8:00 PM.",
+        "tags": ["event", "observation"]
+    }
+]
