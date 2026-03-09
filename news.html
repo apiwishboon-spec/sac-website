@@ -70,7 +70,7 @@
     </footer>
 
     <script type="module">
-        import { fetchNews, renderNewsItem } from './js/news.js';
+        import { fetchNews, renderNewsItem, initNewsEvents } from './js/news.js';
 
         const ITEMS_PER_PAGE = 6;
         let currentPage = 1;
@@ -109,6 +109,9 @@
             container.innerHTML = pageNews.length > 0
                 ? pageNews.map(item => renderNewsItem(item)).join('')
                 : '<p style="text-align: center; grid-column: 1/-1;">No news found in this category.</p>';
+
+            // Attach events
+            initNewsEvents(container, allNews);
 
             // Pagination logic
             pagination.innerHTML = '';

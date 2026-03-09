@@ -11,8 +11,8 @@ export async function fetchNews() {
 
 export function renderNewsItem(item) {
     return `
-        <article class="news-card" style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: var(--transition);">
-            <div class="news-thumb" style="height: 200px; overflow: hidden;">
+        <article class="news-card" data-id="${item.id}" style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: var(--transition);">
+            <div class="news-thumb" style="height: 200px; overflow: hidden; cursor: pointer;">
                 <img src="${item.thumbnail}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; transition: var(--transition);" loading="lazy">
             </div>
             <div class="news-content" style="padding: 1.5rem;">
@@ -27,10 +27,46 @@ export function renderNewsItem(item) {
                 <div class="news-tags" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
                     ${item.tags.map(tag => `<span class="tag" style="background: rgba(79, 70, 229, 0.1); color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">#${tag}</span>`).join('')}
                 </div>
-                <a href="news-detail.html?id=${item.id}" class="btn btn-outline" style="width: 100%; font-size: 0.9rem;">Read More</a>
+                <button class="btn btn-outline read-more-btn" data-id="${item.id}" style="width: 100%; font-size: 0.9rem;">Read More</button>
             </div>
         </article>
     `;
+}
+
+export function openNewsModal(item) {
+    let modal = document.getElementById('news-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'news-modal';
+        modal.className = 'modal-overlay';
+        document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <img src="${item.thumbnail}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 1.5rem;">
+            <div class="news-meta" style="margin-bottom: 1rem; color: var(--text-muted);">
+                <span>${new Date(item.date).toLocaleDateString()}</span> | <span>${item.author}</span>
+            </div>
+            <h2 style="margin-bottom: 1.5rem;">${item.title}</h2>
+            <div style="color: var(--text-muted); line-height: 1.8;">${item.content}</div>
+        </div>
+    `;
+
+    modal.style.display = 'flex';
+    modal.querySelector('.modal-close').onclick = () => modal.style.display = 'none';
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+}
+
+export function initNewsEvents(container, newsData) {
+    container.querySelectorAll('.read-more-btn, .news-thumb').forEach(el => {
+        el.onclick = () => {
+            const id = el.dataset.id || el.closest('.news-card').dataset.id;
+            const item = newsData.find(n => n.id === id);
+            if (item) openNewsModal(item);
+        };
+    });
 }
 
 export function initNewsPreview(containerId, limit = 3) {
@@ -40,5 +76,6 @@ export function initNewsPreview(containerId, limit = 3) {
     fetchNews().then(news => {
         const previewNews = news.slice(0, limit);
         container.innerHTML = previewNews.map(item => renderNewsItem(item)).join('');
+        initNewsEvents(container, news);
     });
 }

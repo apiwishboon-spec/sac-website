@@ -18,17 +18,28 @@ export async function uploadToImgBB(file) {
     return result.data.url;
 }
 
+export async function sendOTP(email) {
+    const response = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'sendOTP', email })
+    });
+    return response.json();
+}
+
+export async function verifyOTP(email, otp) {
+    const response = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'verifyOTP', email, otp })
+    });
+    return response.json();
+}
+
 export async function submitOrder(orderData) {
     const response = await fetch(GAS_WEB_APP_URL, {
         method: 'POST',
-        mode: 'no-cors', // Use no-cors for GAS if not using a specific header
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify({ ...orderData, action: 'submitOrder' })
     });
-
-    return response;
+    return response.json();
 }
 
 // PromptPay QR generation helper (simplified CRC16 calculation is complex, so we'll use a standard library pattern)
