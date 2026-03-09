@@ -1,7 +1,7 @@
 import { cart } from './cart.js';
 
 const IMGBB_API_KEY = '53fa14ae2f0767e183d1c2d9ee8f51a6'; // User provided key
-const GAS_WEB_APP_URL = 'YOUR_GAS_WEB_APP_URL'; // User will need to replace this
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyVB6KZbhWLdP_qb0F68fTFWZp3aX1CsWUC3A9Z9-ax9vh_WZbkFaJES7cgwxSMuDa5/exec'; // User provided URL
 
 export async function uploadToImgBB(file) {
     const formData = new FormData();
