@@ -1,5 +1,5 @@
 /**
- * SKA CLUB Order Processing System
+ * SAC Order Processing System
  * 
  * SETUP INSTRUCTIONS:
  * 1. Create a Google Sheet.
