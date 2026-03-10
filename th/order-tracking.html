@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ติดตามสินค้า - ศาลาว่าการวิทยาศาสตร์เพื่อเด็ก</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .tracking-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .search-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            margin: 20px auto 0;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .search-btn:hover {
+            background: #0056b3;
+        }
+        
+        .order-details {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .order-header {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .order-id {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .order-date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .status-section {
+            margin-bottom: 30px;
+        }
+        
+        .status-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .status-dropdown {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 200px;
+            cursor: pointer;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+        
+        .status-pending { background: #ffc107; color: #333; }
+        .status-shipping { background: #17a2b8; color: white; }
+        .status-ready { background: #28a745; color: white; }
+        
+        .order-items {
+            margin-bottom: 30px;
+        }
+        
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .item-name {
+            font-weight: 500;
+        }
+        
+        .item-price {
+            color: #666;
+        }
+        
+        .order-total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+        }
+        
+        .notification {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">ศาลาว่าการวิทยาศาสตร์เพื่อเด็ก</a>
+            </div>
+            <ul>
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="shop.html">ร้านค้า</a></li>
+                <li><a href="planetarium.html">ท้องฟ้าจำลอง</a></li>
+                <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                <li><a href="contact.html">ติดต่อ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="tracking-container">
+            <h1>ติดตามสินค้า</h1>
+            
+            <div class="search-section">
+                <h2>ติดตามออเดอร์ของคุณ</h2>
+                <p>ป้อนหมายเลขออเดอร์เพื่อตรวจสอบสถานะการสั่งซื้อของคุณ</p>
+                
+                <form class="search-form" id="searchForm">
+                    <input type="text" class="search-input" id="orderIdInput" placeholder="ป้อนหมายเลขออเดอร์" required>
+                    <button type="submit" class="search-btn">ติดตาม</button>
+                </form>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                ไม่พบออเดอร์ กรุณาตรวจสอบหมายเลขออเดอร์และลองใหม่
+            </div>
+
+            <div class="order-details" id="orderDetails">
+                <div class="order-header">
+                    <div class="order-id" id="orderId">ออเดอร์ #12345</div>
+                    <div class="order-date" id="orderDate">สั่งซื้อเมื่อ 10 มีนาคม 2026</div>
+                </div>
+
+                <div class="status-section">
+                    <label class="status-label">สถานะออเดอร์:</label>
+                    <select class="status-dropdown" id="statusDropdown">
+                        <option value="pending">รอดำเนินการ</option>
+                        <option value="shipping">กำลังจัดส่ง</option>
+                        <option value="ready">พร้อมรับสินค้า</option>
+                    </select>
+                    <span class="status-badge" id="statusBadge">รอดำเนินการ</span>
+                </div>
+
+                <div class="notification success" id="notification">
+                    อัพเดทสถานะสำเร็จ! ลูกค้าได้รับการแจ้งเตือนทางอีเมลแล้ว
+                </div>
+
+                <div class="order-items">
+                    <h3>รายการสินค้า</h3>
+                    <div id="itemsList">
+                        <!-- Items will be populated here -->
+                    </div>
+                    <div class="order-total" id="orderTotal">
+                        รวม: ฿0.00
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 ศาลาว่าการวิทยาศาสตร์เพื่อเด็ก สงวนลิขสิทธิ์</p>
+    </footer>
+
+    <script>
+        // Mock order data (in real app, this would come from backend)
+        const mockOrders = {
+            '12345': {
+                id: '12345',
+                date: '10 มีนาคม 2026',
+                status: 'pending',
+                items: [
+                    { name: 'ชุดวิทยาศาสตร์ - พื้นฐาน', price: 999, quantity: 1 },
+                    { name: 'บัตรท้องฟ้าจำลอง', price: 500, quantity: 2 }
+                ],
+                email: 'customer@example.com'
+            },
+            '12346': {
+                id: '12346',
+                date: '9 มีนาคม 2026',
+                status: 'shipping',
+                items: [
+                    { name: 'ชุดเคมีขั้นสูง', price: 2999, quantity: 1 }
+                ],
+                email: 'customer2@example.com'
+            }
+        };
+
+        let currentOrder = null;
+
+        // Search form handler
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const orderId = document.getElementById('orderIdInput').value.trim();
+            searchOrder(orderId);
+        });
+
+        function searchOrder(orderId) {
+            const order = mockOrders[orderId];
+            
+            if (order) {
+                currentOrder = order;
+                displayOrder(order);
+                document.getElementById('errorMessage').style.display = 'none';
+                document.getElementById('orderDetails').style.display = 'block';
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('orderDetails').style.display = 'none';
+            }
+        }
+
+        function displayOrder(order) {
+            document.getElementById('orderId').textContent = `ออเดอร์ #${order.id}`;
+            document.getElementById('orderDate').textContent = `สั่งซื้อเมื่อ ${order.date}`;
+            
+            // Set status
+            document.getElementById('statusDropdown').value = order.status;
+            updateStatusBadge(order.status);
+            
+            // Display items
+            const itemsList = document.getElementById('itemsList');
+            itemsList.innerHTML = '';
+            let total = 0;
+            
+            order.items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'item';
+                itemDiv.innerHTML = `
+                    <span class="item-name">${item.name} x${item.quantity}</span>
+                    <span class="item-price">฿${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                itemsList.appendChild(itemDiv);
+                total += item.price * item.quantity;
+            });
+            
+            document.getElementById('orderTotal').textContent = `รวม: ฿${total.toFixed(2)}`;
+        }
+
+        function updateStatusBadge(status) {
+            const badge = document.getElementById('statusBadge');
+            badge.className = `status-badge status-${status}`;
+            
+            const statusTexts = {
+                'pending': 'รอดำเนินการ',
+                'shipping': 'กำลังจัดส่ง',
+                'ready': 'พร้อมรับสินค้า'
+            };
+            badge.textContent = statusTexts[status] || status;
+        }
+
+        // Status change handler
+        document.getElementById('statusDropdown').addEventListener('change', function(e) {
+            if (currentOrder) {
+                const newStatus = e.target.value;
+                updateOrderStatus(currentOrder.id, newStatus);
+            }
+        });
+
+        function updateOrderStatus(orderId, newStatus) {
+            // Update local data
+            if (mockOrders[orderId]) {
+                mockOrders[orderId].status = newStatus;
+            }
+            
+            // Update badge
+            updateStatusBadge(newStatus);
+            
+            // Show notification
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            
+            // Send email notification (mock)
+            sendEmailNotification(orderId, newStatus);
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function sendEmailNotification(orderId, status) {
+            // Mock email sending - in real app, this would call backend API
+            console.log(`ส่งอีเมลสำหรับออเดอร์ ${orderId}: สถานะเปลี่ยนเป็น ${status}`);
+            
+            // Real-time notification (mock)
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(`ออเดอร์ ${orderId} อัพเดทสถานะ`, {
+                    body: `สถานะออเดอร์ของคุณคือ: ${status}`,
+                    icon: '/images/logo.png'
+                });
+            }
+        }
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>

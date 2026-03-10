@@ -308,6 +308,11 @@
                 document.getElementById('success-overlay').style.display = 'flex';
                 cart.items = [];
                 cart.save();
+                
+                // Redirect to success page with order ID
+                setTimeout(() => {
+                    window.location.href = `order-success.html?orderId=${res.orderId || '12345'}`;
+                }, 2000);
 
             } catch (error) {
                 alert('There was an error processing your order. ' + (error.message || 'Please try again.'));
