@@ -7,6 +7,11 @@
  * 3. Paste this code.
  * 4. Deploy as a Web App (Access: Anyone).
  * 5. Replace "YOUR_GAS_WEB_APP_URL" in js/checkout.js with the deployment URL.
+ * 
+ * REQUIRED SCOPES:
+ * - https://www.googleapis.com/auth/script.external_request (for API calls)
+ * - https://www.googleapis.com/auth/spreadsheets (for sheet access)
+ * - https://www.googleapis.com/script.send_mail (for emails)
  */
 
 // Use Script Properties to store sensitive keys securely
@@ -41,13 +46,26 @@ function doPost(e) {
 }
 
 function handleSendOTP(email) {
+  // Basic email validation
+  if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    return createResponse({ "result": "error", "message": "Invalid email format" });
+  }
+  
   var otp = Math.floor(100000 + Math.random() * 900000).toString();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var otpSheet = ss.getSheetByName("OTPs") || ss.insertSheet("OTPs");
   
   var data = otpSheet.getDataRange().getValues();
+  var now = new Date();
+  var rateLimitWindow = 1 * 60 * 1000; // 1 minute
+  
+  // Check rate limiting
   for (var i = data.length - 1; i >= 0; i--) {
     if (data[i][0] === email) {
+      var lastOtpTime = new Date(data[i][2]);
+      if (now - lastOtpTime < rateLimitWindow) {
+        return createResponse({ "result": "error", "message": "Please wait before requesting another OTP" });
+      }
       otpSheet.deleteRow(i + 1);
     }
   }
@@ -62,7 +80,7 @@ function handleSendOTP(email) {
       <h2>Verification Code</h2>
       <p>Your code to secure your order at SAC Shop is:</p>
       <div style="font-size: 32px; font-weight: bold; color: #4f46e5; margin: 20px 0;">${otp}</div>
-      <p style="color: #666;">This code will expire shortly.</p>
+      <p style="color: #666;">This code will expire in 5 minutes.</p>
     </div>`
   });
   
@@ -75,9 +93,21 @@ function handleVerifyOTP(email, otp) {
   if (!otpSheet) return createResponse({ "result": "error", "message": "No OTP found" });
   
   var data = otpSheet.getDataRange().getValues();
+  var now = new Date();
+  var otpExpiration = 5 * 60 * 1000; // 5 minutes
+  
   for (var i = 0; i < data.length; i++) {
     if (data[i][0] === email && data[i][1].toString() === otp.toString()) {
-      return createResponse({ "result": "success", "message": "OTP verified" });
+      var otpTime = new Date(data[i][2]);
+      if (now - otpTime < otpExpiration) {
+        // Clear used OTP
+        otpSheet.deleteRow(i + 1);
+        return createResponse({ "result": "success", "message": "OTP verified" });
+      } else {
+        // Clear expired OTP
+        otpSheet.deleteRow(i + 1);
+        return createResponse({ "result": "error", "message": "OTP expired" });
+      }
     }
   }
   return createResponse({ "result": "error", "message": "Invalid OTP" });
@@ -99,14 +129,24 @@ function handleSubmitOrder(data) {
   }
 
   // 2. Save Order
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.appendRow([
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var orderSheet = ss.getSheetByName("Orders");
+  if (!orderSheet) {
+    orderSheet = ss.insertSheet("Orders");
+    // Set headers if sheet is new
+    orderSheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Address", "Cart", "Total Price", "Payment Slip URL", "Status"]);
+  }
+  
+  // Ensure cart data is string
+  var cartData = typeof data.cart === 'string' ? data.cart : JSON.stringify(data.cart);
+  
+  orderSheet.appendRow([
     new Date(),
     data.name,
     data.email,
     data.phone,
     data.address,
-    data.cart,
+    cartData,
     data.totalPrice,
     data.paymentSlipURL,
     "Pending"
@@ -125,8 +165,18 @@ function handleUploadImage(base64Image) {
     return createResponse({ "result": "error", "error": "IMGBB_API_KEY not configured in backend." });
   }
 
-  // ImgBB Expects a base64 string without the data URI prefix
-  var rawBase64 = base64Image.split(',')[1] || base64Image;
+  // More robust base64 parsing
+  var rawBase64;
+  if (base64Image.includes(',')) {
+    rawBase64 = base64Image.split(',')[1];
+  } else {
+    rawBase64 = base64Image;
+  }
+  
+  // Validate base64
+  if (!rawBase64 || rawBase64.length === 0) {
+    return createResponse({ "result": "error", "error": "Invalid image data" });
+  }
 
   var response = UrlFetchApp.fetch("https://api.imgbb.com/1/upload?expiration=5184000&key=" + IMGBB_API_KEY, {
     method: "POST",
@@ -210,7 +260,7 @@ function sendConfirmationEmail(order) {
 
   MailApp.sendEmail({
     to: order.email,
-    subject: `Order Recieved - SAC Shop #${Math.floor(Math.random() * 10000)}`,
+    subject: `Order Received - SAC Shop #${Math.floor(Math.random() * 10000)}`,
     htmlBody: htmlBody
   });
 }
