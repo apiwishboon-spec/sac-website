@@ -51,12 +51,21 @@ export async function getPromptPayQR(amount) {
     const response = await fetch(GAS_WEB_APP_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'getPaymentQR', amount })
+    }).catch(err => {
+        console.error('Fetch error:', err);
+        throw new Error('Could not reach the payment server. Please check your internet or GAS deployment.');
     });
 
-    if (!response.ok) throw new Error('Failed to generate payment QR');
+    if (!response.ok) {
+        console.error('Server response error:', response.status);
+        throw new Error('Payment server returned an error (' + response.status + ')');
+    }
 
     const result = await response.json();
-    if (result.result === 'error') throw new Error(result.error);
+    if (result.result === 'error') {
+        console.error('Backend logic error:', result.error);
+        throw new Error(result.error);
+    }
 
     return result.qrUrl;
 }
