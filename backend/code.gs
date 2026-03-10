@@ -36,6 +36,12 @@ function doPost(e) {
       return handleUploadImage(data.base64Image);
     } else if (action === "getPaymentQR") {
       return handleGetPaymentQR(data.amount);
+    } else if (action === "updateOrderStatus") {
+      return handleUpdateOrderStatus(data.orderId, data.status);
+    } else if (action === "getOrderStatus") {
+      return handleGetOrderStatus(data.orderId);
+    } else if (action === "sendStatusEmail") {
+      return handleSendStatusEmail(data.orderId, data.status, data.customerEmail);
     } else {
       // Default: submitOrder
       return handleSubmitOrder(data);
@@ -261,6 +267,190 @@ function sendConfirmationEmail(order) {
   MailApp.sendEmail({
     to: order.email,
     subject: `Order Received - SAC Shop #${Math.floor(Math.random() * 10000)}`,
+    htmlBody: htmlBody
+  });
+}
+
+// Order Tracking Functions
+function handleUpdateOrderStatus(orderId, newStatus) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Orders");
+    var data = sheet.getDataRange().getValues();
+    
+    // Find the order by ID (assuming ID is in column 1)
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] == orderId) {
+        // Update status (assuming status is in column 7)
+        sheet.getRange(i + 1, 7).setValue(newStatus);
+        
+        // Get customer email for notification (assuming email is in column 3)
+        var customerEmail = data[i][2];
+        
+        // Send status update email
+        sendStatusUpdateEmail(orderId, newStatus, customerEmail);
+        
+        return createResponse({
+          "result": "success",
+          "message": "Order status updated successfully"
+        });
+      }
+    }
+    
+    return createResponse({
+      "result": "error",
+      "error": "Order not found"
+    });
+  } catch (error) {
+    return createResponse({
+      "result": "error",
+      "error": error.toString()
+    });
+  }
+}
+
+function handleGetOrderStatus(orderId) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Orders");
+    var data = sheet.getDataRange().getValues();
+    
+    // Find the order by ID
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0] == orderId) {
+        var orderData = {
+          "orderId": data[i][0],
+          "date": data[i][1].toISOString(),
+          "customerName": data[i][2],
+          "email": data[i][3],
+          "status": data[i][6], // Status column
+          "total": data[i][7],
+          "items": JSON.parse(data[i][8] || "[]")
+        };
+        
+        return createResponse({
+          "result": "success",
+          "order": orderData
+        });
+      }
+    }
+    
+    return createResponse({
+      "result": "error",
+      "error": "Order not found"
+    });
+  } catch (error) {
+    return createResponse({
+      "result": "error",
+      "error": error.toString()
+    });
+  }
+}
+
+function handleSendStatusEmail(orderId, status, customerEmail) {
+  try {
+    sendStatusUpdateEmail(orderId, status, customerEmail);
+    
+    return createResponse({
+      "result": "success",
+      "message": "Status email sent successfully"
+    });
+  } catch (error) {
+    return createResponse({
+      "result": "error",
+      "error": error.toString()
+    });
+  }
+}
+
+function sendStatusUpdateEmail(orderId, status, customerEmail) {
+  var statusTexts = {
+    "pending": "รอดำเนินการ / Pending",
+    "shipping": "กำลังจัดส่ง / Shipping",
+    "ready": "พร้อมรับสินค้า / Ready for Pickup"
+  };
+  
+  var statusColors = {
+    "pending": "#ffc107",
+    "shipping": "#17a2b8", 
+    "ready": "#28a745"
+  };
+  
+  var statusText = statusTexts[status] || status;
+  var statusColor = statusColors[status] || "#6c757d";
+  
+  var htmlBody = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f8f9fa; font-family: Arial, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" style="padding: 40px 20px;">
+            <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+              <!-- Header -->
+              <tr>
+                <td style="padding: 30px 40px; text-align: center; border-bottom: 1px solid #e9ecef;">
+                  <h1 style="margin: 0; color: #0f111a; font-size: 24px;">
+                    <i class="fas fa-meteor" style="color: #6366f1;"></i> Suankularb Astronomy Club
+                  </h1>
+                  <p style="margin: 10px 0 0 0; color: #6c757d; font-size: 16px;">Order Status Update</p>
+                </td>
+              </tr>
+              
+              <!-- Status Update -->
+              <tr>
+                <td style="padding: 40px;">
+                  <div style="text-align: center; margin-bottom: 30px;">
+                    <h2 style="margin: 0 0 10px 0; color: #0f111a;">Order #${orderId}</h2>
+                    <div style="display: inline-block; padding: 12px 24px; background-color: ${statusColor}; color: white; border-radius: 25px; font-weight: bold; font-size: 16px;">
+                      ${statusText}
+                    </div>
+                  </div>
+                  
+                  <p style="margin: 0 0 20px 0; color: #495057; line-height: 1.6;">
+                    Dear Customer,<br><br>
+                    Your order status has been updated. You can track your order progress using the link below.
+                  </p>
+                  
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td align="center" style="padding: 20px 0;">
+                        <a href="https://apiwishboon-spec.github.io/sac-website/order-tracking.html" 
+                           style="display: inline-block; padding: 15px 30px; background-color: #6366f1; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                          Track Your Order
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+              <!-- Footer -->
+              <tr>
+                <td style="padding: 30px 40px; background-color: #f8f9fa; border-top: 1px solid #e9ecef;">
+                  <p style="margin: 0; color: #6c757d; font-size: 14px;">
+                    If you have any questions, please contact us at:<br>
+                    📧 Email: sac@suan.ac.th<br>
+                    📱 Phone: 02-123-4567
+                  </p>
+                  <p style="margin: 20px 0 0 0; font-size: 11px; color: #cbd5e1;">
+                    This is an automated message. Please do not reply to this email.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+  `;
+  
+  MailApp.sendEmail({
+    to: customerEmail,
+    subject: `Order Status Update - SAC Shop #${orderId}`,
     htmlBody: htmlBody
   });
 }

@@ -164,17 +164,34 @@
 <body>
     <header>
         <nav>
-            <div class="logo">
-                <a href="index.html">ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย</a>
-            </div>
-            <ul>
-                <li><a href="index.html">หน้าแรก</a></li>
+        <div class="nav-container">
+            <a href="/th/" class="logo">
+                <i class="fas fa-meteor"></i> SAC
+            </a>
+            <ul class="nav-links">
+                <li><a href="/th/">หน้าแรก</a></li>
+                <li><a href="about.html">เกี่ยวกับ</a></li>
+                <li><a href="administration.html">โครงสร้าง</a></li>
+                <li><a href="news.html">ข่าวสาร</a></li>
                 <li><a href="shop.html">ร้านค้า</a></li>
-                <li><a href="planetarium.html">ท้องฟ้าจำลอง</a></li>
-                <li><a href="about.html">เกี่ยวกับเรา</a></li>
                 <li><a href="contact.html">ติดต่อ</a></li>
             </ul>
-        </nav>
+            <div class="nav-actions">
+                <button id="cart-btn" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </button>
+                <a href="order-tracking.html" class="btn btn-outline" style="padding: 0.5rem 1rem;" title="ติดตามออเดอร์">
+                    <i class="fas fa-truck"></i> ติดตาม
+                </a>
+                <a href="../order-success.html" class="btn btn-outline" style="padding: 0.5rem 1rem; margin-left: 0.5rem;" title="English">
+                    <i class="fas fa-globe"></i> EN
+                </a>
+                <button class="mobile-nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
     </header>
 
     <main>
