@@ -1,18 +1,18 @@
 [
     {
         "id": "shirt_repeat_2022",
-        "name": "เสื้อยืด SKA Repeat 2022",
+        "name": "เสื้อยืด SAC Repeat 2022",
         "price": 200,
         "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800",
         "description": "เสื้อยืดที่แข็งแกร่งที่สุดในปฐพี เนื้อผ้า Cotton เกรดพรีเมียม สกรีนลายดาราศาสตร์สวนกุหลาบ",
         "stock": 100
     },
     {
-        "id": "mask_ska",
-        "name": "หน้ากากอนามัย SKA Mask",
+        "id": "mask_sac",
+        "name": "หน้ากากอนามัย SAC Mask",
         "price": 40,
         "image": "https://images.unsplash.com/photo-1586942511414-b4a11b0e2511?auto=format&fit=crop&q=80&w=800",
-        "description": "หน้ากากผ้า SKA ลายลิมิเต็ด สีน้ำเงิน-ชมพู พร้อมสายคล้อง",
+        "description": "หน้ากากผ้า SAC ลายลิมิเต็ด สีน้ำเงิน-ชมพู พร้อมสายคล้อง",
         "stock": 50
     },
     {

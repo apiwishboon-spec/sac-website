@@ -1,6 +1,6 @@
 // Cart Management
 export const cart = {
-    items: JSON.parse(localStorage.getItem('ska_cart')) || [],
+    items: JSON.parse(localStorage.getItem('sac_cart')) || [],
 
     add(product) {
         const existing = this.items.find(item => item.id === product.id);
@@ -32,7 +32,7 @@ export const cart = {
     },
 
     save() {
-        localStorage.setItem('ska_cart', JSON.stringify(this.items));
+        localStorage.setItem('sac_cart', JSON.stringify(this.items));
     },
 
     getTotal() {
