@@ -2,8 +2,7 @@
  * SAC Order Processing System
  * 
  * SETUP INSTRUCTIONS:
- * 1. Create a Google Sheet with these columns in row 1:
- *    A: Order ID | B: Date | C: Customer Name | D: Email | E: Phone | F: Address | G: Status | H: Total | I: Items | J: Payment Method | K: Payment Image
+ * 1. Create a Google Sheet.
  * 2. Go to Extensions > Apps Script.
  * 3. Paste this code.
  * 4. Deploy as a Web App (Access: Anyone).
@@ -24,26 +23,8 @@ const TURNSTILE_SECRET = PropertiesService.getScriptProperties().getProperty('TU
 const IMGBB_API_KEY = PropertiesService.getScriptProperties().getProperty('IMGBB_API_KEY');
 const PROMPTPAY_ID = PropertiesService.getScriptProperties().getProperty('PROMPTPAY_ID');
 
-// Initialize sheet if it doesn't exist
-function initializeSheet() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Orders");
-  if (!sheet) {
-    const newSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet("Orders");
-    // Set up headers
-    newSheet.getRange("A1:K1").setValues([[
-      "Order ID", "Date", "Customer Name", "Email", "Phone", "Address", 
-      "Status", "Total", "Items", "Payment Method", "Payment Image"
-    ]]);
-    newSheet.getRange("A1:K1").setFontWeight("bold");
-    newSheet.autoResizeColumn(1, 11);
-  }
-}
-
 function doPost(e) {
   try {
-    // Initialize sheet if needed
-    initializeSheet();
-    
     var data = JSON.parse(e.postData.contents);
     var action = data.action;
     
@@ -55,12 +36,6 @@ function doPost(e) {
       return handleUploadImage(data.base64Image);
     } else if (action === "getPaymentQR") {
       return handleGetPaymentQR(data.amount);
-    } else if (action === "updateOrderStatus") {
-      return handleUpdateOrderStatus(data.orderId, data.status);
-    } else if (action === "getOrderStatus") {
-      return handleGetOrderStatus(data.orderId);
-    } else if (action === "sendStatusEmail") {
-      return handleSendStatusEmail(data.orderId, data.status, data.customerEmail);
     } else {
       // Default: submitOrder
       return handleSubmitOrder(data);
@@ -153,54 +128,32 @@ function handleSubmitOrder(data) {
     return createResponse({ "result": "error", "error": "Security verification failed." });
   }
 
-  // 2. Generate Order ID and Save Order
+  // 2. Save Order
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var orderSheet = ss.getSheetByName("Orders");
   if (!orderSheet) {
     orderSheet = ss.insertSheet("Orders");
     // Set headers if sheet is new
-    orderSheet.getRange("A1:K1").setValues([[
-      "Order ID", "Date", "Customer Name", "Email", "Phone", "Address", 
-      "Status", "Total", "Items", "Payment Method", "Payment Image"
-    ]]);
-    orderSheet.getRange("A1:K1").setFontWeight("bold");
+    orderSheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Address", "Cart", "Total Price", "Payment Slip URL", "Status"]);
   }
-  
-  // Generate unique order ID
-  var orderId = generateOrderId();
   
   // Ensure cart data is string
   var cartData = typeof data.cart === 'string' ? data.cart : JSON.stringify(data.cart);
   
-  // Save order with proper columns
   orderSheet.appendRow([
-    orderId,                    // A: Order ID
-    new Date(),                  // B: Date
-    data.name,                   // C: Customer Name
-    data.email,                  // D: Email
-    data.phone,                  // E: Phone
-    data.address,                 // F: Address
-    "pending",                   // G: Status
-    data.totalPrice,              // H: Total
-    cartData,                    // I: Items
-    data.paymentMethod || "PromptPay", // J: Payment Method
-    data.paymentSlipURL || ""    // K: Payment Image
+    new Date(),
+    data.name,
+    data.email,
+    data.phone,
+    data.address,
+    cartData,
+    data.totalPrice,
+    data.paymentSlipURL,
+    "Pending"
   ]);
   
-  // Send confirmation email with order ID
-  sendConfirmationEmail(data, orderId);
-  
-  return createResponse({ 
-    "result": "success", 
-    "orderId": orderId 
-  });
-}
-
-function generateOrderId() {
-  // Generate unique order ID (timestamp + random)
-  var timestamp = new Date().getTime();
-  var random = Math.floor(Math.random() * 1000);
-  return (timestamp + random).toString().slice(-6);
+  sendConfirmationEmail(data);
+  return createResponse({ "result": "success" });
 }
 
 function createResponse(obj) {
@@ -255,7 +208,7 @@ function handleGetPaymentQR(amount) {
   return createResponse({ "result": "success", "qrUrl": qrUrl });
 }
 
-function sendConfirmationEmail(order, orderId) {
+function sendConfirmationEmail(order) {
   var htmlBody = `
     <html>
       <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f7; color: #333;">
@@ -278,22 +231,10 @@ function sendConfirmationEmail(order, orderId) {
                     
                     <div style="background-color: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0;">
                       <h3 style="margin-top: 0; font-size: 16px; color: #0f172a;">Order Details</h3>
-                      <p style="margin: 10px 0; font-size: 14px; color: #475569;"><strong>Order ID:</strong> #${orderId}</p>
                       <p style="margin: 10px 0; font-size: 14px; color: #475569;"><strong>Items:</strong> ${order.cart}</p>
                       <p style="margin: 10px 0; font-size: 14px; color: #475569;"><strong>Total Amount:</strong> ฿${order.totalPrice}</p>
                       <p style="margin: 10px 0; font-size: 14px; color: #475569;"><strong>Shipping Address:</strong><br>${order.address.replace(/\n/g, '<br>')}</p>
                     </div>
-                    
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="padding: 20px 0;">
-                          <a href="https://skastronomy.pages.dev/order-tracking" 
-                             style="display: inline-block; padding: 15px 30px; background-color: #4f46e5; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
-                            Track Your Order
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
                     
                     <p style="color: #64748b; line-height: 1.6; font-size: 14px;">If you have any questions, please reply to this email or contact us via our social media channels.</p>
                   </td>
@@ -319,190 +260,7 @@ function sendConfirmationEmail(order, orderId) {
 
   MailApp.sendEmail({
     to: order.email,
-    subject: `Order Confirmation - SAC Shop #${orderId}`,
-    htmlBody: htmlBody
-  });
-}
-
-// Order Tracking Functions
-function handleUpdateOrderStatus(orderId, newStatus) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Orders");
-    var data = sheet.getDataRange().getValues();
-    
-    // Find the order by ID (assuming ID is in column 1)
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0] == orderId) {
-        // Update status (assuming status is in column 7)
-        sheet.getRange(i + 1, 7).setValue(newStatus);
-        
-        // Get customer email for notification (assuming email is in column 3)
-        var customerEmail = data[i][2];
-        
-        // Send status update email
-        sendStatusUpdateEmail(orderId, newStatus, customerEmail);
-        
-        return createResponse({
-          "result": "success",
-          "message": "Order status updated successfully"
-        });
-      }
-    }
-    
-    return createResponse({
-      "result": "error",
-      "error": "Order not found"
-    });
-  } catch (error) {
-    return createResponse({
-      "result": "error",
-      "error": error.toString()
-    });
-  }
-}
-
-function handleGetOrderStatus(orderId) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Orders");
-    var data = sheet.getDataRange().getValues();
-    
-    // Find the order by ID
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0] == orderId) {
-        var orderData = {
-          "orderId": data[i][0],
-          "date": data[i][1].toISOString(),
-          "customerName": data[i][2],
-          "email": data[i][3],
-          "status": data[i][6], // Status column
-          "total": data[i][7],
-          "items": JSON.parse(data[i][8] || "[]")
-        };
-        
-        return createResponse({
-          "result": "success",
-          "order": orderData
-        });
-      }
-    }
-    
-    return createResponse({
-      "result": "error",
-      "error": "Order not found"
-    });
-  } catch (error) {
-    return createResponse({
-      "result": "error",
-      "error": error.toString()
-    });
-  }
-}
-
-function handleSendStatusEmail(orderId, status, customerEmail) {
-  try {
-    sendStatusUpdateEmail(orderId, status, customerEmail);
-    
-    return createResponse({
-      "result": "success",
-      "message": "Status email sent successfully"
-    });
-  } catch (error) {
-    return createResponse({
-      "result": "error",
-      "error": error.toString()
-    });
-  }
-}
-
-function sendStatusUpdateEmail(orderId, status, customerEmail) {
-  var statusTexts = {
-    "pending": "รอดำเนินการ / Pending",
-    "shipping": "กำลังจัดส่ง / Shipping",
-    "ready": "พร้อมรับสินค้า / Ready for Pickup"
-  };
-  
-  var statusColors = {
-    "pending": "#ffc107",
-    "shipping": "#17a2b8", 
-    "ready": "#28a745"
-  };
-  
-  var statusText = statusTexts[status] || status;
-  var statusColor = statusColors[status] || "#6c757d";
-  
-  var htmlBody = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body style="margin: 0; padding: 0; background-color: #f8f9fa; font-family: Arial, sans-serif;">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td align="center" style="padding: 40px 20px;">
-            <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-              <!-- Header -->
-              <tr>
-                <td style="padding: 30px 40px; text-align: center; border-bottom: 1px solid #e9ecef;">
-                  <h1 style="margin: 0; color: #0f111a; font-size: 24px;">
-                    <i class="fas fa-meteor" style="color: #6366f1;"></i> Suankularb Astronomy Club
-                  </h1>
-                  <p style="margin: 10px 0 0 0; color: #6c757d; font-size: 16px;">Order Status Update</p>
-                </td>
-              </tr>
-              
-              <!-- Status Update -->
-              <tr>
-                <td style="padding: 40px;">
-                  <div style="text-align: center; margin-bottom: 30px;">
-                    <h2 style="margin: 0 0 10px 0; color: #0f111a;">Order #${orderId}</h2>
-                    <div style="display: inline-block; padding: 12px 24px; background-color: ${statusColor}; color: white; border-radius: 25px; font-weight: bold; font-size: 16px;">
-                      ${statusText}
-                    </div>
-                  </div>
-                  
-                  <p style="margin: 0 0 20px 0; color: #495057; line-height: 1.6;">
-                    Dear Customer,<br><br>
-                    Your order status has been updated. You can track your order progress using the link below.
-                  </p>
-                  
-                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                      <td align="center" style="padding: 20px 0;">
-                        <a href="https://skastronomy.pages.dev/order-tracking" 
-                           style="display: inline-block; padding: 15px 30px; background-color: #6366f1; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                          Track Your Order
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              
-              <!-- Footer -->
-              <tr>
-                <td style="padding: 30px 40px; background-color: #f8f9fa; border-top: 1px solid #e9ecef;">
-                  <p style="margin: 0; color: #6c757d; font-size: 14px;">
-                    If you have any questions, please contact us at:<br>
-                    📧 Email: skastronomy.club@gmail.com<br>
-                  </p>
-                  <p style="margin: 20px 0 0 0; font-size: 11px; color: #cbd5e1;">
-                    This is an automated message. Please do not reply to this email.
-                  </p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </body>
-    </html>
-  `;
-  
-  MailApp.sendEmail({
-    to: customerEmail,
-    subject: `Order Status Update - SAC Shop #${orderId}`,
+    subject: `Order Received - SAC Shop #${Math.floor(Math.random() * 10000)}`,
     htmlBody: htmlBody
   });
 }

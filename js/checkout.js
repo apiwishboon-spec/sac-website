@@ -46,30 +46,6 @@ export async function submitOrder(orderData) {
     return response.json();
 }
 
-export async function updateOrderStatus(orderId, status) {
-    const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'updateOrderStatus', orderId, status })
-    });
-    return response.json();
-}
-
-export async function getOrderStatus(orderId) {
-    const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'getOrderStatus', orderId })
-    });
-    return response.json();
-}
-
-export async function sendStatusEmail(orderId, status, customerEmail) {
-    const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'sendStatusEmail', orderId, status, customerEmail })
-    });
-    return response.json();
-}
-
 // PromptPay QR generation - now handled by Backend
 export async function getPromptPayQR(amount) {
     const response = await fetch(GAS_WEB_APP_URL, {
