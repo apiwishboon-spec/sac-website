@@ -74,11 +74,18 @@
                             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Scan the QR
                                 code below using your banking app and upload the transfer slip.</p>
 
-                            <div style="text-align: center; margin-bottom: 2rem;">
+                            <div
+                                style="text-align: center; margin-bottom: 2rem; position: relative; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid var(--glass-border); padding: 2rem;">
+                                <div id="qr-loader" style="position: absolute; color: var(--text-muted);">
+                                    <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+                                    <p style="margin-top: 1rem; font-size: 0.8rem;">Generating Secure QR...</p>
+                                </div>
                                 <img id="promptpay-qr" src="" alt="PromptPay QR"
-                                    style="max-width: 250px; border-radius: 12px; background: white; padding: 10px;">
-                                <p style="margin-top: 1rem; font-weight: 700;">Total Amount: <span
-                                        id="payment-total">฿0.00</span></p>
+                                    style="max-width: 250px; border-radius: 12px; background: white; padding: 10px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                                <p id="total-display"
+                                    style="margin-top: 1.5rem; font-weight: 700; font-size: 1.2rem; display: none;">
+                                    Total Amount: <span id="payment-total" style="color: var(--secondary);">฿0.00</span>
+                                </p>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 2rem;">
@@ -164,9 +171,19 @@
             paymentTotal.textContent = `฿${total.toFixed(2)}`;
 
             try {
-                qrImg.src = await getPromptPayQR(total);
+                const qrUrl = await getPromptPayQR(total);
+                qrImg.src = qrUrl;
+
+                // Show elements once loaded
+                qrImg.onload = () => {
+                    document.getElementById('qr-loader').style.display = 'none';
+                    qrImg.style.display = 'inline-block';
+                    document.getElementById('total-display').style.display = 'block';
+                };
+
             } catch (err) {
                 console.error('Failed to load QR:', err);
+                document.getElementById('qr-loader').innerHTML = '<i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i><p style="margin-top: 1rem;">QR loading failed. Refresh the page.</p>';
                 alert('Connection to payment gateway failed. Please refresh.');
             }
 
