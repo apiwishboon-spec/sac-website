@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ไม่พบหน้า | ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .error-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        .astronaut-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .astronaut {
+            width: 200px;
+            height: 240px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(2deg);
+            }
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/th/" class="logo">
+                <i class="fas fa-meteor"></i> SAC
+            </a>
+            <ul class="nav-links">
+                <li><a href="/th/">หน้าแรก</a></li>
+                <li><a href="about.html">เกี่ยวกับ</a></li>
+                <li><a href="administration.html">โครงสร้าง</a></li>
+                <li><a href="news.html">ข่าวสาร</a></li>
+                <li><a href="shop.html">ร้านค้า</a></li>
+                <li><a href="contact.html">ติดต่อ</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </a>
+                <button class="mobile-nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="/404.html" class="btn btn-outline" style="padding: 0.5rem 1rem; margin-left: 0.5rem;" title="English">
+                    <i class="fas fa-globe"></i> EN
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="error-container">
+            <div class="astronaut-wrapper">
+                <!-- Among Us Style Character -->
+                <svg class="astronaut" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Backpack -->
+                    <rect x="10" y="25" width="15" height="50" rx="7" fill="#4a5568" />
+                    <!-- Body -->
+                    <rect x="25" y="20" width="50" height="70" rx="25" fill="#6366f1" />
+                    <!-- Visor -->
+                    <rect x="35" y="35" width="35" height="25" rx="12" fill="#1a202c" />
+                    <rect x="38" y="38" width="28" height="18" rx="9" fill="#4299e1" opacity="0.6" />
+                    <!-- Legs -->
+                    <rect x="32" y="85" width="15" height="20" rx="7" fill="#6366f1" />
+                    <rect x="53" y="85" width="15" height="20" rx="7" fill="#6366f1" />
+                </svg>
+            </div>
+            <div class="error-code">404</div>
+            <h1 style="font-size: 2rem; margin-bottom: 1rem;">หลงทางในอวกาศ?</h1>
+            <p class="error-message">หน้าที่คุณกำลังหาอยู่อาจถูกย้ายหรือไม่มีอยู่</p>
+            <a href="/th/" class="btn btn-primary" style="padding: 1rem 2rem;">
+                <i class="fas fa-home"></i> กลับหน้าแรก
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-meteor"></i> ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย<br>
+                        88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>เมนู</h4>
+                    <ul>
+                        <li><a href="/th/">หน้าแรก</a></li>
+                        <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                        <li><a href="news.html">ข่าวสาร</a></li>
+                        <li><a href="shop.html">ร้านค้า</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>ร่วมงาน</h4>
+                    <ul>
+                        <li><a href="get-involved.html#join">สมัครเข้าร่วม</a></li>
+                        <li><a href="get-involved.html#donate">บริจาค</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>ข้อมูล</h4>
+                    <ul>
+                        <li><a href="privacy.html">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="terms.html">เงื่อนไขการใช้งาน</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>ติดตามเรา</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="https://www.facebook.com/SuankularbAstronomyClub" target="_blank"
+                            title="Suankularb Astronomy Club"><i class="fab fa-facebook fa-xl"></i></a>
+                        <a href="https://www.instagram.com/skastronomy_official" target="_blank"
+                            title="skastronomy_official"><i class="fab fa-instagram fa-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย สงวนลิขสิทธิ์
+            </div>
+        </div>
+    </footer>
+    <script src="../js/main.js" type="module"></script>
+</body>
+
+</html>
