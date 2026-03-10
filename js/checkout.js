@@ -1,6 +1,6 @@
 import { cart } from './cart.js';
 
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz3wzMGsJ-bPIHIma05C6LUoXWM-02FtOIaChy0dcReNNO1ieKk0egRdYC4f4uTAmR5/exec'; // User provided URL
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzmGfyxTsj-oXrFAEddCiTU4dxAz11DIoR-ocfg_eP5DCULSDJDG7WpnVMOe5GjbJE0/exec'; // User provided URL
 
 export async function uploadToImgBB(file) {
     const base64 = await new Promise((resolve) => {
