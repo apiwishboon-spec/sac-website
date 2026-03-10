@@ -46,11 +46,17 @@ export async function submitOrder(orderData) {
     return response.json();
 }
 
-// PromptPay QR generation helper (simplified CRC16 calculation is complex, so we'll use a standard library pattern)
-export function generatePromptPayQR(mobileOrTaxId, total) {
-    // For this demonstration, we'll use a service or a simplified static QR link
-    // Real implementation would use the promptpay-qr library logic
-    // We'll use the API-based generator for better reliability in this standalone demo
-    const amount = parseFloat(total).toFixed(2);
-    return `https://promptpay.io/${mobileOrTaxId}/${amount}.png`;
+// PromptPay QR generation - now handled by Backend
+export async function getPromptPayQR(amount) {
+    const response = await fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getPaymentQR', amount })
+    });
+
+    if (!response.ok) throw new Error('Failed to generate payment QR');
+
+    const result = await response.json();
+    if (result.result === 'error') throw new Error(result.error);
+
+    return result.qrUrl;
 }

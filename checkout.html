@@ -136,7 +136,7 @@
 
     <script type="module">
         import { cart } from './js/cart.js';
-        import { uploadToImgBB, generatePromptPayQR, submitOrder, sendOTP, verifyOTP } from './js/checkout.js';
+        import { uploadToImgBB, getPromptPayQR, submitOrder, sendOTP, verifyOTP } from './js/checkout.js';
 
         const form = document.getElementById('order-form');
         const summaryItems = document.getElementById('summary-items');
@@ -153,7 +153,7 @@
         let isOtpVerified = false;
 
         // Initialize Page
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             if (cart.items.length === 0) {
                 window.location.href = 'shop.html';
                 return;
@@ -163,7 +163,12 @@
             summaryTotal.textContent = `฿${total}`;
             paymentTotal.textContent = `฿${total.toFixed(2)}`;
 
-            qrImg.src = generatePromptPayQR('0800000000', total);
+            try {
+                qrImg.src = await getPromptPayQR(total);
+            } catch (err) {
+                console.error('Failed to load QR:', err);
+                alert('Connection to payment gateway failed. Please refresh.');
+            }
 
             summaryItems.innerHTML = cart.items.map(item => `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">

@@ -13,8 +13,10 @@
 // SETUP: Go to Project Settings (Gear Icon) -> Script Properties
 // Add 'TURNSTILE_SECRET' = 0x4AAAAAACoVB1YJTL-5_UymIf5_rkv1Svo
 // Add 'IMGBB_API_KEY' = (Your ImgBB Key)
+// Add 'PROMPTPAY_ID' = (Your Phone Number or Tax ID, e.g., 0812345678)
 const TURNSTILE_SECRET = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET'); 
 const IMGBB_API_KEY = PropertiesService.getScriptProperties().getProperty('IMGBB_API_KEY');
+const PROMPTPAY_ID = PropertiesService.getScriptProperties().getProperty('PROMPTPAY_ID');
 
 function doPost(e) {
   try {
@@ -27,6 +29,8 @@ function doPost(e) {
       return handleVerifyOTP(data.email, data.otp);
     } else if (action === "uploadImage") {
       return handleUploadImage(data.base64Image);
+    } else if (action === "getPaymentQR") {
+      return handleGetPaymentQR(data.amount);
     } else {
       // Default: submitOrder
       return handleSubmitOrder(data);
@@ -137,6 +141,21 @@ function handleUploadImage(base64Image) {
   } else {
     return createResponse({ "result": "error", "error": "ImgBB upload failed" });
   }
+}
+
+function handleGetPaymentQR(amount) {
+  if (!PROMPTPAY_ID) {
+    return createResponse({ "result": "error", "error": "PROMPTPAY_ID not configured in backend." });
+  }
+  
+  // Format amount to 2 decimal places as string
+  var amtStr = parseFloat(amount).toFixed(2);
+  
+  // Return the QR implementation URL
+  // Real dynamic generation would use promptpay-qr logic, but this secure passthrough works too
+  var qrUrl = "https://promptpay.io/" + PROMPTPAY_ID + "/" + amtStr + ".png";
+  
+  return createResponse({ "result": "success", "qrUrl": qrUrl });
 }
 
 function sendConfirmationEmail(order) {
