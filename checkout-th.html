@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | Suankularb Astronomy Club</title>
+    <title>ชำระเงิน | ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -15,14 +15,11 @@
 
     <nav>
         <div class="nav-container">
-            <a href="index.html" class="logo">
+            <a href="index-th.html" class="logo">
                 <i class="fas fa-meteor"></i> SAC
             </a>
-            <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">
-                <i class="fas fa-chevron-left"></i> Back to Shop
-            </a>
-            <a href="checkout-th.html" class="btn btn-outline" style="padding: 0.5rem 1rem; margin-left: 0.5rem;" title="ภาษาไทย">
-                <i class="fas fa-globe"></i> TH
+            <a href="shop-th.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">
+                <i class="fas fa-chevron-left"></i> กลับไปร้านค้า
             </a>
         </div>
     </nav>
@@ -30,69 +27,69 @@
     <main>
         <section style="padding-top: 120px;">
             <div class="container" style="max-width: 900px;">
-                <h1 class="section-title">Finalize <span>Your Order</span></h1>
+                <h1 class="section-title">ยืนยัน<span>คำสั่งซื้อ</span></h1>
 
                 <div class="checkout-grid" style="display: grid; gap: 2.5rem;">
                     <!-- Left: Form -->
                     <div id="checkout-form-container">
                         <form id="order-form"
                             style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2.5rem;">
-                            <h3 style="margin-bottom: 2rem;">Shipping Information</h3>
+                            <h3 style="margin-bottom: 2rem;">ข้อมูลการจัดส่ง</h3>
 
                             <div class="form-group" style="margin-bottom: 1.5rem;">
-                                <label>Full Name</label>
+                                <label>ชื่อ-นามสกุล</label>
                                 <input type="text" id="name" required class="form-input">
                             </div>
 
                             <div
                                 style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
                                 <div class="form-group">
-                                    <label>Email Address</label>
+                                    <label>อีเมล</label>
                                     <div style="display: flex; gap: 0.5rem;">
                                         <input type="email" id="email" required class="form-input">
                                         <button type="button" id="send-otp-btn" class="btn btn-outline"
-                                            style="white-space: nowrap; font-size: 0.8rem;">Send Code</button>
+                                            style="white-space: nowrap; font-size: 0.8rem;">ส่งรหัส</button>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Phone Number</label>
+                                    <label>เบอร์โทรศัพท์</label>
                                     <input type="tel" id="phone" required class="form-input">
                                 </div>
                             </div>
 
                             <div id="otp-group" class="form-group" style="margin-bottom: 1.5rem; display: none;">
-                                <label>Verification Code (OTP)</label>
-                                <input type="text" id="otp" placeholder="Enter 6-digit code" class="form-input">
+                                <label>รหัสยืนยัน (OTP)</label>
+                                <input type="text" id="otp" placeholder="กรอกรหัส 6 หลัก" class="form-input">
                                 <p id="otp-msg" style="font-size: 0.8rem; margin-top: 0.5rem;"></p>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 2rem;">
-                                <label>Delivery Address</label>
+                                <label>ที่อยู่จัดส่ง</label>
                                 <textarea id="address" required rows="3" class="form-input"></textarea>
                             </div>
 
                             <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 2rem 0;">
 
-                            <h3 style="margin-bottom: 1.5rem;">Payment Transfer</h3>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Scan the QR
-                                code below using your banking app and upload the transfer slip.</p>
+                            <h3 style="margin-bottom: 1.5rem;">การโอนเงิน</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">สแกน QR Code
+                                ด้านล่างด้วยแอพธนาคารของคุณและอัปโหลดสลิปการโอน</p>
 
                             <div
                                 style="text-align: center; margin-bottom: 2rem; position: relative; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid var(--glass-border); padding: 2rem;">
                                 <div id="qr-loader" style="position: absolute; color: var(--text-muted);">
                                     <i class="fas fa-circle-notch fa-spin fa-2x"></i>
-                                    <p style="margin-top: 1rem; font-size: 0.8rem;">Generating Secure QR...</p>
+                                    <p style="margin-top: 1rem; font-size: 0.8rem;">กำลังสร้าง QR...</p>
                                 </div>
                                 <img id="promptpay-qr" src="" alt="PromptPay QR"
                                     style="max-width: 250px; border-radius: 12px; background: white; padding: 10px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                                 <p id="total-display"
                                     style="margin-top: 1.5rem; font-weight: 700; font-size: 1.2rem; display: none;">
-                                    Total Amount: <span id="payment-total" style="color: var(--secondary);">฿0.00</span>
+                                    ยอดชำระ: <span id="payment-total" style="color: var(--secondary);">฿0.00</span>
                                 </p>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 2rem;">
-                                <label>Upload Payment Slip</label>
+                                <label>อัปโหลดสลิปการโอน</label>
                                 <input type="file" id="slip" accept="image/*" required
                                     style="width: 100%; padding: 0.5rem; color: var(--text-muted);">
                                 <div id="slip-preview" style="margin-top: 1rem; display: none;">
@@ -107,7 +104,7 @@
 
                             <button type="submit" id="submit-btn" class="btn btn-primary"
                                 style="width: 100%; padding: 1rem;">
-                                Place Order
+                                ยืนยันคำสั่งซื้อ
                             </button>
                         </form>
                     </div>
@@ -115,14 +112,14 @@
                     <!-- Right: Summary -->
                     <div id="order-summary"
                         style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; height: fit-content;">
-                        <h3 style="margin-bottom: 1.5rem;">Order Summary</h3>
+                        <h3 style="margin-bottom: 1.5rem;">สรุปคำสั่งซื้อ</h3>
                         <div id="summary-items" style="margin-bottom: 1.5rem;">
                             <!-- Items go here -->
                         </div>
                         <div style="border-top: 1px solid var(--glass-border); padding-top: 1rem;">
                             <div
                                 style="display: flex; justify-content: space-between; font-weight: 600; font-size: 1.1rem;">
-                                <span>Grand Total</span>
+                                <span>รวมทั้งหมด</span>
                                 <span id="summary-total">฿0</span>
                             </div>
                         </div>
@@ -137,10 +134,9 @@
         style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 3000; display: none; align-items: center; justify-content: center; text-align: center;">
         <div class="container">
             <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--secondary); margin-bottom: 2rem;"></i>
-            <h1 style="font-size: 3rem; margin-bottom: 1rem;">Order Received!</h1>
-            <p style="color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.2rem;">Thank you for supporting SKA
-                Club. You will receive an email shortly.</p>
-            <a href="index.html" class="btn btn-primary">Return Home</a>
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">รับคำสั่งซื้อแล้ว!</h1>
+            <p style="color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.2rem;">ขอบคุณที่สนับสนุนชุมนุมดาราศาสตร์ คุณจะได้รับอีเมลยืนยันเร็ว ๆ นี้</p>
+            <a href="index-th.html" class="btn btn-primary">กลับหน้าหลัก</a>
         </div>
     </div>
 
@@ -165,7 +161,7 @@
         // Initialize Page
         document.addEventListener('DOMContentLoaded', async () => {
             if (cart.items.length === 0) {
-                window.location.href = 'shop.html';
+                window.location.href = 'shop-th.html';
                 return;
             }
 
@@ -186,8 +182,8 @@
 
             } catch (err) {
                 console.error('Failed to load QR:', err);
-                document.getElementById('qr-loader').innerHTML = '<i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i><p style="margin-top: 1rem;">QR loading failed. Refresh the page.</p>';
-                alert('Connection to payment gateway failed. Please refresh.');
+                document.getElementById('qr-loader').innerHTML = '<i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i><p style="margin-top: 1rem;">โหลด QR ไม่สำเร็จ รีเฟรชหน้าใหม่</p>';
+                alert('เชื่อมต่อระบบชำระเงินไม่สำเร็จ กรุณารีเฟรชหน้า');
             }
 
             summaryItems.innerHTML = cart.items.map(item => `
@@ -202,25 +198,25 @@
         sendOtpBtn.onclick = async () => {
             const email = document.getElementById('email').value;
             if (!email || !email.includes('@')) {
-                alert('Please enter a valid email first.');
+                alert('กรุณากรอกอีเมลที่ถูกต้องก่อน');
                 return;
             }
 
             sendOtpBtn.disabled = true;
-            sendOtpBtn.textContent = 'Sending...';
+            sendOtpBtn.textContent = 'กำลังส่ง...';
 
             try {
                 const res = await sendOTP(email);
                 if (res.result === 'success') {
                     otpGroup.style.display = 'block';
                     otpMsg.style.color = 'var(--secondary)';
-                    otpMsg.textContent = 'Check your email for the 6-digit code.';
-                    sendOtpBtn.textContent = 'Resend Code';
+                    otpMsg.textContent = 'ตรวจสอบอีเมลของคุณสำหรับรหัส 6 หลัก';
+                    sendOtpBtn.textContent = 'ส่งใหม่';
                 } else {
                     throw new Error(res.error);
                 }
             } catch (err) {
-                alert('Failed to send OTP. Please try again.');
+                alert('ส่ง OTP ไม่สำเร็จ กรุณาลองใหม่');
                 console.error(err);
             } finally {
                 sendOtpBtn.disabled = false;
@@ -249,13 +245,13 @@
             const turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
 
             if (!turnstileInput) {
-                alert('Security check (Turnstile) failed to load. Please refresh the page or check your internet connection.');
+                alert('ระบบตรวจสอบความปลอดภัย (Turnstile) โหลดไม่สำเร็จ กรุณารีเฟรชหน้าหรือตรวจสอบการเชื่อมต่ออินเทอร์เน็ต');
                 return;
             }
 
             const turnstileResponse = turnstileInput.value;
             if (!turnstileResponse) {
-                alert('Please complete the security check (I am not a robot).');
+                alert('กรุณาทำการยืนยันความปลอดภัย (I am not a robot)');
                 return;
             }
 
@@ -264,25 +260,25 @@
                 const email = document.getElementById('email').value;
                 const otp = otpInput.value;
                 if (!otp) {
-                    alert('Please enter the verification code.');
+                    alert('กรุณากรอกรหัสยืนยัน');
                     return;
                 }
 
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Verifying Code...';
+                submitBtn.textContent = 'กำลังยืนยันรหัส...';
 
                 const res = await verifyOTP(email, otp);
                 if (res.result !== 'success') {
-                    alert('Invalid verification code. Please try again.');
+                    alert('รหัสยืนยันไม่ถูกต้อง กรุณาลองใหม่');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Place Order';
+                    submitBtn.textContent = 'ยืนยันคำสั่งซื้อ';
                     return;
                 }
                 isOtpVerified = true;
             }
 
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Processing Order...';
+            submitBtn.textContent = 'กำลังดำเนินการ...';
 
             try {
                 // 2. Upload Slip
@@ -310,10 +306,10 @@
                 cart.save();
 
             } catch (error) {
-                alert('There was an error processing your order. ' + (error.message || 'Please try again.'));
+                alert('เกิดข้อผิดพลาดในการดำเนินการคำสั่งซื้อ ' + (error.message || 'กรุณาลองใหม่'));
                 console.error(error);
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Place Order';
+                submitBtn.textContent = 'ยืนยันคำสั่งซื้อ';
             }
         };
     </script>
@@ -322,7 +318,7 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div class="logo" style="margin-bottom: 1.5rem;">
-                        <i class="fas fa-meteor"></i> Suankularb Astronomy Club
+                        <i class="fas fa-meteor"></i> ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย
                     </div>
                     <p style="color: var(--text-muted); font-size: 0.9rem;">
                         ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย<br>
@@ -330,30 +326,30 @@
                     </p>
                 </div>
                 <div class="footer-col">
-                    <h4>Quick Links</h4>
+                    <h4>ลิงก์ด่วน</h4>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="news.html">News</a></li>
-                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="index-th.html">หน้าหลัก</a></li>
+                        <li><a href="about-th.html">เกี่ยวกับเรา</a></li>
+                        <li><a href="news-th.html">ข่าวสาร</a></li>
+                        <li><a href="shop-th.html">ร้านค้า</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Community</h4>
+                    <h4>ชุมชน</h4>
                     <ul>
-                        <li><a href="get-involved.html#join">Join Staff</a></li>
-                        <li><a href="get-involved.html#donate">Donate</a></li>
+                        <li><a href="get-involved-th.html#join">สมัครสมาชิก</a></li>
+                        <li><a href="get-involved-th.html#donate">บริจาค</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Legal</h4>
+                    <h4>กฎหมาย</h4>
                     <ul>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy-th.html">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="terms-th.html">ข้อกำหนดการใช้งาน</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Connect</h4>
+                    <h4>ติดต่อ</h4>
                     <div style="display: flex; gap: 1rem;">
                         <a href="https://www.facebook.com/SuankularbAstronomyClub" target="_blank"
                             title="Suankularb Astronomy Club"><i class="fab fa-facebook fa-xl"></i></a>
@@ -363,7 +359,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                &copy; 2026 Suankularb Astronomy Club. All rights reserved.
+                &copy; 2026 ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย สงวนลิขสิทธิ์
             </div>
         </div>
     </footer>

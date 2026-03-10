@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ร้านค้า | ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="stars"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index-th.html" class="logo">
+                <i class="fas fa-meteor"></i> SAC
+            </a>
+            <ul class="nav-links">
+                <li><a href="index-th.html">หน้าหลัก</a></li>
+                <li><a href="about-th.html">เกี่ยวกับ</a></li>
+                <li><a href="administration-th.html">โครงสร้าง</a></li>
+                <li><a href="news-th.html">ข่าวสาร</a></li>
+                <li><a href="shop-th.html" class="active">ร้านค้า</a></li>
+                <li><a href="contact-th.html">ติดต่อ</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="cart-btn" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </button>
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem; margin-left: 0.5rem;" title="English">
+                    <i class="fas fa-globe"></i> EN
+                </a>
+                <button class="mobile-nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section style="padding-top: 140px;">
+            <div class="container">
+                <h1 class="section-title">ร้านค้า<span>ชุมนุม</span></h1>
+
+                <div id="shop-container" class="product-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <!-- Products will be loaded via JS -->
+                    <div class="loading">กำลังโหลดสินค้า...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer"
+        style="position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #0f111a; border-left: 1px solid var(--glass-border); z-index: 2000; transition: var(--transition); padding: 2rem; box-shadow: -10px 0 30px rgba(0,0,0,0.5); display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>ตะกร้าของคุณ</h2>
+            <button id="close-cart"
+                style="background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;"><i
+                    class="fas fa-times"></i></button>
+        </div>
+        <div id="cart-items" style="flex: 1; overflow-y: auto; margin-bottom: 2rem;">
+            <!-- Cart items will be rendered here -->
+        </div>
+        <div style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
+            <div
+                style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">
+                <span>รวม:</span>
+                <span id="cart-total">฿0</span>
+            </div>
+            <a href="checkout-th.html" id="checkout-btn" class="btn btn-primary" style="width: 100%;">ไปชำระเงิน</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-meteor"></i> ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย<br>
+                        88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>ลิงก์ด่วน</h4>
+                    <ul>
+                        <li><a href="index-th.html">หน้าหลัก</a></li>
+                        <li><a href="about-th.html">เกี่ยวกับเรา</a></li>
+                        <li><a href="news-th.html">ข่าวสาร</a></li>
+                        <li><a href="shop-th.html">ร้านค้า</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>ชุมชน</h4>
+                    <ul>
+                        <li><a href="get-involved-th.html#join">สมัครสมาชิก</a></li>
+                        <li><a href="get-involved-th.html#donate">บริจาค</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>กฎหมาย</h4>
+                    <ul>
+                        <li><a href="privacy-th.html">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="terms-th.html">ข้อกำหนดการใช้งาน</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>ติดต่อ</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="https://www.facebook.com/SuankularbAstronomyClub" target="_blank"
+                            title="Suankularb Astronomy Club"><i class="fab fa-facebook fa-xl"></i></a>
+                        <a href="https://www.instagram.com/skastronomy_official" target="_blank"
+                            title="skastronomy_official"><i class="fab fa-instagram fa-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย สงวนลิขสิทธิ์
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js" type="module"></script>
+</body>
+
+</html>
