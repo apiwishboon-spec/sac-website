@@ -7,6 +7,7 @@
  * 3. Paste this code.
  * 4. Deploy as a Web App (Access: Anyone).
  * 5. Replace "YOUR_GAS_WEB_APP_URL" in js/checkout.js with the deployment URL.
+ * 6. IMPORTANT: Set up the onEdit trigger by going to Triggers > Add Trigger > Choose "onEdit" function
  * 
  * REQUIRED SCOPES:
  * - https://www.googleapis.com/auth/script.external_request (for API calls)
@@ -219,6 +220,7 @@ function sendConfirmationEmail(order) {
                 <!-- Header -->
                 <tr>
                   <td style="background-color: #0f172a; padding: 40px 0; text-align: center;">
+                    <img src="https://apiwishboon-spec.github.io/sac-website/favicon.ico" alt="SAC Shop" style="width: 48px; height: 48px; margin-bottom: 15px; border-radius: 8px;">
                     <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 2px;">SAC SHOP</h1>
                     <p style="color: #94a3b8; margin: 5px 0 0; font-size: 14px; text-transform: uppercase;">Order Confirmation</p>
                   </td>
@@ -263,4 +265,192 @@ function sendConfirmationEmail(order) {
     subject: `Order Received - SAC Shop #${Math.floor(Math.random() * 10000)}`,
     htmlBody: htmlBody
   });
+}
+
+function handleUpdateOrderStatus(orderId, newStatus) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var orderSheet = ss.getSheetByName("Orders");
+  if (!orderSheet) {
+    return createResponse({ "result": "error", "message": "Orders sheet not found" });
+  }
+  
+  var data = orderSheet.getDataRange().getValues();
+  var headers = data[0];
+  var orderIndex = -1;
+  var statusColumnIndex = -1;
+  var emailColumnIndex = -1;
+  var nameColumnIndex = -1;
+  var cartColumnIndex = -1;
+  
+  // Find column indices
+  for (var i = 0; i < headers.length; i++) {
+    if (headers[i] === "Status") statusColumnIndex = i;
+    if (headers[i] === "Email") emailColumnIndex = i;
+    if (headers[i] === "Name") nameColumnIndex = i;
+    if (headers[i] === "Cart") cartColumnIndex = i;
+  }
+  
+  // Find the order by row number (orderId is row number)
+  var targetRow = parseInt(orderId);
+  if (targetRow <= 1 || targetRow > data.length) {
+    return createResponse({ "result": "error", "message": "Invalid order ID" });
+  }
+  
+  // Validate status
+  var validStatuses = ["Pending", "Shipping", "Ready"];
+  if (validStatuses.indexOf(newStatus) === -1) {
+    return createResponse({ "result": "error", "message": "Invalid status" });
+  }
+  
+  // Update the status
+  orderSheet.getRange(targetRow, statusColumnIndex + 1).setValue(newStatus);
+  
+  // Get order details for email
+  var orderData = data[targetRow - 1];
+  var order = {
+    name: orderData[nameColumnIndex],
+    email: orderData[emailColumnIndex],
+    cart: orderData[cartColumnIndex],
+    status: newStatus
+  };
+  
+  // Send status update email
+  sendStatusUpdateEmail(order);
+  
+  return createResponse({ "result": "success", "message": "Order status updated successfully" });
+}
+
+// Automatic trigger function that runs when any cell is edited
+function onEdit(e) {
+  var range = e.range;
+  var sheet = range.getSheet();
+  
+  // Check if the edit was made in the Orders sheet
+  if (sheet.getName() !== "Orders") return;
+  
+  // Check if the edit was in the Status column (column 9, index 8)
+  if (range.getColumn() !== 9) return;
+  
+  // Don't send email for header row
+  if (range.getRow() === 1) return;
+  
+  // Get the new status value
+  var newStatus = range.getValue();
+  
+  // Validate status
+  var validStatuses = ["Pending", "Shipping", "Ready"];
+  if (validStatuses.indexOf(newStatus) === -1) return;
+  
+  // Get order data from the row
+  var orderData = sheet.getRange(range.getRow(), 1, 1, 8).getValues()[0];
+  
+  // Map columns: Timestamp(0), Name(1), Email(2), Phone(3), Address(4), Cart(5), Total Price(6), Payment Slip URL(7)
+  var order = {
+    name: orderData[1],      // Name column
+    email: orderData[2],     // Email column
+    cart: orderData[5],      // Cart column
+    status: newStatus
+  };
+  
+  // Send status update email
+  sendStatusUpdateEmail(order);
+}
+
+function sendStatusUpdateEmail(order) {
+  var statusMessages = {
+    "Pending": {
+      subject: "Order Processing - SAC Shop",
+      title: "Your Order is Being Processed",
+      message: "We're preparing your order and will notify you once it's ready for shipping.",
+      color: "#dc2626" // Red
+    },
+    "Shipping": {
+      subject: "Order Shipped - SAC Shop",
+      title: "Your Order is on the Way!",
+      message: "Great news! Your order has been shipped and is on its way to you.",
+      color: "#eab308" // Yellow
+    },
+    "Ready": {
+      subject: "Order Ready for Pickup - SAC Shop",
+      title: "Your Order is Ready!",
+      message: "Your order is ready for pickup. Please visit us during business hours.",
+      color: "#10b981" // Green
+    }
+  };
+  
+  var statusInfo = statusMessages[order.status];
+  if (!statusInfo) return;
+  
+  var htmlBody = `
+    <html>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f7; color: #333;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding: 40px 20px;">
+          <tr>
+            <td align="center">
+              <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <!-- Header -->
+                <tr>
+                  <td style="background-color: ${statusInfo.color}; padding: 40px 0; text-align: center;">
+                    <img src="https://apiwishboon-spec.github.io/sac-website/favicon.ico" alt="SAC Shop" style="width: 48px; height: 48px; margin-bottom: 15px; border-radius: 8px;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 2px;">SAC SHOP</h1>
+                    <p style="color: #ffffff; margin: 5px 0 0; font-size: 14px; text-transform: uppercase;">Order Status Update</p>
+                  </td>
+                </tr>
+                <!-- Content -->
+                <tr>
+                  <td style="padding: 40px;">
+                    <h2 style="margin-top: 0; font-size: 20px;">Hi ${order.name},</h2>
+                    <div style="background-color: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid #e2e8f0; text-align: center;">
+                      <div style="background-color: ${statusInfo.color}; color: white; padding: 10px 20px; border-radius: 20px; display: inline-block; margin-bottom: 15px; font-weight: bold; text-transform: uppercase;">
+                        ${order.status}
+                      </div>
+                      <h3 style="margin-top: 0; font-size: 18px; color: #0f172a;">${statusInfo.title}</h3>
+                      <p style="color: #64748b; line-height: 1.6; margin: 15px 0;">${statusInfo.message}</p>
+                    </div>
+                    
+                    <div style="background-color: #fef3c7; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #f59e0b;">
+                      <h4 style="margin-top: 0; font-size: 14px; color: #92400e;">Order Items:</h4>
+                      <p style="margin: 10px 0; font-size: 13px; color: #78350f;">${order.cart}</p>
+                    </div>
+                    
+                    <p style="color: #64748b; line-height: 1.6; font-size: 14px;">If you have any questions, please reply to this email or contact us via our social media channels.</p>
+                  </td>
+                </tr>
+                <!-- Footer -->
+                <tr>
+                  <td style="background-color: #f1f5f9; padding: 30px; text-align: center;">
+                    <p style="margin: 0; font-size: 13px; color: #64748b; font-weight: bold;">SAC (Suankularb Astronomy Club)</p>
+                    <p style="margin: 5px 0; font-size: 12px; color: #94a3b8;">
+                      88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200
+                    </p>
+                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+                    <p style="margin: 0; font-size: 11px; color: #cbd5e1;">&copy; 2026 Suankularb Astronomy Club. All rights reserved.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+  `;
+
+  MailApp.sendEmail({
+    to: order.email,
+    subject: statusInfo.subject,
+    htmlBody: htmlBody
+  });
+}
+
+// Test function to manually trigger status update email
+function testStatusEmail() {
+  var testOrder = {
+    name: "Test Customer",
+    email: "your-email@example.com", // Replace with your email to test
+    cart: "Test Product - ฿100",
+    status: "Shipping"
+  };
+  
+  sendStatusUpdateEmail(testOrder);
+  return "Test email sent!";
 }
