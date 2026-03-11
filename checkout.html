@@ -89,6 +89,9 @@
                                     style="margin-top: 1.5rem; font-weight: 700; font-size: 1.2rem; display: none;">
                                     Total Amount: <span id="payment-total" style="color: var(--secondary);">฿0.00</span>
                                 </p>
+                                <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); font-style: italic; display: none;" id="fee-note">
+                                    Note: Shopping fee has been included in total amount.
+                                </p>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 2rem;">
@@ -182,6 +185,7 @@
                     document.getElementById('qr-loader').style.display = 'none';
                     qrImg.style.display = 'inline-block';
                     document.getElementById('total-display').style.display = 'block';
+                    document.getElementById('fee-note').style.display = 'block';
                 };
 
             } catch (err) {

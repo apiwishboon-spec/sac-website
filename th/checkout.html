@@ -93,9 +93,13 @@
                                 <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--bg-dark);"></i>
                                 <p style="margin-top: 1rem; color: var(--bg-dark);">กำลังโหลด QR...</p>
                             </div>
-                            <div id="total-display" style="margin-top: 1rem; display: none;">
-                                <p style="color: var(--bg-dark); font-size: 1.5rem; font-weight: bold;">
-                                    ฿<span id="payment-total">0</span>
+                            <div id="total-display" style="margin-top: 1rem;">
+                                <p id="total-display"
+                                    style="margin-top: 1.5rem; font-weight: 700; font-size: 1.2rem; display: none;">
+                                    ยอดรวม: <span id="payment-total" style="color: var(--secondary);">฿0.00</span>
+                                </p>
+                                <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); font-style: italic; display: none;" id="fee-note">
+                                    หมายเหตุ: ค่าธรรมเนียมการจัดส่งได้รวมอยู่ในยอดเงินแล้ว
                                 </p>
                             </div>
                         </div>
@@ -156,6 +160,7 @@
                     document.getElementById('qr-loader').style.display = 'none';
                     qrImg.style.display = 'inline-block';
                     document.getElementById('total-display').style.display = 'block';
+                    document.getElementById('fee-note').style.display = 'block';
                 };
 
             } catch (err) {

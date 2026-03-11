@@ -370,9 +370,9 @@ function sendStatusUpdateEmail(order) {
       color: "#eab308" // Yellow
     },
     "Ready": {
-      subject: "Order Ready for Pickup - SAC Shop",
-      title: "Your Order is Ready!",
-      message: "Your order is ready for pickup. Please visit us during business hours.",
+      subject: "Package Arrived - SAC Shop",
+      title: "Your Package Has Arrived!",
+      message: "Great news! Your package has arrived and is ready for you. Please visit us during business hours to pick up your order.",
       color: "#10b981" // Green
     }
   };
