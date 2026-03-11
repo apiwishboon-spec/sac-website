@@ -454,13 +454,12 @@ footer {
 .tree-node {
     background: rgba(255, 255, 255, 0.03);
     border: 3px solid rgba(255, 255, 255, 0.15);
-    padding: 3rem 2rem;
+    padding: 2.5rem 1.5rem;
     border-radius: 20px;
     text-align: center;
-    min-width: 200px;
-    min-height: 280px;
-    transition: var(--transition);
     position: relative;
+    width: 280px;
+    transition: var(--transition);
     backdrop-filter: blur(10px);
 }
 
