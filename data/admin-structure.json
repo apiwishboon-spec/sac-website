@@ -1,0 +1,94 @@
+{
+  "organization": {
+    "title": "Suankularb Astronomy Club",
+    "description": "The organizational map of Suankularb Astronomy Club team."
+  },
+  "levels": [
+    {
+      "level": 0,
+      "title": "Chief Advisor",
+      "name": "นายธวัชชัย สุขล้อม",
+      "description": "Head of Sirindhorn Planetarium",
+      "image": "/images/Administrative structure/teacher.png",
+      "icon": "fa-user-tie",
+      "color": "var(--secondary)"
+    },
+    {
+      "level": 1,
+      "title": "President (CEO)",
+      "name": "นายอัฑฒกร จงผาติวุฒิ",
+      "description": "Academic Year 2026",
+      "icon": "fa-crown",
+      "color": "var(--primary)"
+    },
+    {
+      "level": 2,
+      "title": "Vice Presidents",
+      "positions": [
+        {
+          "title": "CPO (Product)",
+          "name": "Vice President",
+          "description": "Production & Media",
+          "icon": "fa-palette",
+          "color": "#eab308"
+        },
+        {
+          "title": "CFO (Finance)",
+          "name": "Vice President", 
+          "description": "Account & Supplies",
+          "icon": "fa-wallet",
+          "color": "#ec4899"
+        },
+        {
+          "title": "COO (Operations)",
+          "name": "Vice President",
+          "description": "HR & Systems",
+          "icon": "fa-cog",
+          "color": "#0ea5e9"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "title": "Departments",
+      "positions": [
+        {
+          "title": "Content & Art",
+          "parent": "CPO (Product)"
+        },
+        {
+          "title": "Public Relations",
+          "parent": "CPO (Product)"
+        },
+        {
+          "title": "Activity Creators",
+          "parent": "CPO (Product)"
+        },
+        {
+          "title": "Accounting",
+          "parent": "CFO (Finance)"
+        },
+        {
+          "title": "Financial Planning",
+          "parent": "CFO (Finance)"
+        },
+        {
+          "title": "HR & General",
+          "parent": "COO (Operations)"
+        },
+        {
+          "title": "IT Support",
+          "parent": "COO (Operations)",
+          "special": true,
+          "image": "/images/Administrative structure/it1.png"
+        },
+        {
+          "title": "อภิวิชญ์",
+          "parent": "COO (Operations)",
+          "special": true,
+          "image": "/images/Administrative structure/it2.png"
+        }
+      ]
+    }
+  ]
+}
