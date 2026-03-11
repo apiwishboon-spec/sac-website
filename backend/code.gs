@@ -372,7 +372,7 @@ function sendStatusUpdateEmail(order) {
     "Ready": {
       subject: "Package Arrived - SAC Shop",
       title: "Your Package Has Arrived!",
-      message: "Great news! Your package has arrived and is ready for you. Please visit us during business hours to pick up your order.",
+      message: "Great news! Your package has arrived at your home and is ready to be opened.",
       color: "#10b981" // Green
     }
   };
