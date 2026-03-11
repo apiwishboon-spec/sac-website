@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Successful - SAC Shop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <h1>SAC</h1>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="planetarium.html">Planetarium</a></li>
+                <li><a href="shop.html" class="active">Shop</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="get-involved.html">Get Involved</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="th/index.html" class="lang-toggle">TH</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="success-container">
+        <div class="success-card">
+            <div class="success-icon">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                    <circle cx="40" cy="40" r="40" fill="#10b981"/>
+                    <path d="M25 40L35 50L55 30" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            
+            <h1>Order Successful!</h1>
+            <p class="success-message">Thank you for your order. We've received your payment and will process it shortly.</p>
+            
+            <div class="order-details">
+                <div class="order-info">
+                    <h3>Order Information</h3>
+                    <div class="info-row">
+                        <span class="label">Order ID:</span>
+                        <span class="value" id="orderId">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Order Date:</span>
+                        <span class="value" id="orderDate">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Status:</span>
+                        <span class="value status-badge pending">Pending</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Total Amount:</span>
+                        <span class="value" id="totalAmount">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="customer-info">
+                    <h3>Customer Information</h3>
+                    <div class="info-row">
+                        <span class="label">Name:</span>
+                        <span class="value" id="customerName">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Email:</span>
+                        <span class="value" id="customerEmail">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Phone:</span>
+                        <span class="value" id="customerPhone">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="order-items">
+                    <h3>Order Items</h3>
+                    <div id="itemsList">
+                        <!-- Items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="next-steps">
+                <h3>What's Next?</h3>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon">📧</div>
+                        <div class="step-content">
+                            <h4>Confirmation Email</h4>
+                            <p>You'll receive an order confirmation email shortly.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">⏳</div>
+                        <div class="step-content">
+                            <h4>Order Processing</h4>
+                            <p>We'll process your order and update you on the status.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">🚚</div>
+                        <div class="step-content">
+                            <h4>Shipping/Pickup</h4>
+                            <p>You'll be notified when your order is ready for shipping or pickup.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="shop.html" class="btn btn-secondary">Continue Shopping</a>
+                <button onclick="window.print()" class="btn btn-outline">Print Receipt</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SAC (Suankularb Astronomy Club)</h3>
+                <p>88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200</p>
+                <div class="social-links">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="planetarium.html">Planetarium</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Suankularb Astronomy Club. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get order data from URL parameters or localStorage
+        function getOrderData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderData = {
+                orderId: urlParams.get('orderId') || localStorage.getItem('lastOrderId') || 'N/A',
+                orderDate: urlParams.get('orderDate') || new Date().toLocaleDateString(),
+                totalAmount: urlParams.get('totalAmount') || localStorage.getItem('lastOrderTotal') || 'N/A',
+                customerName: urlParams.get('customerName') || localStorage.getItem('lastOrderName') || 'N/A',
+                customerEmail: urlParams.get('customerEmail') || localStorage.getItem('lastOrderEmail') || 'N/A',
+                customerPhone: urlParams.get('customerPhone') || localStorage.getItem('lastOrderPhone') || 'N/A',
+                items: urlParams.get('items') ? JSON.parse(decodeURIComponent(urlParams.get('items'))) : 
+                       (localStorage.getItem('lastOrderItems') ? JSON.parse(localStorage.getItem('lastOrderItems')) : [])
+            };
+            return orderData;
+        }
+
+        // Populate the page with order data
+        function populateOrderData() {
+            const orderData = getOrderData();
+            
+            document.getElementById('orderId').textContent = orderData.orderId;
+            document.getElementById('orderDate').textContent = orderData.orderDate;
+            document.getElementById('totalAmount').textContent = orderData.totalAmount;
+            document.getElementById('customerName').textContent = orderData.customerName;
+            document.getElementById('customerEmail').textContent = orderData.customerEmail;
+            document.getElementById('customerPhone').textContent = orderData.customerPhone;
+            
+            // Populate items list
+            const itemsList = document.getElementById('itemsList');
+            if (orderData.items && orderData.items.length > 0) {
+                itemsList.innerHTML = orderData.items.map(item => `
+                    <div class="item-row">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-quantity">x${item.quantity}</span>
+                        <span class="item-price">฿${item.price}</span>
+                    </div>
+                `).join('');
+            } else {
+                itemsList.innerHTML = '<p>No items found</p>';
+            }
+        }
+
+        // Clear order data after displaying
+        function clearOrderData() {
+            localStorage.removeItem('lastOrderId');
+            localStorage.removeItem('lastOrderTotal');
+            localStorage.removeItem('lastOrderName');
+            localStorage.removeItem('lastOrderEmail');
+            localStorage.removeItem('lastOrderPhone');
+            localStorage.removeItem('lastOrderItems');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateOrderData();
+            // Don't clear data immediately in case user wants to print
+            setTimeout(clearOrderData, 60000); // Clear after 1 minute
+        });
+    </script>
+
+    <style>
+        .success-container {
+            max-width: 800px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .success-icon {
+            margin-bottom: 20px;
+        }
+
+        .success-card h1 {
+            color: #10b981;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .success-message {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .order-items {
+            grid-column: 1 / -1;
+        }
+
+        .order-details h3 {
+            color: #0f172a;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .value {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-badge.pending {
+            background-color: #dc2626;
+            color: white;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .item-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .item-quantity {
+            color: #64748b;
+            margin: 0 20px;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .next-steps {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .next-steps h3 {
+            color: #0f172a;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .step-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background-color: #0f172a;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1e293b;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #0f172a;
+            border: 2px solid #0f172a;
+        }
+
+        .btn-outline:hover {
+            background-color: #0f172a;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .success-container {
+                margin: 100px auto 20px;
+            }
+
+            .success-card {
+                padding: 20px;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -215,9 +215,25 @@
                 const res = await submitOrder(orderData);
                 if (res.result !== 'success') throw new Error(res.error);
 
-                document.getElementById('success-overlay').style.display = 'flex';
+                // 5. Generate Order ID and Redirect to Success Page
+                const orderId = 'SAC' + Date.now().toString().slice(-8);
+                const orderDate = new Date().toLocaleDateString('th-TH');
+                
+                // Store order data for success page
+                localStorage.setItem('lastOrderId', orderId);
+                localStorage.setItem('lastOrderDate', orderDate);
+                localStorage.setItem('lastOrderTotal', cart.getTotal());
+                localStorage.setItem('lastOrderName', orderData.name);
+                localStorage.setItem('lastOrderEmail', orderData.email);
+                localStorage.setItem('lastOrderPhone', orderData.phone);
+                localStorage.setItem('lastOrderItems', JSON.stringify(cart.items));
+
+                // Clear cart
                 cart.items = [];
                 cart.save();
+
+                // Redirect to success page
+                window.location.href = `order-success.html?orderId=${orderId}&orderDate=${orderDate}&totalAmount=${cart.getTotal()}&customerName=${encodeURIComponent(orderData.name)}&customerEmail=${encodeURIComponent(orderData.email)}&customerPhone=${encodeURIComponent(orderData.phone)}&items=${encodeURIComponent(JSON.stringify(cart.items))}`;
 
             } catch (error) {
                 alert('เกิดข้อผิดพลาดในการสั่งซื้อ ' + (error.message || 'กรุณาลองใหม่อีกครั้ง'));

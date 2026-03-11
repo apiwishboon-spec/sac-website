@@ -220,7 +220,6 @@ function sendConfirmationEmail(order) {
                 <!-- Header -->
                 <tr>
                   <td style="background-color: #0f172a; padding: 40px 0; text-align: center;">
-                    <img src="https://apiwishboon-spec.github.io/sac-website/favicon.ico" alt="SAC Shop" style="width: 48px; height: 48px; margin-bottom: 15px; border-radius: 8px;">
                     <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 2px;">SAC SHOP</h1>
                     <p style="color: #94a3b8; margin: 5px 0 0; font-size: 14px; text-transform: uppercase;">Order Confirmation</p>
                   </td>
@@ -391,7 +390,6 @@ function sendStatusUpdateEmail(order) {
                 <!-- Header -->
                 <tr>
                   <td style="background-color: ${statusInfo.color}; padding: 40px 0; text-align: center;">
-                    <img src="https://apiwishboon-spec.github.io/sac-website/favicon.ico" alt="SAC Shop" style="width: 48px; height: 48px; margin-bottom: 15px; border-radius: 8px;">
                     <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 2px;">SAC SHOP</h1>
                     <p style="color: #ffffff; margin: 5px 0 0; font-size: 14px; text-transform: uppercase;">Order Status Update</p>
                   </td>
