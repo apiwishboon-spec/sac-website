@@ -310,9 +310,10 @@
                 const orderDate = new Date().toLocaleDateString();
                 
                 // Store order data for success page
+                const totalAmount = cart.getTotal();
                 localStorage.setItem('lastOrderId', orderId);
                 localStorage.setItem('lastOrderDate', orderDate);
-                localStorage.setItem('lastOrderTotal', cart.getTotal());
+                localStorage.setItem('lastOrderTotal', totalAmount);
                 localStorage.setItem('lastOrderName', orderData.name);
                 localStorage.setItem('lastOrderEmail', orderData.email);
                 localStorage.setItem('lastOrderPhone', orderData.phone);
@@ -323,7 +324,7 @@
                 cart.save();
 
                 // Redirect to success page
-                window.location.href = `order-success.html?orderId=${orderId}&orderDate=${orderDate}&totalAmount=${cart.getTotal()}&customerName=${encodeURIComponent(orderData.name)}&customerEmail=${encodeURIComponent(orderData.email)}&customerPhone=${encodeURIComponent(orderData.phone)}&items=${encodeURIComponent(JSON.stringify(cart.items))}`;
+                window.location.href = `order-success.html?orderId=${orderId}&orderDate=${orderDate}&totalAmount=${totalAmount}&customerName=${encodeURIComponent(orderData.name)}&customerEmail=${encodeURIComponent(orderData.email)}&customerPhone=${encodeURIComponent(orderData.phone)}&items=${encodeURIComponent(JSON.stringify(cart.items))}`;
 
             } catch (error) {
                 alert('There was an error processing your order. ' + (error.message || 'Please try again.'));
