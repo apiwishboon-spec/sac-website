@@ -436,14 +436,9 @@ footer {
 
 /* Org Chart Tree Structure */
 .org-container {
-    padding: 2rem;
+    padding: 2rem 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    width: 100vw;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
 }
 
 .tree {
