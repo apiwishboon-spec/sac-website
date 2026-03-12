@@ -22,5 +22,21 @@
         "image": "https://images.unsplash.com/photo-1582142839970-2b9e04b60f25?auto=format&fit=crop&q=80&w=800",
         "description": "พวงกุญแจลายพื้นผิวดวงจันทร์ สวยงาม ทนทาน สำหรับชาวดาราศาสตร์",
         "stock": 30
+    },
+    {
+        "id": "Suan_Universal_Shirt_black",
+        "name": "เสื้อ Suan Universal black",
+        "price": 120,
+        "image": "https://i.postimg.cc/zGXzBGmy/image.png",
+        "description": "เสื้อ Suankularb Universe รวมคำว่า “สวนกุหลาบ” จากหลายภาษาและอักษรทั่วโลก สื่อถึงความหลากหลายทางวัฒนธรรมและการเชื่อมต่อของผู้คนในจักรวาลแห่งภาษา",
+        "stock": 90
+    },
+    {
+        "id": "Suan_Universal_Shirt_white",
+        "name": "เสื้อ Suan Universal white",
+        "price": 120,
+        "image": "https://i.postimg.cc/W3Sqdf9r/image.png",
+        "description": "เสื้อ Suankularb Universe รวมคำว่า “สวนกุหลาบ” จากหลายภาษาและอักษรทั่วโลก สื่อถึงความหลากหลายทางวัฒนธรรมและการเชื่อมต่อของผู้คนในจักรวาลแห่งภาษา",
+        "stock": 90
     }
 ]
