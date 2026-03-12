@@ -11,7 +11,7 @@
         "id": "mask_sac",
         "name": "หน้ากากอนามัย SAC Mask",
         "price": 40,
-        "image": "https://images.unsplash.com/photo-1586942511414-b4a11b0e2511?auto=format&fit=crop&q=80&w=800",
+        "image": "https://i.postimg.cc/YC5rtKH1/image.png",
         "description": "หน้ากากผ้า SAC ลายลิมิเต็ด สีน้ำเงิน-ชมพู พร้อมสายคล้อง",
         "stock": 50
     },
@@ -19,7 +19,7 @@
         "id": "keychain_moon",
         "name": "พวงกุญแจดวงจันทร์ (Moon Keychain)",
         "price": 60,
-        "image": "https://images.unsplash.com/photo-1582142839970-2b9e04b60f25?auto=format&fit=crop&q=80&w=800",
+        "image": "https://i.postimg.cc/J4yC06KZ/image.png",
         "description": "พวงกุญแจลายพื้นผิวดวงจันทร์ สวยงาม ทนทาน สำหรับชาวดาราศาสตร์",
         "stock": 30
     },
