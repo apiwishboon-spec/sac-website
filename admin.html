@@ -673,6 +673,10 @@
         document.getElementById('login-wall').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         showAdminToast('🎉 Login successful!');
+        
+        // Request notification permission immediately after login
+        requestNotificationPermission();
+        
         loadDashboard();
       } else {
         error.textContent = 'Invalid password. Please try again.';
@@ -969,8 +973,11 @@
       if (token) {
         document.getElementById('login-wall').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        loadDashboard();
+        
+        // Request notification permission immediately when entering admin
         requestNotificationPermission();
+        
+        loadDashboard();
       }
     });
 
