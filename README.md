@@ -93,6 +93,7 @@ The website is fully responsive and works seamlessly across:
 
 ## 📧 Contact
 
+- **Email**: astronomyclub@sk.ac.th
 - **Facebook**: https://www.facebook.com/SuankularbAstronomyClub
 - **Instagram**: https://www.instagram.com/skastronomy_official/
 - **Phone**: 02-2255605 ต่อ 631
