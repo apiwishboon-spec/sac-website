@@ -4,14 +4,15 @@ import { loadDashboard } from './dashboard.js';
 let previousOrderIds = new Set();
 let notificationsReady = false;
 
-async function requestNotificationPermission() {
+export async function requestNotificationPermission() {
     if (!('Notification' in window)) return;
-    if (Notification.permission === 'default') {
+
+    if (Notification.permission === 'granted') {
+        notificationsReady = true;
+    } else if (Notification.permission !== 'denied') {
         const perm = await Notification.requestPermission();
         notificationsReady = (perm === 'granted');
         if (notificationsReady) showAdminToast('🔔 Order notifications enabled!');
-    } else {
-        notificationsReady = (Notification.permission === 'granted');
     }
 }
 
@@ -20,31 +21,34 @@ export function showOrderNotification(newOrders) {
     newOrders.forEach((o, i) => {
         setTimeout(() => {
             const n = new Notification('🛍️ New Order!', {
-                body: `${o.item} – ฿${o.totalPrice}\nFrom: ${o.email}`,
+                body: `${o.item || 'New Item'} – ฿${o.totalPrice}\nFrom: ${o.email}`,
                 icon: 'images/favicon.ico',
-                tag: `order-${o.orderId}`,
+                tag: `order-${o.orderId || o.rowIndex}`,
             });
             n.onclick = () => {
                 window.focus();
                 n.close();
-                document.querySelector('[data-target="orders-pane"]')?.click();
+                document.getElementById('orders-nav-link')?.click();
             };
-        }, i * 800);
+        }, i * 1000);
     });
 }
 
 export function checkForNewOrders(currentOrders) {
-    const currentIds = new Set(currentOrders.map(o => o.orderId).filter(Boolean));
+    // Use orderId if available, otherwise fallback to rowIndex + timestamp hash
+    const currentIds = new Set(currentOrders.map(o => o.orderId || `row-${o.rowIndex}-${o.timestamp}`).filter(Boolean));
+
     if (previousOrderIds.size > 0) {
         const newIds = [...currentIds].filter(id => !previousOrderIds.has(id));
         if (newIds.length > 0) {
-            const newOrders = currentOrders.filter(o => newIds.includes(o.orderId));
+            const newOrders = currentOrders.filter(o => newIds.includes(o.orderId || `row-${o.rowIndex}-${o.timestamp}`));
             showOrderNotification(newOrders);
             showAdminToast(newOrders.length === 1
-                ? `🔔 New order from ${newOrders[0].email}`
+                ? `🔔 New order from ${newOrders[0].name || newOrders[0].email}`
                 : `🔔 ${newOrders.length} new orders!`);
         }
     }
+
     previousOrderIds = currentIds;
 
     // Update pending badge
@@ -52,7 +56,7 @@ export function checkForNewOrders(currentOrders) {
     if (badge) {
         if (currentOrders.length > 0) {
             badge.textContent = currentOrders.length;
-            badge.style.display = 'inline';
+            badge.style.display = 'inline-block';
         } else {
             badge.style.display = 'none';
         }
@@ -82,7 +86,7 @@ export function attemptAdminLogin() {
         requestNotificationPermission();
         loadDashboard();
     } else {
-        errorEl.textContent = 'Incorrect password. Please try again.';
+        errorEl.textContent = 'Incorrect password.';
         pwInput.value = '';
         pwInput.focus();
     }
@@ -95,8 +99,5 @@ export function cancelLogin() {
 export function logout() {
     localStorage.removeItem('adminToken');
     sessionStorage.removeItem('adminToken');
-    document.getElementById('admin-layout').style.display = 'none';
-    document.getElementById('login-wall').style.display = 'flex';
-    document.getElementById('pw-input').value = '';
-    showAdminToast('👋 Logged out.');
+    window.location.reload(); // Hard reload to clear all states
 }

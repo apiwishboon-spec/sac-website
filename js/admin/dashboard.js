@@ -135,12 +135,14 @@ const tblStyle = `<style id="tbl-style">
   .orders-tbl th{background:rgba(255,255,255,0.04);padding:10px 14px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:2px solid var(--glass-border);color:var(--text-muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:.5px;}
   .orders-tbl td{padding:12px 14px;border-bottom:1px solid var(--glass-border);vertical-align:middle;word-break:break-word;}
   .orders-tbl tr:hover td{background:rgba(255,255,255,0.025);}
-  .order-actions{display:flex;gap:0.5rem;}
-  .btn-status{padding:6px 10px;border-radius:6px;border:1px solid var(--glass-border);background:rgba(0,0,0,0.2);color:var(--text-main);cursor:pointer;font-size:0.75rem;font-weight:600;transition:all 0.2s;}
+  .order-actions{display:flex;gap:0.4rem;flex-wrap:wrap;}
+  .btn-status{padding:6px 8px;border-radius:6px;border:1px solid var(--glass-border);background:rgba(0,0,0,0.2);color:var(--text-main);cursor:pointer;font-size:0.75rem;font-weight:600;transition:all 0.2s;}
   .btn-status:hover{background:rgba(255,255,255,0.1);}
   .btn-pending:hover{border-color:#fbbf24;color:#fbbf24;}
   .btn-shipping:hover{border-color:#3b82f6;color:#3b82f6;}
   .btn-ready:hover{border-color:#10b981;color:#10b981;}
+  .btn-done:hover{border-color:#a855f7;color:#a855f7;}
+  .btn-delete-row:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,0.1);}
   .slip-link{color:var(--secondary);text-decoration:none;}
   .slip-link:hover{text-decoration:underline;}
 </style>`;
@@ -177,21 +179,24 @@ export async function loadIncompleteOrders() {
         if (o.status === 'Shipping') statusColor = '#3b82f6';
         if (o.status === 'Ready') statusColor = '#10b981';
 
+        const rowTime = o.timestamp ? new Date(o.timestamp).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '—';
+
         return `<tr id="row-${o.rowIndex}">
           <td>${i + 1}</td>
-          <td><code style="font-size:.8rem;opacity:.7">${new Date(o.timestamp).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })}</code></td>
+          <td><code style="font-size:.8rem;opacity:.7">${rowTime}</code></td>
           <td>${o.name || '—'}<br><small style="color:var(--text-muted)">${o.email || ''}</small></td>
           <td>${o.phone || '—'}</td>
-          <td><div style="max-width:200px;font-size:0.75rem;color:var(--text-muted)">${o.cart || '—'}</div></td>
+          <td><div style="max-width:200px;font-size:0.75rem;color:var(--text-muted);word-wrap:break-word">${o.cart || '—'}</div></td>
           <td><strong>฿${o.totalPrice || '—'}</strong></td>
           <td>${slip}</td>
           <td><span style="background:rgba(255,255,255,0.05);color:${statusColor};padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;border:1px solid ${statusColor}44;">${o.status || 'Pending'}</span></td>
           <td>
             <div class="order-actions">
-              <button class="btn-status btn-pending" onclick="updateStatus(${o.rowIndex}, 'Pending', this)">⏳ Pnd</button>
-              <button class="btn-status btn-shipping" onclick="updateStatus(${o.rowIndex}, 'Shipping', this)">🚚 Shp</button>
-              <button class="btn-status btn-ready" onclick="updateStatus(${o.rowIndex}, 'Ready', this)">✅ Rdy</button>
-              <button class="btn-status" style="border-color:#ef4444;color:#ef4444" onclick="markOrderDone(${o.rowIndex}, this)">🗑️ Done</button>
+              <button class="btn-status btn-pending" title="Set Pending" onclick="updateStatus(${o.rowIndex}, 'Pending', this)">⏳ Pnd</button>
+              <button class="btn-status btn-shipping" title="Set Shipping" onclick="updateStatus(${o.rowIndex}, 'Shipping', this)">🚚 Shp</button>
+              <button class="btn-status btn-ready" title="Set Ready" onclick="updateStatus(${o.rowIndex}, 'Ready', this)">✅ Rdy</button>
+              <button class="btn-status btn-done" title="Move to History" onclick="markOrderDone(${o.rowIndex}, this)">💜 Done</button>
+              <button class="btn-status btn-delete-row" title="PERMANENTLY DELETE" onclick="deleteOrderPermanently(${o.rowIndex}, this)">🗑️ Del</button>
             </div>
           </td>
         </tr>`;
@@ -233,8 +238,8 @@ export async function updateStatus(rowIndex, status, btn) {
 
     if (result.result === 'success') {
       showAdminToast(`✅ Status updated to: ${status}`);
-      loadIncompleteOrders(); // Reload table
-      initCharts(); // Update status chart
+      loadIncompleteOrders();
+      initCharts();
     } else {
       showAdminToast('❌ ' + result.error);
       btn.disabled = false;
@@ -248,7 +253,7 @@ export async function updateStatus(rowIndex, status, btn) {
 }
 
 export async function markOrderDone(rowIndex, btn) {
-  if (!confirm('Mark as completely done? It will be moved to History.')) return;
+  if (!confirm('Mark as completely done? It will be HIDDEN from this view but kept in database.')) return;
 
   btn.disabled = true;
   btn.textContent = '…';
@@ -266,13 +271,44 @@ export async function markOrderDone(rowIndex, btn) {
       initCharts();
     } else {
       btn.disabled = false;
-      btn.textContent = '🗑️ Done';
+      btn.textContent = '💜 Done';
       showAdminToast('❌ ' + result.error);
     }
   } catch (e) {
     btn.disabled = false;
-    btn.textContent = '🗑️ Done';
+    btn.textContent = '💜 Done';
     showAdminToast('❌ Network error');
+  }
+}
+
+export async function deleteOrderPermanently(rowIndex, btn) {
+  if (!confirm('⚠️ PERMANENT DELETE\n\nAre you sure you want to PERMANENTLY delete this order from the database? This cannot be undone.')) return;
+
+  const originalText = btn.textContent;
+  btn.textContent = '…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(ADMIN_API, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'deleteOrder', token: getAdminToken(), rowIndex }),
+    });
+    const result = await res.json();
+
+    if (result.result === 'success') {
+      showAdminToast('🗑️ Order deleted from database');
+      loadIncompleteOrders();
+      initCharts();
+      updateStats();
+    } else {
+      showAdminToast('❌ ' + result.error);
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  } catch (e) {
+    showAdminToast('❌ Network error');
+    btn.disabled = false;
+    btn.textContent = originalText;
   }
 }
 
@@ -305,13 +341,13 @@ export async function openStatModal(type) {
       title.textContent = '✅ Completed Orders';
       body.innerHTML = tbl(
         ['Time', 'Email', 'Items', 'Total'],
-        done.map(o => `<tr><td><code>${new Date(o.timestamp).toLocaleDateString()}</code></td><td>${o.email}</td><td>${o.cart}</td><td>฿${o.totalPrice}</td></tr>`).join(''),
+        done.map(o => `<tr><td><code>${o.timestamp ? new Date(o.timestamp).toLocaleDateString() : '—'}</code></td><td>${o.email}</td><td>${o.cart}</td><td>฿${o.totalPrice}</td></tr>`).join(''),
       );
     } else if (type === 'revenue') {
       title.textContent = '💳 Revenue Breakdown';
       body.innerHTML = tbl(
         ['Time', 'Customer', 'Amount'],
-        done.map(o => `<tr><td><code>${new Date(o.timestamp).toLocaleDateString()}</code></td><td>${o.email}</td><td><strong>฿${o.totalPrice}</strong></td></tr>`).join(''),
+        done.map(o => `<tr><td><code>${o.timestamp ? new Date(o.timestamp).toLocaleDateString() : '—'}</code></td><td>${o.email}</td><td><strong>฿${o.totalPrice}</strong></td></tr>`).join(''),
       );
     } else if (type === 'products') {
       title.textContent = '📦 Popular Selection';

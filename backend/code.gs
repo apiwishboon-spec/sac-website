@@ -43,6 +43,8 @@ function doPost(e) {
       return handleMarkOrderDone(data.token, data.rowIndex);
     } else if (action === "updateOrderStatus") {
       return handleUpdateOrderStatus(data.token, data.rowIndex, data.status);
+    } else if (action === "deleteOrder") {
+      return handleDeleteOrder(data.token, data.rowIndex);
     } else if (action === "getStats") {
       return handleGetStats(data.token);
     } else {
@@ -235,6 +237,30 @@ function handleMarkOrderDone(token, rowIndex) {
     return createResponse({ "result": "success" });
   } catch (error) {
     Logger.log("Error in handleMarkOrderDone: " + error.toString());
+    return createResponse({ "result": "error", "error": error.toString() });
+  }
+}
+
+function handleDeleteOrder(token, rowIndex) {
+  try {
+    if (!token || !token.includes('sac_admin_token')) {
+      return createResponse({ "result": "error", "error": "Invalid admin token" });
+    }
+    
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Orders");
+    if (!sheet) {
+      return createResponse({ "result": "error", "error": "Orders sheet not found" });
+    }
+    
+    var targetRow = parseInt(rowIndex);
+    if (isNaN(targetRow) || targetRow <= 1) {
+      return createResponse({ "result": "error", "error": "Invalid row index" });
+    }
+
+    sheet.deleteRow(targetRow);
+    
+    return createResponse({ "result": "success" });
+  } catch (error) {
     return createResponse({ "result": "error", "error": error.toString() });
   }
 }

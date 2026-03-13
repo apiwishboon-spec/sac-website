@@ -1,7 +1,7 @@
 import { initAdminTabs } from './tabs.js';
-import { attemptAdminLogin, cancelLogin, logout } from './auth.js';
+import { attemptAdminLogin, cancelLogin, logout, requestNotificationPermission } from './auth.js';
 import {
-  loadDashboard, refreshData, markOrderDone, updateStatus,
+  loadDashboard, refreshData, markOrderDone, updateStatus, deleteOrderPermanently,
   loadIncompleteOrders, openStatModal, closeStatModal,
 } from './dashboard.js';
 import { getAdminToken } from './utils.js';
@@ -13,24 +13,33 @@ window.logout = logout;
 window.refreshData = refreshData;
 window.markOrderDone = markOrderDone;
 window.updateStatus = updateStatus;
+window.deleteOrderPermanently = deleteOrderPermanently;
 window.loadIncompleteOrders = loadIncompleteOrders;
 window.openStatModal = openStatModal;
 window.closeStatModal = closeStatModal;
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Set up tab navigation
   initAdminTabs();
 
-  // Handle Enter key in password field
   document.getElementById('pw-input')?.addEventListener('keypress', e => {
     if (e.key === 'Enter') attemptAdminLogin();
   });
 
-  // Auto-login if token already exists
   const token = getAdminToken();
   if (token) {
     document.getElementById('login-wall').style.display = 'none';
     document.getElementById('admin-layout').style.display = 'block';
+
+    // Check for notification permission immediately on startup
+    requestNotificationPermission();
+
+    // Initial load
     loadDashboard();
+
+    // Start auto-polling for new orders every 60 seconds
+    setInterval(() => {
+      console.log('🔄 Checking for new orders...');
+      loadIncompleteOrders();
+    }, 60000);
   }
 });
