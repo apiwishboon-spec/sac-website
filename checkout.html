@@ -162,6 +162,102 @@
 
         let isOtpVerified = false;
 
+        // Comprehensive Name Validation
+        function validateName(name) {
+            const n = name.toLowerCase().trim();
+
+            // Banned words and phrases
+            const banned = [
+                // Admin/staff impersonation
+                "admin","administrator","moderator","mod","owner","system","root","support","staff","official","realadmin","superuser","adminhere","realowner","officialaccount","staffaccount","moderatoraccount",
+                // Generic/placeholder names
+                "unknown","null","none","guest","user","test","testing","example","sample","demo","name","yourname","me","you","someone","nobody","anonymous","default","username",
+                // Explicit content
+                "fuck","fucker","fucking","shit","shitty","bitch","bastard","ass","asshole","damn","wtf","crap","sex","sexy","sexual","porn","porno","pornhub","nsfw","nude","naked","boobs","boob","tits","penis","dick","cock","pussy","cum","horny","fetish","onlyfans","sugarbaby","sugardaddy",
+                // Recent trends/memes
+                "diddy","skibidi","sus","sigma",
+                // Phrases
+                "i am","you are","admin here","real admin","official admin",
+                // Numbers only
+                "123","1234","000","111","69","420","666",
+                // Symbols only
+                "-","_","."
+            ];
+
+            // Banned patterns (regex)
+            const bannedPatterns = [
+                // Admin impersonation patterns
+                /admin/i,
+                /mod/i,
+                /staff/i,
+                /support/i,
+                /system/i,
+                /owner/i,
+                /root/i,
+                // Explicit content patterns
+                /fu+ck/i,
+                /sh+i+t/i,
+                /b+i+tch/i,
+                /a+ss/i,
+                /d+i+ck/i,
+                /p+en+i+s/i,
+                /p+u+ss+y/i,
+                /c+u+m/i,
+                // Garbage patterns
+                /^[0-9]+$/,                    // only numbers
+                /^[-_.]+$/,                    // only symbols
+                /(.)\1{5,}/,                   // repeating letters like aaaaaaa
+                /^\s+/,                        // starts with space
+                /\s+$/,                        // ends with space
+                /skibidi/i,
+                /diddy/i,
+                /sus/i,
+                /sigma/i
+            ];
+
+            // Automatic rules
+            if (n.length < 3) {
+                alert('Name must be at least 3 characters long.');
+                return false;
+            }
+
+            if (/^[0-9]+$/.test(n)) {
+                alert('Name cannot contain only numbers.');
+                return false;
+            }
+
+            if (/^[-_.]+$/.test(n)) {
+                alert('Name cannot contain only symbols.');
+                return false;
+            }
+
+            if (/^\s|\s$/.test(name)) {
+                alert('Name cannot start or end with spaces.');
+                return false;
+            }
+
+            if (/(.)\1{5,}/.test(n)) {
+                alert('Name cannot contain repeated characters (e.g., "aaaaaaa").');
+                return false;
+            }
+
+            // Check banned words
+            if (banned.includes(n)) {
+                alert('This name is not allowed. Please use a different name.');
+                return false;
+            }
+
+            // Check banned patterns
+            for (const pattern of bannedPatterns) {
+                if (pattern.test(n)) {
+                    alert('This name contains inappropriate content. Please use a different name.');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         // Initialize Page
         document.addEventListener('DOMContentLoaded', async () => {
             if (cart.items.length === 0) {
@@ -172,6 +268,30 @@
             const total = cart.getTotal();
             summaryTotal.textContent = `฿${total}`;
             paymentTotal.textContent = `฿${total.toFixed(2)}`;
+
+            // Add real-time name validation
+            const nameInput = document.getElementById('name');
+            nameInput.addEventListener('input', () => {
+                const name = nameInput.value;
+                if (name.length > 0) {
+                    if (!validateName(name)) {
+                        nameInput.style.borderColor = '#ef4444';
+                        nameInput.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                    } else {
+                        nameInput.style.borderColor = 'var(--secondary)';
+                        nameInput.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+                    }
+                } else {
+                    nameInput.style.borderColor = '';
+                    nameInput.style.backgroundColor = '';
+                }
+            });
+
+            // Clear validation styling on focus
+            nameInput.addEventListener('focus', () => {
+                nameInput.style.borderColor = '';
+                nameInput.style.backgroundColor = '';
+            });
 
             try {
                 const qrUrl = await getPromptPayQR(total);
@@ -257,6 +377,12 @@
             const turnstileResponse = turnstileInput.value;
             if (!turnstileResponse) {
                 alert('Please complete the security check (I am not a robot).');
+                return;
+            }
+
+            // 0.5. Name Validation
+            const nameInput = document.getElementById('name').value;
+            if (!validateName(nameInput)) {
                 return;
             }
 
