@@ -213,23 +213,19 @@
             try {
                 // Import and use the getPromptPayQR function from checkout.js
                 const { getPromptPayQR } = await import('./js/checkout.js');
-                const qrData = await getPromptPayQR(selectedAmount);
+                const qrUrl = await getPromptPayQR(selectedAmount);
                 
-                if (qrData.result === 'success') {
-                    // Display QR code
-                    const qrImg = document.getElementById('donation-qr');
-                    qrImg.src = qrData.qrCode;
-                    qrImg.onload = () => {
-                        document.getElementById('qr-loader').style.display = 'none';
-                        qrImg.style.display = 'block';
-                        document.getElementById('thank-you-message').style.display = 'block';
-                    };
-                    qrImg.onerror = () => {
-                        throw new Error('Failed to load QR code image');
-                    };
-                } else {
-                    throw new Error(qrData.error || 'Failed to generate QR code');
-                }
+                // Display QR code
+                const qrImg = document.getElementById('donation-qr');
+                qrImg.src = qrUrl;
+                qrImg.onload = () => {
+                    document.getElementById('qr-loader').style.display = 'none';
+                    qrImg.style.display = 'block';
+                    document.getElementById('thank-you-message').style.display = 'block';
+                };
+                qrImg.onerror = () => {
+                    throw new Error('Failed to load QR code image');
+                };
             } catch (error) {
                 console.error('QR generation error:', error);
                 document.getElementById('qr-loader').innerHTML = `
