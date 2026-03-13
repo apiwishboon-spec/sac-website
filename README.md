@@ -93,9 +93,10 @@ The website is fully responsive and works seamlessly across:
 
 ## 📧 Contact
 
-- **Email**: [Your club email]
+- **Facebook**: https://www.facebook.com/SuankularbAstronomyClub
+- **Instagram**: https://www.instagram.com/skastronomy_official/
+- **Phone**: 02-2255605 ต่อ 631
 - **Address**: 88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200
-- **Social**: [Social media links]
 
 ## 👥 Author
 
