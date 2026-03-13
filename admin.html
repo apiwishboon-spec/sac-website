@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+  <title>Admin — Suankularb Astronomy Club</title>
+  <link rel="icon" type="image/png" href="images/favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    /* Admin-specific styles */
+    .login-box {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 400px;
+      margin: 10vh auto;
+      text-align: center;
+      backdrop-filter: blur(20px);
+    }
+
+    .login-logo {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .login-sub {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    #pw-input {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.2);
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .login-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn-go, .btn-cancel-login {
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-go {
+      background: var(--secondary);
+      color: var(--bg-dark);
+    }
+
+    .btn-cancel-login {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--glass-border);
+    }
+
+    .login-error {
+      color: #ef4444;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .topbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+
+    .topbar-brand {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .topbar-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.1);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topbar-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .topbar-btn.danger {
+      background: rgba(239,68,68,0.2);
+      color: #ef4444;
+    }
+
+    .topbar-btn.danger:hover {
+      background: rgba(239,68,68,0.3);
+    }
+
+    .dash-main {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .page-sub {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255,255,255,0.1) 50%, var(--bg-card) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin: 2rem 0 1rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .chart-card h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 300px;
+    }
+
+    .newsletter-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nl-info h4 {
+      margin-top: 0;
+      color: var(--text-main);
+    }
+
+    .nl-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .btn-compose, .btn-quick-send {
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .btn-compose {
+      background: var(--secondary);
+      color: var(--bg-dark);
+    }
+
+    .btn-quick-send {
+      background: rgba(255,255,255,0.1);
+      color: var(--text-main);
+      border: 1px solid var(--glass-border);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .email-modal {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--text-main);
+    }
+
+    .field {
+      margin-bottom: 1.5rem;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .field input, .field textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      background: rgba(0,0,0,0.2);
+      color: white;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .preview-box {
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 1rem;
+      background: rgba(0,0,0,0.1);
+      min-height: 100px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      padding: 1.5rem;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .btn-preview2, .btn-send-email {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-preview2 {
+      background: rgba(255,255,255,0.1);
+      color: var(--text-main);
+    }
+
+    .btn-send-email {
+      background: var(--secondary);
+      color: var(--bg-dark);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      color: var(--text-main);
+      font-weight: 600;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .newsletter-panel {
+        grid-template-columns: 1fr;
+      }
+      
+      .topbar {
+        padding: 1rem;
+      }
+      
+      .topbar-brand {
+        font-size: 1rem;
+      }
+      
+      .topbar-btn {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stars"></div>
+
+  <!-- LOGIN WALL -->
+  <div id="login-wall">
+    <div class="login-box">
+      <div class="login-logo">🌟 SAC Admin</div>
+      <p class="login-sub">Admin Dashboard &nbsp;·&nbsp; Secure Access</p>
+
+      <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password">
+
+      <div class="login-btns">
+        <button class="btn-go" id="btn-go" onclick="attemptAdminLogin()">Go →</button>
+        <button class="btn-cancel-login" onclick="cancelLogin()">Cancel</button>
+      </div>
+
+      <p class="login-error" id="login-error"></p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" style="display: none;">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <span class="topbar-brand">🌟 SAC Admin</span>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="refreshData()">🔄 Refresh</button>
+        <a href="index.html" class="topbar-btn">🏪 Back to Site</a>
+        <button class="topbar-btn danger" onclick="logout()">🔒 Log out</button>
+      </div>
+    </header>
+
+    <main class="dash-main">
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-sub" id="last-updated">Loading analytics…</p>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+        <div class="stat-card" style="cursor:pointer;" onclick="openStatModal('orders')" title="View completed orders">
+          <div class="stat-icon" style="background:#fef3c7;">🛍️</div>
+          <div>
+            <div class="stat-value skeleton" id="total-orders">—</div>
+            <div class="stat-label">Completed Orders</div>
+          </div>
+        </div>
+        <div class="stat-card" style="cursor:pointer;" onclick="openStatModal('revenue')"
+          title="View revenue breakdown">
+          <div class="stat-icon" style="background:#dcfce7;">💳</div>
+          <div>
+            <div class="stat-value skeleton" id="total-revenue">—</div>
+            <div class="stat-label">Total Revenue</div>
+          </div>
+        </div>
+        <div class="stat-card" style="cursor:pointer;" onclick="openStatModal('products')" title="View products sold">
+          <div class="stat-icon" style="background:#eff6ff;">📦</div>
+          <div>
+            <div class="stat-value skeleton" id="products-sold">—</div>
+            <div class="stat-label">Products Sold</div>
+          </div>
+        </div>
+        <div class="stat-card" style="cursor:pointer;" onclick="openStatModal('customers')"
+          title="View unique customers">
+          <div class="stat-icon" style="background:#f5f3ff;">👥</div>
+          <div>
+            <div class="stat-value skeleton" id="new-customers">—</div>
+            <div class="stat-label">Unique Customers</div>
+          </div>
+        </div>
+        <div class="stat-card" style="cursor:pointer;" onclick="openStatModal('subscribers')" title="View subscribers">
+          <div class="stat-icon" style="background:#fdf2f8;">📬</div>
+          <div>
+            <div class="stat-value skeleton" id="subscriber-count">—</div>
+            <div class="stat-label">Subscribers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="section-title">📊 Analytics Overview</div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>📈 Store Metrics</h3>
+          <div class="chart-wrap">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>🎯 Audience Breakdown</h3>
+          <div class="chart-wrap">
+            <canvas id="donutChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- INCOMPLETE ORDERS -->
+      <div class="section-title" style="margin-top:36px;">⏳ Incomplete Orders</div>
+      <div style="margin-bottom:12px; display:flex; justify-content:flex-end;">
+        <button class="topbar-btn" onclick="loadIncompleteOrders()">🔄 Reload Orders</button>
+      </div>
+      <div id="orders-panel" style="overflow-x:auto;">
+        <p style="color:#aaa;">Loading incomplete orders…</p>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="section-title" style="margin-top:36px;">📧 Newsletter</div>
+      <div class="newsletter-panel">
+        <div class="nl-info">
+          <h4>Send to All Subscribers</h4>
+          <p>Reach your audience with a custom HTML email or default template</p>
+        </div>
+        <div class="nl-actions">
+          <button class="btn-compose" onclick="showEmailEditor()">✏️ Compose Email</button>
+          <button class="btn-quick-send" onclick="sendQuickNewsletter()">📨 Quick Send</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- EMAIL EDITOR MODAL -->
+  <div class="modal-overlay hidden" id="email-modal">
+    <div class="email-modal">
+      <div class="modal-head">
+        <h3>✏️ Compose Newsletter</h3>
+        <button class="modal-close" onclick="closeEmailEditor()">✕</button>
+      </div>
+
+      <div class="field">
+        <label>Subject</label>
+        <input type="text" id="email-subject" placeholder="e.g. New Astronomy Events 🌟">
+      </div>
+
+      <div class="field">
+        <label>HTML Content</label>
+        <textarea id="email-content" rows="11" placeholder="Paste your HTML email body here…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Preview</label>
+        <div class="preview-box" id="email-preview">
+          <span style="color:#aaa;font-size:.85rem;">Click Preview to render HTML…</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-preview2" id="preview-email-btn" onclick="previewEmail()">👁️ Preview</button>
+        <button class="btn-send-email" id="send-custom-newsletter-btn">📧 Send to All Subscribers</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Stat Detail Modal -->
+  <div id="stat-modal-overlay"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;padding:20px;overflow-y:auto;"
+    onclick="closeStatModal(event)">
+    <div style="background:var(--bg-card);border-radius:16px;max-width:720px;margin:40px auto;padding:28px;position:relative;border:1px solid var(--glass-border);"
+      onclick="event.stopPropagation()">
+      <button onclick="closeStatModal()"
+        style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">✕</button>
+      <h3 id="stat-modal-title" style="margin-top:0;color:var(--text-main);"></h3>
+      <div id="stat-modal-body" style="margin-top:16px;overflow-x:auto;color:var(--text-main);"></div>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_API = "https://script.google.com/macros/s/AKfycbxENBG6cKm3ImJd_6gjvxCUnM-hG0xeNhPhjLUleDCyh0JsXhkkG7wOwkBjRW43j-88mg/exec";
+
+    // Notification System
+    let previousOrderIds = new Set();
+    let notificationPermission = 'default';
+
+    // Request notification permission on page load
+    async function requestNotificationPermission() {
+      if ('Notification' in window) {
+        if (Notification.permission === 'default') {
+          const permission = await Notification.requestPermission();
+          notificationPermission = permission;
+          if (permission === 'granted') {
+            showAdminToast('🔔 Notifications enabled! You will be alerted about new orders.');
+          } else if (permission === 'denied') {
+            showAdminToast('⚠️ Notifications blocked. Please enable in browser settings for order alerts.');
+          }
+        } else {
+          notificationPermission = Notification.permission;
+        }
+      }
+    }
+
+    // Show notification for new orders
+    function showOrderNotification(newOrders) {
+      if (notificationPermission !== 'granted') return;
+
+      newOrders.forEach((order, index) => {
+        setTimeout(() => {
+          const notification = new Notification('🛍️ New Order Received!', {
+            body: `${order.item} (${order.size}) - ฿${order.total}\nCustomer: ${order.email}`,
+            icon: '/images/favicon.ico',
+            tag: `order-${order.orderId}`,
+            requireInteraction: true,
+            actions: [
+              {
+                action: 'view',
+                title: 'View Order'
+              }
+            ]
+          });
+
+          // Handle notification click
+          notification.onclick = function() {
+            window.focus();
+            notification.close();
+            // Scroll to orders section
+            document.getElementById('orders-panel').scrollIntoView({ behavior: 'smooth' });
+          };
+        }, index * 1000); // Stagger notifications if multiple
+      });
+    }
+
+    // Check for new orders
+    function checkForNewOrders(currentOrders) {
+      const currentOrderIds = new Set(currentOrders.map(o => o.orderId).filter(Boolean));
+      const newOrderIds = [...currentOrderIds].filter(id => !previousOrderIds.has(id));
+      
+      if (newOrderIds.length > 0) {
+        const newOrders = currentOrders.filter(o => newOrderIds.includes(o.orderId));
+        showOrderNotification(newOrders);
+        
+        // Show admin toast for multiple orders
+        if (newOrders.length === 1) {
+          showAdminToast(`🔔 New order: ${newOrders[0].item} from ${newOrders[0].email}`);
+        } else {
+          showAdminToast(`🔔 ${newOrders.length} new orders received!`);
+        }
+      }
+      
+      previousOrderIds = currentOrderIds;
+    }
+
+    const tblStyle = `<style>
+      .orders-tbl{width:100%;border-collapse:collapse;font-size:.85rem;}
+      .orders-tbl th{background:var(--bg-card);padding:10px 12px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:2px solid var(--glass-border);}
+      .orders-tbl td{padding:10px 12px;border-bottom:1px solid var(--glass-border);vertical-align:middle;word-break:break-word;}
+      .orders-tbl tr:hover td{background:rgba(255,255,255,0.05);}
+      .btn-mark-done{background:var(--secondary);color:var(--bg-dark);border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:600;white-space:nowrap;}
+      .btn-mark-done:disabled{background:#86efac;cursor:not-allowed;}
+      .slip-link{color:var(--secondary);text-decoration:none;} .slip-link:hover{text-decoration:underline;}
+    </style>`;
+
+    function getAdminToken() {
+      return localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken') || '';
+    }
+
+    function attemptAdminLogin() {
+      const password = document.getElementById('pw-input').value;
+      const error = document.getElementById('login-error');
+      
+      if (!password) {
+        error.textContent = 'Please enter a password';
+        return;
+      }
+
+      // Simple password check (in production, use proper authentication)
+      if (password === 'sacadmin2026') {
+        localStorage.setItem('adminToken', 'sac_admin_token_' + Date.now());
+        sessionStorage.setItem('adminToken', 'sac_admin_token_' + Date.now());
+        document.getElementById('login-wall').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        showAdminToast('🎉 Login successful!');
+        loadDashboard();
+      } else {
+        error.textContent = 'Invalid password. Please try again.';
+        document.getElementById('pw-input').value = '';
+      }
+    }
+
+    function cancelLogin() {
+      window.location.href = 'index.html';
+    }
+
+    function logout() {
+      localStorage.removeItem('adminToken');
+      sessionStorage.removeItem('adminToken');
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('login-wall').style.display = 'flex';
+      showAdminToast('👋 Logged out successfully');
+    }
+
+    async function loadDashboard() {
+      loadIncompleteOrders();
+      updateStats();
+      initCharts();
+    }
+
+    async function updateStats() {
+      // Mock data for demonstration - replace with real API calls
+      document.getElementById('total-orders').textContent = '47';
+      document.getElementById('total-revenue').textContent = '฿12,450';
+      document.getElementById('products-sold').textContent = '89';
+      document.getElementById('new-customers').textContent = '63';
+      document.getElementById('subscriber-count').textContent = '156';
+      document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleString();
+      
+      // Remove skeleton loading state
+      document.querySelectorAll('.stat-value').forEach(el => el.classList.remove('skeleton'));
+    }
+
+    function initCharts() {
+      // Bar Chart
+      const barCtx = document.getElementById('barChart').getContext('2d');
+      new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Orders',
+            data: [12, 19, 8, 15, 22, 18],
+            backgroundColor: 'rgba(245, 158, 11, 0.5)',
+            borderColor: 'rgba(245, 158, 11, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#fff' }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#fff' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+              ticks: { color: '#fff' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+          }
+        }
+      });
+
+      // Donut Chart
+      const donutCtx = document.getElementById('donutChart').getContext('2d');
+      new Chart(donutCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Direct', 'Social Media', 'News', 'Referrals'],
+          datasets: [{
+            data: [35, 25, 20, 20],
+            backgroundColor: [
+              'rgba(245, 158, 11, 0.7)',
+              'rgba(59, 130, 246, 0.7)',
+              'rgba(16, 185, 129, 0.7)',
+              'rgba(239, 68, 68, 0.7)'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#fff' }
+            }
+          }
+        }
+      });
+    }
+
+    async function loadIncompleteOrders() {
+      const panel = document.getElementById('orders-panel');
+      if (!panel) return;
+      
+      // Mock data for demonstration - replace with real API call
+      const mockOrders = [
+        {
+          orderId: 'SAC-001',
+          email: 'student1@school.ac.th',
+          phone: '081-234-5678',
+          item: 'SAC T-Shirt',
+          qty: 1,
+          size: 'L',
+          total: '250',
+          status: 'Pending',
+          slipUrl: null,
+          rowIndex: 0
+        },
+        {
+          orderId: 'SAC-002',
+          email: 'student2@school.ac.th',
+          phone: '082-345-6789',
+          item: 'Moon Keychain',
+          qty: 2,
+          size: 'N/A',
+          total: '180',
+          status: 'Pending',
+          slipUrl: null,
+          rowIndex: 1
+        }
+      ];
+      
+      if (mockOrders.length === 0) { 
+        panel.innerHTML = '<p style="color:#4ade80;font-weight:600;">✅ All orders are completed!</p>'; 
+        return; 
+      }
+      
+      let rows = '';
+      mockOrders.forEach((o, idx) => {
+        const slip = o.slipUrl ? '<a class="slip-link" href="' + o.slipUrl + '" target="_blank">View 📄</a>' : '-';
+        rows += '<tr id="row-' + o.rowIndex + '">'
+          + '<td>' + (idx + 1) + '</td>'
+          + '<td><code>' + (o.orderId || '-') + '</code></td>'
+          + '<td>' + (o.email || '-') + '</td>'
+          + '<td>' + (o.phone || '-') + '</td>'
+          + '<td>' + (o.item || '-') + '</td>'
+          + '<td>' + (o.qty || '-') + '</td>'
+          + '<td><b>' + (o.size || '-') + '</b></td>'
+          + '<td>฿' + (o.total || '-') + '</td>'
+          + '<td>' + slip + '</td>'
+          + '<td><span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:20px;font-size:.75rem;">' + (o.status || 'Pending') + '</span></td>'
+          + '<td><button class="btn-mark-done" onclick="markDone(' + o.rowIndex + ', this)">✅ Done</button></td>'
+          + '</tr>';
+      });
+      
+      panel.innerHTML = tblStyle + '<table class="orders-tbl"><thead><tr><th>#</th><th>Order ID</th><th>Email</th><th>Phone</th><th>Item</th><th>Qty</th><th>Size</th><th>Total</th><th>Slip</th><th>Status</th><th>Action</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    }
+
+    async function markDone(rowIndex, btn) {
+      btn.disabled = true; 
+      btn.textContent = 'Saving...';
+      
+      // Mock API call - replace with real implementation
+      setTimeout(() => {
+        const row = document.getElementById('row-' + rowIndex);
+        if (row) { 
+          row.style.opacity = '0.4'; 
+          row.style.transition = 'opacity .5s'; 
+        }
+        btn.textContent = 'Done!';
+        showAdminToast('Order marked as Done!');
+      }, 1000);
+    }
+
+    let _cachedOrders = null;
+
+    async function openStatModal(type) {
+      document.getElementById('stat-modal-overlay').style.display = 'block';
+      const title = document.getElementById('stat-modal-title');
+      const body = document.getElementById('stat-modal-body');
+      
+      // Mock data - replace with real API calls
+      if (type === 'orders') {
+        title.textContent = 'Completed Orders';
+        body.innerHTML = '<p style="color:var(--text-muted);">Loading completed orders...</p>';
+        setTimeout(() => {
+          body.innerHTML = '<p style="color:var(--text-muted);">47 completed orders found</p>';
+        }, 500);
+      } else if (type === 'revenue') {
+        title.textContent = 'Revenue Breakdown';
+        body.innerHTML = '<p style="color:var(--text-muted);">Loading revenue data...</p>';
+        setTimeout(() => {
+          body.innerHTML = '<p style="color:var(--text-muted);">Total Revenue: ฿12,450</p>';
+        }, 500);
+      } else if (type === 'products') {
+        title.textContent = 'Products Sold';
+        body.innerHTML = '<p style="color:var(--text-muted);">Loading product data...</p>';
+        setTimeout(() => {
+          body.innerHTML = '<p style="color:var(--text-muted);">89 products sold</p>';
+        }, 500);
+      } else if (type === 'customers') {
+        title.textContent = 'Unique Customers';
+        body.innerHTML = '<p style="color:var(--text-muted);">Loading customer data...</p>';
+        setTimeout(() => {
+          body.innerHTML = '<p style="color:var(--text-muted);">63 unique customers</p>';
+        }, 500);
+      } else {
+        title.textContent = 'Subscribers';
+        body.innerHTML = '<p style="color:var(--text-muted);">Loading subscribers...</p>';
+        setTimeout(() => {
+          body.innerHTML = '<p style="color:var(--text-muted);">156 newsletter subscribers</p>';
+        }, 500);
+      }
+    }
+
+    function closeStatModal(e) {
+      if (!e || e.target === document.getElementById('stat-modal-overlay'))
+        document.getElementById('stat-modal-overlay').style.display = 'none';
+    }
+
+    function refreshData() {
+      showAdminToast('🔄 Refreshing data...');
+      loadDashboard();
+    }
+
+    function showEmailEditor() {
+      document.getElementById('email-modal').classList.remove('hidden');
+    }
+
+    function closeEmailEditor() {
+      document.getElementById('email-modal').classList.add('hidden');
+    }
+
+    function previewEmail() {
+      const content = document.getElementById('email-content').value;
+      const preview = document.getElementById('email-preview');
+      
+      if (!content) {
+        preview.innerHTML = '<span style="color:#aaa;">No content to preview</span>';
+        return;
+      }
+      
+      preview.innerHTML = DOMPurify.sanitize(content);
+    }
+
+    function sendQuickNewsletter() {
+      showAdminToast('📧 Quick newsletter feature coming soon!');
+    }
+
+    function showAdminToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) { 
+        t.textContent = msg; 
+        t.classList.add('show'); 
+        setTimeout(() => t.classList.remove('show'), 3000); 
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      const token = getAdminToken();
+      if (token) {
+        document.getElementById('login-wall').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadDashboard();
+        requestNotificationPermission();
+      }
+    });
+
+    // Handle Enter key in password field
+    document.getElementById('pw-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        attemptAdminLogin();
+      }
+    });
+  </script>
+</body>
+</html>
