@@ -55,10 +55,42 @@
                     <h2 style="margin-bottom: 1.5rem; color: var(--accent);">Support Our Mission</h2>
                     <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">Your donations help us
                         maintain the Sirindhorn Planetarium and acquire essential equipment for discovery.</p>
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <button class="btn btn-outline" style="min-width: 150px; font-weight: 700;">฿500</button>
-                        <button class="btn btn-outline" style="min-width: 150px; font-weight: 700;">฿1,000</button>
-                        <button class="btn btn-outline" style="min-width: 150px; font-weight: 700;">฿5,000</button>
+                    
+                    <!-- Donation Amount Selection -->
+                    <div id="donation-amounts" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+                        <button class="btn btn-outline donation-amount" data-amount="50" style="min-width: 120px; font-weight: 700;">฿50</button>
+                        <button class="btn btn-outline donation-amount" data-amount="100" style="min-width: 120px; font-weight: 700;">฿100</button>
+                        <button class="btn btn-outline donation-amount" data-amount="200" style="min-width: 120px; font-weight: 700;">฿200</button>
+                        <button class="btn btn-outline donation-amount" data-amount="500" style="min-width: 120px; font-weight: 700;">฿500</button>
+                        <button class="btn btn-outline donation-amount" data-amount="1000" style="min-width: 120px; font-weight: 700;">฿1,000</button>
+                        <button class="btn btn-outline donation-amount" data-amount="custom" style="min-width: 120px; font-weight: 700;">Custom</button>
+                    </div>
+
+                    <!-- Custom Amount Input (Hidden by default) -->
+                    <div id="custom-amount-container" style="display: none; margin-bottom: 2rem;">
+                        <input type="number" id="custom-amount" placeholder="Enter custom amount (฿)" 
+                               min="1" style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--glass-border); 
+                                      background: rgba(0,0,0,0.2); color: white; text-align: center; width: 200px;">
+                    </div>
+
+                    <!-- Generate QR Button -->
+                    <button id="generate-qr-btn" class="btn btn-primary" style="padding: 1rem 2rem; display: none;">
+                        Generate Donation QR
+                    </button>
+
+                    <!-- QR Code Display Area -->
+                    <div id="qr-display" style="display: none; margin-top: 2rem;">
+                        <div style="background: white; padding: 2rem; border-radius: 12px; display: inline-block;">
+                            <div id="qr-loader" style="text-align: center; color: #333;">
+                                <i class="fas fa-spinner fa-spin fa-2x"></i>
+                                <p style="margin-top: 1rem;">Generating QR code...</p>
+                            </div>
+                            <img id="donation-qr" style="display: none; max-width: 300px; height: auto;">
+                        </div>
+                        <div id="thank-you-message" style="display: none; margin-top: 2rem;">
+                            <h3 style="color: var(--accent); margin-bottom: 1rem;">Thank you for donating!</h3>
+                            <p style="color: var(--text-muted);">Your support helps us continue our astronomical education mission.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,6 +147,98 @@
         </div>
     </footer>
     <script src="js/main.js" type="module"></script>
+    <script src="js/checkout.js" type="module"></script>
+    <script>
+        // Donation functionality
+        let selectedAmount = null;
+        
+        // Handle donation amount selection
+        document.querySelectorAll('.donation-amount').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active state from all buttons
+                document.querySelectorAll('.donation-amount').forEach(btn => {
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline');
+                });
+                
+                // Add active state to clicked button
+                this.classList.remove('btn-outline');
+                this.classList.add('btn-primary');
+                
+                const amount = this.dataset.amount;
+                
+                if (amount === 'custom') {
+                    // Show custom amount input
+                    document.getElementById('custom-amount-container').style.display = 'block';
+                    document.getElementById('custom-amount').focus();
+                    selectedAmount = null;
+                    document.getElementById('generate-qr-btn').style.display = 'none';
+                } else {
+                    // Hide custom amount input and set amount
+                    document.getElementById('custom-amount-container').style.display = 'none';
+                    selectedAmount = parseInt(amount);
+                    document.getElementById('generate-qr-btn').style.display = 'inline-block';
+                }
+                
+                // Hide previous QR if any
+                document.getElementById('qr-display').style.display = 'none';
+            });
+        });
+        
+        // Handle custom amount input
+        document.getElementById('custom-amount').addEventListener('input', function() {
+            const value = parseInt(this.value);
+            if (value && value > 0) {
+                selectedAmount = value;
+                document.getElementById('generate-qr-btn').style.display = 'inline-block';
+            } else {
+                selectedAmount = null;
+                document.getElementById('generate-qr-btn').style.display = 'none';
+            }
+        });
+        
+        // Handle QR generation
+        document.getElementById('generate-qr-btn').addEventListener('click', async function() {
+            if (!selectedAmount || selectedAmount <= 0) {
+                alert('Please select or enter a valid donation amount.');
+                return;
+            }
+            
+            // Show QR display area with loader
+            document.getElementById('qr-display').style.display = 'block';
+            document.getElementById('qr-loader').style.display = 'block';
+            document.getElementById('donation-qr').style.display = 'none';
+            document.getElementById('thank-you-message').style.display = 'none';
+            
+            try {
+                // Import and use the getPromptPayQR function from checkout.js
+                const { getPromptPayQR } = await import('./js/checkout.js');
+                const qrData = await getPromptPayQR(selectedAmount);
+                
+                if (qrData.result === 'success') {
+                    // Display QR code
+                    const qrImg = document.getElementById('donation-qr');
+                    qrImg.src = qrData.qrCode;
+                    qrImg.onload = () => {
+                        document.getElementById('qr-loader').style.display = 'none';
+                        qrImg.style.display = 'block';
+                        document.getElementById('thank-you-message').style.display = 'block';
+                    };
+                    qrImg.onerror = () => {
+                        throw new Error('Failed to load QR code image');
+                    };
+                } else {
+                    throw new Error(qrData.error || 'Failed to generate QR code');
+                }
+            } catch (error) {
+                console.error('QR generation error:', error);
+                document.getElementById('qr-loader').innerHTML = `
+                    <i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i>
+                    <p style="margin-top: 1rem;">Failed to generate QR code. Please try again.</p>
+                `;
+            }
+        });
+    </script>
 </body>
 
 </html>
