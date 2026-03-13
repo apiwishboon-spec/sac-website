@@ -269,30 +269,6 @@
             summaryTotal.textContent = `฿${total}`;
             paymentTotal.textContent = `฿${total.toFixed(2)}`;
 
-            // Add real-time name validation
-            const nameInput = document.getElementById('name');
-            nameInput.addEventListener('input', () => {
-                const name = nameInput.value;
-                if (name.length > 0) {
-                    if (!validateName(name)) {
-                        nameInput.style.borderColor = '#ef4444';
-                        nameInput.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-                    } else {
-                        nameInput.style.borderColor = 'var(--secondary)';
-                        nameInput.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
-                    }
-                } else {
-                    nameInput.style.borderColor = '';
-                    nameInput.style.backgroundColor = '';
-                }
-            });
-
-            // Clear validation styling on focus
-            nameInput.addEventListener('focus', () => {
-                nameInput.style.borderColor = '';
-                nameInput.style.backgroundColor = '';
-            });
-
             try {
                 const qrUrl = await getPromptPayQR(total);
                 qrImg.src = qrUrl;
@@ -382,7 +358,19 @@
 
             // 0.5. Name Validation
             const nameInput = document.getElementById('name').value;
+            const nameField = document.getElementById('name');
             if (!validateName(nameInput)) {
+                // Highlight the name field with error styling
+                nameField.style.borderColor = '#ef4444';
+                nameField.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                nameField.focus();
+                
+                // Clear error styling after 3 seconds
+                setTimeout(() => {
+                    nameField.style.borderColor = '';
+                    nameField.style.backgroundColor = '';
+                }, 3000);
+                
                 return;
             }
 
