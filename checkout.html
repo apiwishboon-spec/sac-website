@@ -85,8 +85,8 @@
                             </div>
 
                             <div class="form-group" style="margin-bottom: 2rem;">
-                                <label>Detailed Delivery Address</label>
-                                <textarea id="address" required rows="3" class="form-input" placeholder="Please provide detailed address including building name, room number, floor, etc."></textarea>
+                                <label>Delivery Address (Auto-filled from location)</label>
+                                <input type="text" id="address" required class="form-input" placeholder="Address will be auto-filled when location is selected">
                             </div>
 
                             <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 2rem 0;">
@@ -213,6 +213,10 @@
             marker = L.marker([lat, lng]).addTo(map);
             document.getElementById('latitude').value = lat.toFixed(6);
             document.getElementById('longitude').value = lng.toFixed(6);
+            
+            // Auto-fill address with location data
+            reverseGeocode(lat, lng);
+            
             document.getElementById('location-status').textContent = `Location selected: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
             document.getElementById('location-status').style.color = 'var(--secondary)';
         }
@@ -240,6 +244,10 @@
                     } else {
                         document.getElementById('latitude').value = lat.toFixed(6);
                         document.getElementById('longitude').value = lng.toFixed(6);
+                        
+                        // Auto-fill address with location data
+                        reverseGeocode(lat, lng);
+                        
                         statusEl.textContent = `Current location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
                         statusEl.style.color = 'var(--secondary)';
                     }
@@ -261,6 +269,29 @@
                     statusEl.style.color = '#ef4444';
                 }
             );
+        }
+
+        // Reverse geocoding function to get address from coordinates
+        async function reverseGeocode(lat, lng) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+                const data = await response.json();
+                
+                if (data && data.display_name) {
+                    // Format the address nicely
+                    const address = data.display_name;
+                    document.getElementById('address').value = address;
+                    
+                    // Update status
+                    const statusEl = document.getElementById('location-status');
+                    statusEl.textContent = `Address found: ${address.substring(0, 50)}${address.length > 50 ? '...' : ''}`;
+                    statusEl.style.color = 'var(--secondary)';
+                }
+            } catch (error) {
+                console.error('Reverse geocoding failed:', error);
+                // Fallback: show coordinates in address field
+                document.getElementById('address').value = `Location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            }
         }
 
         // Map button event listeners
