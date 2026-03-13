@@ -161,7 +161,10 @@ export async function loadIncompleteOrders() {
 
     if (result.result === 'success') {
       const allOrders = result.data.orders;
-      const filtered = allOrders.filter(o => String(o.status).toLowerCase() !== 'done');
+      const filtered = allOrders.filter(o => {
+        const s = String(o.status || 'Pending').toLowerCase().trim();
+        return s !== 'done';
+      });
 
       checkForNewOrders(filtered);
 
