@@ -71,8 +71,17 @@
                             <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 2rem 0;">
 
                             <h3 style="margin-bottom: 1.5rem;">Payment Transfer</h3>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Scan the QR
-                                code below using your banking app and upload the transfer slip.</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Select amount or use cart total, then scan the QR code below using your banking app and upload the transfer slip.</p>
+                            
+                            <!-- Amount Selection Buttons -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 0.5rem; margin-bottom: 1.5rem;">
+                                <button type="button" onclick="selectAmount(50)" class="amount-btn" data-amount="50" style="padding: 0.5rem; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-main); border-radius: 8px; cursor: pointer; transition: var(--transition);">฿50</button>
+                                <button type="button" onclick="selectAmount(100)" class="amount-btn" data-amount="100" style="padding: 0.5rem; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-main); border-radius: 8px; cursor: pointer; transition: var(--transition);">฿100</button>
+                                <button type="button" onclick="selectAmount(200)" class="amount-btn" data-amount="200" style="padding: 0.5rem; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-main); border-radius: 8px; cursor: pointer; transition: var(--transition);">฿200</button>
+                                <button type="button" onclick="selectAmount(500)" class="amount-btn" data-amount="500" style="padding: 0.5rem; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-main); border-radius: 8px; cursor: pointer; transition: var(--transition);">฿500</button>
+                                <button type="button" onclick="selectAmount(1000)" class="amount-btn" data-amount="1000" style="padding: 0.5rem; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-main); border-radius: 8px; cursor: pointer; transition: var(--transition);">฿1000</button>
+                                <button type="button" onclick="selectAmount('cart')" class="amount-btn" data-amount="cart" style="padding: 0.5rem; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-main); border-radius: 8px; cursor: pointer; transition: var(--transition);">Cart Total</button>
+                            </div>
 
                             <div
                                 style="text-align: center; margin-bottom: 2rem; position: relative; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid var(--glass-border); padding: 2rem;">
@@ -161,6 +170,66 @@
         const otpMsg = document.getElementById('otp-msg');
 
         let isOtpVerified = false;
+        let selectedAmount = cart.getTotal(); // Default to cart total
+
+        // Amount selection function
+        function selectAmount(amount) {
+            selectedAmount = amount === 'cart' ? cart.getTotal() : amount;
+            
+            // Update button styles
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.style.background = 'var(--bg-card)';
+                btn.style.color = 'var(--text-main)';
+                btn.style.borderColor = 'var(--glass-border)';
+            });
+            
+            // Highlight selected button
+            const selectedBtn = document.querySelector(`[data-amount="${amount}"]`);
+            if (selectedBtn) {
+                selectedBtn.style.background = 'var(--primary)';
+                selectedBtn.style.color = 'white';
+                selectedBtn.style.borderColor = 'var(--primary)';
+            }
+            
+            // Generate new QR code
+            generateQRCode(selectedAmount);
+        }
+
+        // Generate QR code function
+        async function generateQRCode(amount) {
+            const qrLoader = document.getElementById('qr-loader');
+            const qrImg = document.getElementById('promptpay-qr');
+            const totalDisplay = document.getElementById('total-display');
+            const paymentTotal = document.getElementById('payment-total');
+            const feeNote = document.getElementById('fee-note');
+            
+            // Show loader
+            qrLoader.style.display = 'block';
+            qrImg.style.display = 'none';
+            totalDisplay.style.display = 'none';
+            feeNote.style.display = 'none';
+            
+            try {
+                const qrUrl = await getPromptPayQR(amount);
+                qrImg.src = qrUrl;
+                
+                // Update total display
+                paymentTotal.textContent = `฿${amount.toFixed(2)}`;
+                
+                // Show elements once loaded
+                qrImg.onload = () => {
+                    qrLoader.style.display = 'none';
+                    qrImg.style.display = 'inline-block';
+                    totalDisplay.style.display = 'block';
+                    feeNote.style.display = 'block';
+                };
+                
+            } catch (err) {
+                console.error('Failed to load QR:', err);
+                qrLoader.innerHTML = '<i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i><p style="margin-top: 1rem;">QR loading failed. Refresh the page.</p>';
+                alert('Connection to payment gateway failed. Please refresh.');
+            }
+        }
 
         // Initialize Page
         document.addEventListener('DOMContentLoaded', async () => {
@@ -171,24 +240,17 @@
 
             const total = cart.getTotal();
             summaryTotal.textContent = `฿${total}`;
-            paymentTotal.textContent = `฿${total.toFixed(2)}`;
-
-            try {
-                const qrUrl = await getPromptPayQR(total);
-                qrImg.src = qrUrl;
-
-                // Show elements once loaded
-                qrImg.onload = () => {
-                    document.getElementById('qr-loader').style.display = 'none';
-                    qrImg.style.display = 'inline-block';
-                    document.getElementById('total-display').style.display = 'block';
-                    document.getElementById('fee-note').style.display = 'block';
-                };
-
-            } catch (err) {
-                console.error('Failed to load QR:', err);
-                document.getElementById('qr-loader').innerHTML = '<i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i><p style="margin-top: 1rem;">QR loading failed. Refresh the page.</p>';
-                alert('Connection to payment gateway failed. Please refresh.');
+            selectedAmount = total; // Set default to cart total
+            
+            // Generate initial QR code with cart total
+            generateQRCode(total);
+            
+            // Highlight cart total button by default
+            const cartBtn = document.querySelector('[data-amount="cart"]');
+            if (cartBtn) {
+                cartBtn.style.background = 'var(--primary)';
+                cartBtn.style.color = 'white';
+                cartBtn.style.borderColor = 'var(--primary)';
             }
 
             summaryItems.innerHTML = cart.items.map(item => `
@@ -295,7 +357,7 @@
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
                     address: document.getElementById('address').value,
-                    totalPrice: cart.getTotal(),
+                    totalPrice: selectedAmount, // Use selected amount instead of cart total
                     paymentSlipURL: slipUrl,
                     cart: cart.items.map(item => `${item.name} (${item.quantity})`).join(', '),
                     turnstileToken: turnstileResponse
@@ -310,7 +372,7 @@
                 const orderDate = new Date().toLocaleDateString();
                 
                 // Store order data for success page
-                const totalAmount = cart.getTotal();
+                const totalAmount = selectedAmount; // Use selected amount
                 localStorage.setItem('lastOrderId', orderId);
                 localStorage.setItem('lastOrderDate', orderDate);
                 localStorage.setItem('lastOrderTotal', totalAmount);
