@@ -1,6 +1,4 @@
 import { loadDashboard } from './dashboard.js';
-import { loadAdminNews } from './news-tab.js';
-import { loadAdminProducts } from './products-tab.js';
 
 export function initAdminTabs() {
     const navLinks = document.querySelectorAll('#main-nav a[data-target]');
@@ -20,8 +18,7 @@ export function initAdminTabs() {
             // Lazy-load data per tab
             const target = link.dataset.target;
             if (target === 'dashboard-pane') loadDashboard();
-            if (target === 'news-pane') loadAdminNews();
-            if (target === 'products-pane') loadAdminProducts();
+            // Orders pane might not need specific lazy load as it's often triggered manually or by dashboard load
         });
     });
 }

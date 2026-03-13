@@ -41,6 +41,8 @@ function doPost(e) {
       return handleGetOrders(data.token);
     } else if (action === "markOrderDone") {
       return handleMarkOrderDone(data.token, data.rowIndex);
+    } else if (action === "updateOrderStatus") {
+      return handleUpdateOrderStatus(data.token, data.rowIndex, data.status);
     } else if (action === "getStats") {
       return handleGetStats(data.token);
     } else {
@@ -189,18 +191,16 @@ function handleGetOrders(token) {
       var row = data[i];
       if (row.length > 0 && row[0]) { // Check if row has data
         orders.push({
-          rowIndex: i,
-          orderId: row[0] || '',
-          email: row[1] || '',
-          phone: row[2] || '',
-          item: row[3] || '',
-          qty: row[4] || '',
-          size: row[5] || '',
+          rowIndex: i + 1, // Store actual 1-based row index for updating
+          timestamp: row[0] || '',
+          name: row[1] || '',
+          email: row[2] || '',
+          phone: row[3] || '',
+          address: row[4] || '',
+          cart: row[5] || '',
           totalPrice: row[6] || '',
-          address: row[7] || '',
-          slipUrl: row[8] || '',
-          status: row[9] || 'Pending',
-          timestamp: row[10] || ''
+          slipUrl: row[7] || '',
+          status: row[8] || 'Pending'
         });
       }
     }
@@ -229,7 +229,8 @@ function handleMarkOrderDone(token, rowIndex) {
     }
     
     // Update status to "Done"
-    sheet.getRange(rowIndex + 1, 10).setValue("Done");
+    // Update status to "Done" in column 9 (Status)
+    sheet.getRange(rowIndex, 9).setValue("Done");
     
     return createResponse({ "result": "success" });
   } catch (error) {
@@ -407,12 +408,47 @@ function sendConfirmationEmail(order) {
   });
 }
 
-function handleUpdateOrderStatus(orderId, newStatus) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var orderSheet = ss.getSheetByName("Orders");
-  if (!orderSheet) {
-    return createResponse({ "result": "error", "message": "Orders sheet not found" });
+function handleUpdateOrderStatus(token, rowIndex, newStatus) {
+  try {
+    if (!token || !token.includes('sac_admin_token')) {
+      return createResponse({ "result": "error", "error": "Invalid admin token" });
+    }
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var orderSheet = ss.getSheetByName("Orders");
+    if (!orderSheet) {
+      return createResponse({ "result": "error", "error": "Orders sheet not found" });
+    }
+    
+    var data = orderSheet.getDataRange().getValues();
+    var targetRow = parseInt(rowIndex);
+    
+    if (isNaN(targetRow) || targetRow <= 1 || targetRow > data.length) {
+      return createResponse({ "result": "error", "error": "Invalid row index: " + rowIndex });
+    }
+    
+    // Status is at Column 9
+    orderSheet.getRange(targetRow, 9).setValue(newStatus);
+    
+    // Get info for email
+    var rowData = data[targetRow - 1]; // 0-indexed
+    var order = {
+      name: rowData[1],
+      email: rowData[2],
+      cart: rowData[5],
+      status: newStatus
+    };
+    
+    sendStatusUpdateEmail(order);
+    
+    return createResponse({ "result": "success" });
+  } catch (error) {
+    return createResponse({ "result": "error", "error": error.toString() });
   }
+}
+
+// Keep the old one for compatibility if needed, but we used the new signature in doPost
+function ___handleUpdateOrderStatus_legacy(orderId, newStatus) {
   
   var data = orderSheet.getDataRange().getValues();
   var headers = data[0];

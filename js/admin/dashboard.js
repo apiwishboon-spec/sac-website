@@ -35,58 +35,98 @@ function setText(id, val) {
 // ─── Charts ─────────────────────────────────────────────────────────────────
 let barChart, donutChart;
 
-export function initCharts() {
+export async function initCharts() {
   const barCtx = document.getElementById('barChart')?.getContext('2d');
   const donutCtx = document.getElementById('donutChart')?.getContext('2d');
   if (!barCtx || !donutCtx) return;
 
-  if (barChart) barChart.destroy();
-  if (donutChart) donutChart.destroy();
+  try {
+    const res = await fetch(ADMIN_API, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getOrders', token: getAdminToken() }),
+    });
+    const result = await res.json();
+    if (result.result !== 'success') throw new Error(result.error);
 
-  const chartColor = '#94a3b8';
-  const gridColor = 'rgba(255,255,255,0.06)';
+    const allOrders = result.data.orders;
 
-  barChart = new Chart(barCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-      datasets: [{
-        label: 'Orders',
-        data: [4, 8, 5, 12, 9, 15],
-        backgroundColor: 'rgba(14,165,233,0.45)',
-        borderColor: 'rgba(14,165,233,0.9)',
-        borderWidth: 2,
-        borderRadius: 6,
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: chartColor } } },
-      scales: {
-        y: { beginAtZero: true, ticks: { color: chartColor }, grid: { color: gridColor } },
-        x: { ticks: { color: chartColor }, grid: { color: gridColor } },
+    // Process Bar Chart (Monthly Orders)
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthlyData = new Array(12).fill(0);
+    allOrders.forEach(o => {
+      if (!o.timestamp) return;
+      const date = new Date(o.timestamp);
+      if (!isNaN(date.getTime())) {
+        monthlyData[date.getMonth()]++;
+      }
+    });
+
+    // Process Donut Chart (Status Breakdown)
+    const statusCounts = { 'Pending': 0, 'Shipping': 0, 'Ready': 0, 'Done': 0 };
+    allOrders.forEach(o => {
+      const s = o.status || 'Pending';
+      if (statusCounts.hasOwnProperty(s)) {
+        statusCounts[s]++;
+      } else {
+        statusCounts['Pending']++;
+      }
+    });
+
+    if (barChart) barChart.destroy();
+    if (donutChart) donutChart.destroy();
+
+    const chartColor = '#94a3b8';
+    const gridColor = 'rgba(255,255,255,0.06)';
+
+    barChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Orders',
+          data: monthlyData,
+          backgroundColor: 'rgba(14,165,233,0.45)',
+          borderColor: 'rgba(14,165,233,0.9)',
+          borderWidth: 2,
+          borderRadius: 6,
+        }],
       },
-    },
-  });
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: chartColor } } },
+        scales: {
+          y: { beginAtZero: true, ticks: { color: chartColor, stepSize: 1 }, grid: { color: gridColor } },
+          x: { ticks: { color: chartColor }, grid: { color: gridColor } },
+        },
+      },
+    });
 
-  donutChart = new Chart(donutCtx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Completed', 'Pending'],
-      datasets: [{
-        data: [65, 35],
-        backgroundColor: ['rgba(16,185,129,0.75)', 'rgba(251,191,36,0.75)'],
-        borderWidth: 0,
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '70%',
-      plugins: { legend: { position: 'bottom', labels: { color: chartColor, padding: 20 } } },
-    },
-  });
+    donutChart = new Chart(donutCtx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(statusCounts),
+        datasets: [{
+          data: Object.values(statusCounts),
+          backgroundColor: [
+            'rgba(251, 191, 36, 0.75)', // Pending (Yellow)
+            'rgba(59, 130, 246, 0.75)',  // Shipping (Blue)
+            'rgba(139, 92, 246, 0.75)', // Ready (Purple)
+            'rgba(16, 185, 129, 0.75)'   // Done (Green)
+          ],
+          borderWidth: 0,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: { legend: { position: 'bottom', labels: { color: chartColor, padding: 20 } } },
+      },
+    });
+  } catch (e) {
+    console.error('Chart Load Error:', e);
+  }
 }
 
 // ─── Orders table ────────────────────────────────────────────────────────────
@@ -95,9 +135,12 @@ const tblStyle = `<style id="tbl-style">
   .orders-tbl th{background:rgba(255,255,255,0.04);padding:10px 14px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:2px solid var(--glass-border);color:var(--text-muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:.5px;}
   .orders-tbl td{padding:12px 14px;border-bottom:1px solid var(--glass-border);vertical-align:middle;word-break:break-word;}
   .orders-tbl tr:hover td{background:rgba(255,255,255,0.025);}
-  .btn-mark-done{background:#10b981;color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:600;white-space:nowrap;font-size:.8rem;transition:all .2s;}
-  .btn-mark-done:hover{background:#059669;}
-  .btn-mark-done:disabled{background:#6ee7b7;cursor:not-allowed;color:#fff;}
+  .order-actions{display:flex;gap:0.5rem;}
+  .btn-status{padding:6px 10px;border-radius:6px;border:1px solid var(--glass-border);background:rgba(0,0,0,0.2);color:var(--text-main);cursor:pointer;font-size:0.75rem;font-weight:600;transition:all 0.2s;}
+  .btn-status:hover{background:rgba(255,255,255,0.1);}
+  .btn-pending:hover{border-color:#fbbf24;color:#fbbf24;}
+  .btn-shipping:hover{border-color:#3b82f6;color:#3b82f6;}
+  .btn-ready:hover{border-color:#10b981;color:#10b981;}
   .slip-link{color:var(--secondary);text-decoration:none;}
   .slip-link:hover{text-decoration:underline;}
 </style>`;
@@ -115,40 +158,51 @@ export async function loadIncompleteOrders() {
     const result = await res.json();
 
     if (result.result === 'success') {
-      const pending = result.data.orders.filter(o => String(o.status).toLowerCase() !== 'done');
+      const allOrders = result.data.orders;
+      const filtered = allOrders.filter(o => String(o.status).toLowerCase() !== 'done');
 
-      checkForNewOrders(pending);
+      checkForNewOrders(filtered);
 
-      if (pending.length === 0) {
+      if (filtered.length === 0) {
         panel.innerHTML = '<div style="text-align:center;padding:3rem;"><div style="font-size:3rem;">✅</div><p style="color:#4ade80;font-weight:600;margin-top:.5rem;">All orders completed!</p></div>';
         return;
       }
 
-      let rows = pending.map((o, i) => {
+      let rows = filtered.map((o, i) => {
         const slip = o.slipUrl
           ? `<a class="slip-link" href="${o.slipUrl}" target="_blank">View 📄</a>`
           : '—';
+
+        let statusColor = '#fbbf24';
+        if (o.status === 'Shipping') statusColor = '#3b82f6';
+        if (o.status === 'Ready') statusColor = '#10b981';
+
         return `<tr id="row-${o.rowIndex}">
           <td>${i + 1}</td>
-          <td><code style="font-size:.8rem;opacity:.7">${o.orderId || '—'}</code></td>
-          <td>${o.email || '—'}</td>
+          <td><code style="font-size:.8rem;opacity:.7">${new Date(o.timestamp).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' })}</code></td>
+          <td>${o.name || '—'}<br><small style="color:var(--text-muted)">${o.email || ''}</small></td>
           <td>${o.phone || '—'}</td>
-          <td><strong>${o.item || '—'}</strong></td>
-          <td>${o.qty || '—'}</td>
-          <td>${o.size || '—'}</td>
+          <td><div style="max-width:200px;font-size:0.75rem;color:var(--text-muted)">${o.cart || '—'}</div></td>
           <td><strong>฿${o.totalPrice || '—'}</strong></td>
           <td>${slip}</td>
-          <td><span style="background:rgba(251,191,36,.15);color:#fbbf24;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">${o.status || 'Pending'}</span></td>
-          <td><button class="btn-mark-done" onclick="markDone(${o.rowIndex}, this)">✅ Done</button></td>
+          <td><span style="background:rgba(255,255,255,0.05);color:${statusColor};padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;border:1px solid ${statusColor}44;">${o.status || 'Pending'}</span></td>
+          <td>
+            <div class="order-actions">
+              <button class="btn-status btn-pending" onclick="updateStatus(${o.rowIndex}, 'Pending', this)">⏳ Pnd</button>
+              <button class="btn-status btn-shipping" onclick="updateStatus(${o.rowIndex}, 'Shipping', this)">🚚 Shp</button>
+              <button class="btn-status btn-ready" onclick="updateStatus(${o.rowIndex}, 'Ready', this)">✅ Rdy</button>
+              <button class="btn-status" style="border-color:#ef4444;color:#ef4444" onclick="markOrderDone(${o.rowIndex}, this)">🗑️ Done</button>
+            </div>
+          </td>
         </tr>`;
       }).join('');
 
       panel.innerHTML = tblStyle + `
         <table class="orders-tbl">
           <thead><tr>
-            <th>#</th><th>Order ID</th><th>Email</th><th>Phone</th>
-            <th>Item</th><th>Qty</th><th>Size</th><th>Total</th>
-            <th>Slip</th><th>Status</th><th>Action</th>
+            <th>#</th><th>Time</th><th>Customer</th><th>Phone</th>
+            <th>Items</th><th>Total</th>
+            <th>Slip</th><th>Status</th><th>Actions</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
@@ -160,9 +214,44 @@ export async function loadIncompleteOrders() {
   }
 }
 
-export async function markDone(rowIndex, btn) {
+export async function updateStatus(rowIndex, status, btn) {
+  const originalText = btn.textContent;
+  btn.textContent = '…';
   btn.disabled = true;
-  btn.textContent = 'Saving…';
+
+  try {
+    const res = await fetch(ADMIN_API, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'updateOrderStatus',
+        token: getAdminToken(),
+        rowIndex: rowIndex,
+        status: status
+      }),
+    });
+    const result = await res.json();
+
+    if (result.result === 'success') {
+      showAdminToast(`✅ Status updated to: ${status}`);
+      loadIncompleteOrders(); // Reload table
+      initCharts(); // Update status chart
+    } else {
+      showAdminToast('❌ ' + result.error);
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  } catch (e) {
+    showAdminToast('❌ Network error');
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+export async function markOrderDone(rowIndex, btn) {
+  if (!confirm('Mark as completely done? It will be moved to History.')) return;
+
+  btn.disabled = true;
+  btn.textContent = '…';
 
   try {
     const res = await fetch(ADMIN_API, {
@@ -172,18 +261,17 @@ export async function markDone(rowIndex, btn) {
     const result = await res.json();
 
     if (result.result === 'success') {
-      const row = document.getElementById('row-' + rowIndex);
-      if (row) { row.style.opacity = '0.35'; row.style.transition = 'opacity .5s'; }
-      btn.textContent = '✓ Done';
-      showAdminToast('✅ Order marked as done!');
+      showAdminToast('✅ Order moved to History');
+      loadIncompleteOrders();
+      initCharts();
     } else {
       btn.disabled = false;
-      btn.textContent = '✅ Done';
+      btn.textContent = '🗑️ Done';
       showAdminToast('❌ ' + result.error);
     }
   } catch (e) {
     btn.disabled = false;
-    btn.textContent = '✅ Done';
+    btn.textContent = '🗑️ Done';
     showAdminToast('❌ Network error');
   }
 }
@@ -216,23 +304,18 @@ export async function openStatModal(type) {
     if (type === 'orders') {
       title.textContent = '✅ Completed Orders';
       body.innerHTML = tbl(
-        ['Order ID', 'Email', 'Item', 'Size', 'Total'],
-        done.map(o => `<tr><td><code>${o.orderId || '—'}</code></td><td>${o.email}</td><td>${o.item}</td><td>${o.size || '—'}</td><td>฿${o.totalPrice}</td></tr>`).join(''),
+        ['Time', 'Email', 'Items', 'Total'],
+        done.map(o => `<tr><td><code>${new Date(o.timestamp).toLocaleDateString()}</code></td><td>${o.email}</td><td>${o.cart}</td><td>฿${o.totalPrice}</td></tr>`).join(''),
       );
     } else if (type === 'revenue') {
       title.textContent = '💳 Revenue Breakdown';
       body.innerHTML = tbl(
-        ['Order ID', 'Customer', 'Item', 'Amount'],
-        done.map(o => `<tr><td><code>${o.orderId || '—'}</code></td><td>${o.email}</td><td>${o.item}</td><td><strong>฿${o.totalPrice}</strong></td></tr>`).join(''),
+        ['Time', 'Customer', 'Amount'],
+        done.map(o => `<tr><td><code>${new Date(o.timestamp).toLocaleDateString()}</code></td><td>${o.email}</td><td><strong>฿${o.totalPrice}</strong></td></tr>`).join(''),
       );
     } else if (type === 'products') {
-      title.textContent = '📦 Products Sold';
-      const counts = {};
-      done.forEach(o => { counts[o.item] = (counts[o.item] || 0) + Number(o.qty || 1); });
-      body.innerHTML = tbl(
-        ['Product', 'Units Sold'],
-        Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<tr><td>${k}</td><td><strong>${v}</strong></td></tr>`).join(''),
-      );
+      title.textContent = '📦 Popular Selection';
+      body.innerHTML = '<p style="color:var(--text-muted)">Aggregation data coming from dashboard stats.</p>';
     } else if (type === 'customers') {
       title.textContent = '👥 Unique Customers';
       const emails = [...new Set(done.map(o => o.email).filter(Boolean))];
