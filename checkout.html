@@ -7,6 +7,7 @@
     <title>Checkout | Suankularb Astronomy Club</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
@@ -63,9 +64,29 @@
                                 <p id="otp-msg" style="font-size: 0.8rem; margin-top: 0.5rem;"></p>
                             </div>
 
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <label>Delivery Location</label>
+                                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                    <button type="button" id="use-current-location" class="btn btn-outline" style="flex: 1;">
+                                        <i class="fas fa-location-crosshairs"></i> Use Current Location
+                                    </button>
+                                    <button type="button" id="select-on-map" class="btn btn-outline" style="flex: 1;">
+                                        <i class="fas fa-map-marker-alt"></i> Select on Map
+                                    </button>
+                                </div>
+                                <div id="map-container" style="display: none; margin-bottom: 1rem;">
+                                    <div id="location-map" style="height: 300px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.02);"></div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+                                        <input type="text" id="latitude" placeholder="Latitude" readonly class="form-input" style="font-size: 0.8rem;">
+                                        <input type="text" id="longitude" placeholder="Longitude" readonly class="form-input" style="font-size: 0.8rem;">
+                                    </div>
+                                </div>
+                                <p id="location-status" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;"></p>
+                            </div>
+
                             <div class="form-group" style="margin-bottom: 2rem;">
-                                <label>Delivery Address</label>
-                                <textarea id="address" required rows="3" class="form-input"></textarea>
+                                <label>Detailed Delivery Address</label>
+                                <textarea id="address" required rows="3" class="form-input" placeholder="Please provide detailed address including building name, room number, floor, etc."></textarea>
                             </div>
 
                             <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 2rem 0;">
@@ -161,6 +182,103 @@
         const otpMsg = document.getElementById('otp-msg');
 
         let isOtpVerified = false;
+        let map = null;
+        let marker = null;
+
+        // Location functionality
+        function initializeMap() {
+            if (map) return; // Already initialized
+            
+            const mapContainer = document.getElementById('location-map');
+            if (!mapContainer) return;
+
+            // Default to Bangkok coordinates
+            map = L.map('location-map').setView([13.7563, 100.5018], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add click event to set location
+            map.on('click', function(e) {
+                setMarker(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
+        function setMarker(lat, lng) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker([lat, lng]).addTo(map);
+            document.getElementById('latitude').value = lat.toFixed(6);
+            document.getElementById('longitude').value = lng.toFixed(6);
+            document.getElementById('location-status').textContent = `Location selected: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            document.getElementById('location-status').style.color = 'var(--secondary)';
+        }
+
+        function getCurrentLocation() {
+            const statusEl = document.getElementById('location-status');
+            
+            if (!navigator.geolocation) {
+                statusEl.textContent = 'Geolocation is not supported by your browser';
+                statusEl.style.color = '#ef4444';
+                return;
+            }
+
+            statusEl.textContent = 'Getting your location...';
+            statusEl.style.color = 'var(--text-muted)';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    if (map) {
+                        map.setView([lat, lng], 15);
+                        setMarker(lat, lng);
+                    } else {
+                        document.getElementById('latitude').value = lat.toFixed(6);
+                        document.getElementById('longitude').value = lng.toFixed(6);
+                        statusEl.textContent = `Current location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                        statusEl.style.color = 'var(--secondary)';
+                    }
+                },
+                (error) => {
+                    let message = 'Unable to get your location';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message = 'Location access denied. Please enable location permissions.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message = 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            message = 'Location request timed out.';
+                            break;
+                    }
+                    statusEl.textContent = message;
+                    statusEl.style.color = '#ef4444';
+                }
+            );
+        }
+
+        // Map button event listeners
+        document.getElementById('use-current-location').addEventListener('click', () => {
+            getCurrentLocation();
+        });
+
+        document.getElementById('select-on-map').addEventListener('click', () => {
+            const mapContainer = document.getElementById('map-container');
+            if (mapContainer.style.display === 'none') {
+                mapContainer.style.display = 'block';
+                initializeMap();
+                document.getElementById('select-on-map').innerHTML = '<i class="fas fa-times"></i> Close Map';
+            } else {
+                mapContainer.style.display = 'none';
+                document.getElementById('select-on-map').innerHTML = '<i class="fas fa-map-marker-alt"></i> Select on Map';
+            }
+        });
 
         // Enhanced Name Validation
         function validateName(name) {
@@ -521,6 +639,8 @@
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
                     address: document.getElementById('address').value,
+                    latitude: document.getElementById('latitude').value,
+                    longitude: document.getElementById('longitude').value,
                     totalPrice: cart.getTotal(),
                     paymentSlipURL: slipUrl,
                     cart: cart.items.map(item => `${item.name} (${item.quantity})`).join(', '),
@@ -610,6 +730,7 @@
             </div>
         </div>
     </footer>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="js/main.js" type="module"></script>
 </body>
 
