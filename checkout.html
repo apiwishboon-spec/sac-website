@@ -162,31 +162,35 @@
 
         let isOtpVerified = false;
 
-        // Comprehensive Name Validation
+        // Enhanced Name Validation
         function validateName(name) {
             const n = name.toLowerCase().trim();
 
-            // Banned words and phrases
+            // Enhanced banned words and phrases
             const banned = [
-                // Admin/staff impersonation
-                "admin","administrator","moderator","mod","owner","system","root","support","staff","official","realadmin","superuser","adminhere","realowner","officialaccount","staffaccount","moderatoraccount",
-                // Generic/placeholder names
-                "unknown","null","none","guest","user","test","testing","example","sample","demo","name","yourname","me","you","someone","nobody","anonymous","default","username",
-                // Explicit content
-                "fuck","fucker","fucking","shit","shitty","bitch","bastard","ass","asshole","damn","wtf","crap","sex","sexy","sexual","porn","porno","pornhub","nsfw","nude","naked","boobs","boob","tits","penis","dick","cock","pussy","cum","horny","fetish","onlyfans","sugarbaby","sugardaddy",
-                // Recent trends/memes
-                "diddy","skibidi","sus","sigma",
-                // Phrases
-                "i am","you are","admin here","real admin","official admin",
-                // Numbers only
-                "123","1234","000","111","69","420","666",
-                // Symbols only
-                "-","_","."
+                // Admin/staff impersonation (expanded)
+                "admin","administrator","moderator","mod","owner","system","root","support","staff","official","realadmin","superuser","adminhere","realowner","officialaccount","staffaccount","moderatoraccount","dev","developer","manager","helper","assistant","operator","maintainer","founder","creator","executive","director","ceo","cto","cfo","cmo",
+                // Generic/placeholder names (expanded)
+                "unknown","null","none","guest","user","test","testing","example","sample","demo","name","yourname","me","you","someone","nobody","anonymous","default","username","account","profile","person","individual","customer","client","member","player","user123","testuser","demoaccount","placeholder","temp","temporary",
+                // Explicit content (comprehensive)
+                "fuck","fucker","fucking","shit","shitty","bitch","bastard","ass","asshole","damn","wtf","crap","sex","sexy","sexual","porn","porno","pornhub","nsfw","nude","naked","boobs","boob","tits","penis","dick","cock","pussy","cum","horny","fetish","onlyfans","sugarbaby","sugardaddy","xxx","adult","erotic","strip","stripper","hooker","prostitute","condom","viagra","cialis",
+                // Recent trends/memes (updated)
+                "diddy","skibidi","sus","sigma","rizz","gyatt","kai cenat","fanum tax","bussin","cap","no cap","bet","slay","periodt","sheesh","ohio","grimace shake","baby gronk","livvy dunne","tate","andrew tate","tristan tate","top g",
+                // Phrases and combinations
+                "i am","you are","admin here","real admin","official admin","the admin","your admin","our admin","system admin","site admin","server admin","game admin","forum admin","discord admin","telegram admin","i own","i run","i control","i manage",
+                // Numbers and sequences
+                "123","1234","000","111","69","420","666","777","999","101","2024","2025","2026","1337","8008","5318008",
+                // Symbols and special characters
+                "-","_",".","...","---","___","///","\\\\\\","***","+++","===","@@@","###","$$$","!!!","???",
+                // Harmful/offensive content
+                "kill","die","death","murder","suicide","hate","racist","nazi","hitler","terror","bomb","gun","knife","weapon","drug","cocaine","heroin","meth","weed","marijuana","alcohol","drunk",
+                // Spam/abuse patterns
+                "spam","scam","fake","bot","robot","cheat","hack","exploit","glitch","bug","virus","malware","phishing","fraud","steal","rob","burglar","thief"
             ];
 
-            // Banned patterns (regex)
+            // Enhanced banned patterns (regex)
             const bannedPatterns = [
-                // Admin impersonation patterns
+                // Admin impersonation patterns (expanded)
                 /admin/i,
                 /mod/i,
                 /staff/i,
@@ -194,7 +198,17 @@
                 /system/i,
                 /owner/i,
                 /root/i,
-                // Explicit content patterns
+                /dev/i,
+                /manager/i,
+                /helper/i,
+                /assistant/i,
+                /operator/i,
+                /maintainer/i,
+                /founder/i,
+                /creator/i,
+                /executive/i,
+                /director/i,
+                // Explicit content patterns (enhanced)
                 /fu+ck/i,
                 /sh+i+t/i,
                 /b+i+tch/i,
@@ -203,21 +217,87 @@
                 /p+en+i+s/i,
                 /p+u+ss+y/i,
                 /c+u+m/i,
-                // Garbage patterns
-                /^[0-9]+$/,                    // only numbers
-                /^[-_.]+$/,                    // only symbols
-                /(.)\1{5,}/,                   // repeating letters like aaaaaaa
-                /^\s+/,                        // starts with space
-                /\s+$/,                        // ends with space
+                /t+i+ts/i,
+                /b+o+ob/i,
+                /n+ud+e/i,
+                /n+ak+ed/i,
+                /p+or+n/i,
+                /s+ex+y/i,
+                /h+or+ny/i,
+                // Recent meme patterns
                 /skibidi/i,
                 /diddy/i,
                 /sus/i,
-                /sigma/i
+                /sigma/i,
+                /rizz/i,
+                /gyatt/i,
+                /kai cenat/i,
+                /fanum tax/i,
+                /bussin/i,
+                /no cap/i,
+                /periodt/i,
+                /sheesh/i,
+                /ohio/i,
+                // Harmful content patterns
+                /kill/i,
+                /die/i,
+                /death/i,
+                /murder/i,
+                /suicide/i,
+                /hate/i,
+                /racist/i,
+                /nazi/i,
+                /hitler/i,
+                /terror/i,
+                /bomb/i,
+                /gun/i,
+                /weapon/i,
+                /drug/i,
+                // Spam/abuse patterns
+                /spam/i,
+                /scam/i,
+                /fake/i,
+                /bot/i,
+                /cheat/i,
+                /hack/i,
+                /exploit/i,
+                /virus/i,
+                /phishing/i,
+                /fraud/i,
+                /steal/i,
+                // Advanced garbage patterns
+                /^[0-9]+$/,                    // only numbers
+                /^[-_.]+$/,                    // only symbols
+                /(.)\1{4,}/,                   // repeating letters like aaaaa
+                /(.)\1{6,}/i,                  // case-insensitive repeating
+                /^\s+/,                        // starts with space
+                /\s+$/,                        // ends with space
+                /\s{3,}/,                      // 3+ consecutive spaces
+                /[^\w\s\-_.,]/,               // invalid characters
+                /\d{4,}/,                      // 4+ consecutive numbers
+                /[\-_]{3,}/,                   // 3+ consecutive symbols
+                /(\w)\1{2,}/i,                 // repeated characters (case-insensitive)
+                /^[a-z]+\d+$/,                 // letters followed by numbers (spam pattern)
+                /^\d+[a-z]+$/i,                // numbers followed by letters (spam pattern)
+                // Leet speak patterns
+                /4dmin/i,                      // leet for admin
+                /4dm1n/i,
+                /h4ck/i,                       // leet for hack
+                /h4x/i,
+                /pr0n/i,                       // leet for porn
+                /s3x/i,                        // leet for sex
+                /w+h+o+r+e/i,                  // whore variations
+                /f+u+c+k+/i                    // fuck variations
             ];
 
-            // Automatic rules
-            if (n.length < 3) {
-                alert('Name must be at least 3 characters long.');
+            // Enhanced automatic rules
+            if (n.length < 2) {
+                alert('Name must be at least 2 characters long.');
+                return false;
+            }
+
+            if (n.length > 50) {
+                alert('Name must be less than 50 characters long.');
                 return false;
             }
 
@@ -226,7 +306,7 @@
                 return false;
             }
 
-            if (/^[-_.]+$/.test(n)) {
+            if (/^[-_.,]+$/.test(n)) {
                 alert('Name cannot contain only symbols.');
                 return false;
             }
@@ -236,8 +316,40 @@
                 return false;
             }
 
-            if (/(.)\1{5,}/.test(n)) {
-                alert('Name cannot contain repeated characters (e.g., "aaaaaaa").');
+            if (/\s{3,}/.test(n)) {
+                alert('Name cannot contain 3 or more consecutive spaces.');
+                return false;
+            }
+
+            if (/(.)\1{4,}/.test(n)) {
+                alert('Name cannot contain repeated characters (e.g., "aaaaa").');
+                return false;
+            }
+
+            if (/\d{4,}/.test(n)) {
+                alert('Name cannot contain 4 or more consecutive numbers.');
+                return false;
+            }
+
+            if (/[\-_]{3,}/.test(n)) {
+                alert('Name cannot contain 3 or more consecutive symbols.');
+                return false;
+            }
+
+            if (/[^\w\s\-_.,]/.test(n)) {
+                alert('Name contains invalid characters. Please use letters, numbers, spaces, hyphens, underscores, periods, or commas only.');
+                return false;
+            }
+
+            // Check for leet speak and common variations
+            if (/4dmin|4dm1n|h4ck|h4x|pr0n|s3x/i.test(n)) {
+                alert('Name contains inappropriate content. Please use a different name.');
+                return false;
+            }
+
+            // Check for spam patterns
+            if (/^[a-z]+\d+$|^\d+[a-z]+$/i.test(n)) {
+                alert('Name appears to be auto-generated. Please use a real name.');
                 return false;
             }
 
