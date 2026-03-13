@@ -1,4 +1,4 @@
-export const ADMIN_API = "https://script.google.com/macros/s/AKfycbylfYCN8xOIfM8rgXeiG5ipQkzXIzwMZvb4CM26hMl9OZoU0oOzdvuYZ2A-FaJgyKHfYg/exec";
+export const ADMIN_API = "https://script.google.com/macros/s/AKfycbwoFSAy3M8v3wI-HPeFYXwDo6AIhFCZN-iFBG0xYcVMDK1Poqb0B-luCnWLOtGFRqYWxQ/exec";
 
 export function getAdminToken() {
     return localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken') || '';
