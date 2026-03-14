@@ -5,11 +5,65 @@ import { cart } from './cart.js';
 
 export async function fetchProducts() {
     try {
-        const response = await fetch('data/products.json');
-        return await response.json();
+        // Try multiple possible paths for the products.json file
+        const possiblePaths = [
+            './data/products.json',
+            'data/products.json',
+            '/data/products.json'
+        ];
+        
+        let response = null;
+        let lastError = null;
+        
+        for (const path of possiblePaths) {
+            try {
+                response = await fetch(path);
+                if (response.ok) {
+                    console.log(`Successfully fetched products from: ${path}`);
+                    const products = await response.json();
+                    console.log('Products loaded:', products.length);
+                    return products;
+                }
+            } catch (error) {
+                console.log(`Failed to fetch from ${path}:`, error);
+                lastError = error;
+            }
+        }
+        
+        // If all paths fail, throw the last error
+        throw lastError || new Error('Failed to fetch products from all paths');
+        
     } catch (error) {
         console.error('Error fetching products:', error);
-        return [];
+        
+        // Return fallback products if fetch fails
+        console.log('Using fallback products');
+        return [
+            {
+                id: "shirt_repeat_2022",
+                name: "เสื้อยืด SAC Repeat 2022",
+                price: 200,
+                image: "https://i.postimg.cc/6QLTwrB9/Screenshot-2569-03-14-at-14-36-20.png",
+                description: "เสื้อยืดที่แข็งแกร่งที่สุดในปฐพี เนื้อผ้า Cotton เกรดพรีเมียม สกรีนลายดาราศาสตร์สวนกุหลาบ",
+                stock: 100
+            },
+            {
+                id: "mask_sac",
+                name: "หน้ากากอนามัย SAC Mask",
+                price: 40,
+                image: "https://i.postimg.cc/YC5rtKH1/image.png",
+                description: "หน้ากากผ้า SAC ลายลิมิเต็ด สีน้ำเงิน-ชมพู พร้อมสายคล้อง",
+                stock: 50
+            },
+            {
+                id: "keychain_moon",
+                name: "พวงกุญแจดวงจันทร์ (Moon Keychain)",
+                price: 60,
+                image: "https://i.postimg.cc/J4yC06KZ/image.png",
+                description: "พวงกุญแจลายพื้นผิวดวงจันทร์ สวยงาม ทนทาน สำหรับชาวดาราศาสตร์",
+                stock: 30
+            }
+        ];
     }
 }
 

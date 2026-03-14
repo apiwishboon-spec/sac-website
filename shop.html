@@ -148,21 +148,33 @@
         const cartTotal = document.getElementById('cart-total');
 
         async function init() {
-            const products = await fetchProducts();
-            const container = document.getElementById('shop-container');
-            container.innerHTML = products.map(p => renderProductItem(p)).join('');
+            try {
+                const products = await fetchProducts();
+                const container = document.getElementById('shop-container');
+                
+                if (products.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">No products available at the moment. Please check back later.</p>';
+                    return;
+                }
+                
+                container.innerHTML = products.map(p => renderProductItem(p)).join('');
 
-            // Add events
-            container.querySelectorAll('.add-to-cart').forEach(btn => {
-                btn.onclick = () => {
-                    const id = btn.dataset.id;
-                    const product = products.find(p => p.id === id);
-                    if (product) {
-                        cart.add(product);
-                        openDrawer();
-                    }
-                };
-            });
+                // Add events
+                container.querySelectorAll('.add-to-cart').forEach(btn => {
+                    btn.onclick = () => {
+                        const id = btn.dataset.id;
+                        const product = products.find(p => p.id === id);
+                        if (product) {
+                            cart.add(product);
+                            openDrawer();
+                        }
+                    };
+                });
+            } catch (error) {
+                console.error('Shop initialization error:', error);
+                const container = document.getElementById('shop-container');
+                container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">Unable to load products. Please refresh the page or try again later.</p>';
+            }
         }
 
         function openDrawer() {
