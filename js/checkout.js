@@ -1,7 +1,5 @@
-/**
- * Checkout functionality for Suankularb Astronomy Club
- * Author: Apiwish Anutaravanichkul
- */
+// Author: Apiwish Anutaravanichkul
+// Checkout functionality for Suankularb Astronomy Club website
 
 import { cart } from './cart.js';
 

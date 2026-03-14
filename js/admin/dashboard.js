@@ -1,7 +1,5 @@
-/**
- * Admin dashboard functionality for Suankularb Astronomy Club
- * Author: Apiwish Anutaravanichkul
- */
+// Author: Apiwish Anutaravanichkul
+// Admin dashboard functionality for Suankularb Astronomy Club website
 
 import { ADMIN_API, getAdminToken, showAdminToast } from './utils.js';
 import { checkForNewOrders } from './auth.js';

@@ -1,10 +1,5 @@
 import { loadDashboard } from './dashboard.js';
 
-/**
- * Admin tabs functionality for Suankularb Astronomy Club
- * Author: Apiwish Anutaravanichkul
- */
-
 export function initAdminTabs() {
     const navLinks = document.querySelectorAll('#main-nav a[data-target]');
     const panes = document.querySelectorAll('.tab-pane');

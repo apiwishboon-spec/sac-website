@@ -1,7 +1,5 @@
-/**
- * Admin authentication for Suankularb Astronomy Club
- * Author: Apiwish Anutaravanichkul
- */
+// Author: Apiwish Anutaravanichkul
+// Admin authentication for Suankularb Astronomy Club website
 
 import { getAdminToken, showAdminToast } from './utils.js';
 import { loadDashboard } from './dashboard.js';

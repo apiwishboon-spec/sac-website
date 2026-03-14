@@ -1,7 +1,5 @@
-/**
- * Shop functionality for Suankularb Astronomy Club
- * Author: Apiwish Anutaravanichkul
- */
+// Author: Apiwish Anutaravanichkul
+// Shop functionality for Suankularb Astronomy Club website
 
 import { cart } from './cart.js';
 
@@ -31,19 +29,12 @@ export function renderProductItem(product) {
 }
 
 export function initShopPreview(containerId, limit = 4) {
-    console.log('initShopPreview called with:', containerId, limit);
     const container = document.getElementById(containerId);
-    console.log('Container found:', container);
     if (!container) return;
 
     fetchProducts().then(products => {
-        console.log('Products data fetched:', products);
         const previewProducts = products.slice(0, limit);
-        console.log('Preview products:', previewProducts);
-        const renderedHTML = previewProducts.map(p => renderProductItem(p)).join('');
-        console.log('Rendered HTML:', renderedHTML.substring(0, 200) + '...');
-        container.innerHTML = renderedHTML;
-        console.log('Container innerHTML set. New content length:', container.innerHTML.length);
+        container.innerHTML = previewProducts.map(p => renderProductItem(p)).join('');
 
         // Add event listeners
         container.querySelectorAll('.add-to-cart').forEach(btn => {
@@ -53,7 +44,5 @@ export function initShopPreview(containerId, limit = 4) {
                 if (product) cart.add(product);
             };
         });
-    }).catch(error => {
-        console.error('Error fetching products:', error);
     });
 }

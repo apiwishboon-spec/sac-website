@@ -1,29 +1,17 @@
-/**
- * Main JavaScript for Suankularb Astronomy Club
- * Author: Apiwish Anutaravanichkul
- */
+// Author: Apiwish Anutaravanichkul
+// Main JavaScript functionality for Suankularb Astronomy Club website
 
 import { initNewsPreview } from './news.js';
 import { initShopPreview } from './shop.js';
 import { cart } from './cart.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Main.js loaded - DOM ready');
-    
     // Initialize Preview Sections if they exist
     const newsGrid = document.getElementById('news-preview-grid');
-    console.log('News grid found:', newsGrid);
-    if (newsGrid) {
-        console.log('Initializing news preview...');
-        initNewsPreview('news-preview-grid', 3);
-    }
+    if (newsGrid) initNewsPreview('news-preview-grid', 3);
 
     const shopGrid = document.getElementById('product-preview-grid');
-    console.log('Shop grid found:', shopGrid);
-    if (shopGrid) {
-        console.log('Initializing shop preview...');
-        initShopPreview('product-preview-grid', 4);
-    }
+    if (shopGrid) initShopPreview('product-preview-grid', 4);
 
     // Smooth Scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

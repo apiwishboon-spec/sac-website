@@ -1,11 +1,6 @@
 // Cart Management
-/**
- * Shopping Cart functionality for Suankularb Astronomy Club
- * Author: Apiwish Anutaravanichkul
- */
-
-export class Cart {
-    items = JSON.parse(localStorage.getItem('sac_cart')) || [];
+export const cart = {
+    items: JSON.parse(localStorage.getItem('sac_cart')) || [],
 
     add(product) {
         const existing = this.items.find(item => item.id === product.id);
@@ -16,13 +11,13 @@ export class Cart {
         }
         this.save();
         this.updateUI();
-    }
+    },
 
     remove(productId) {
         this.items = this.items.filter(item => item.id !== productId);
         this.save();
         this.updateUI();
-    }
+    },
 
     updateQuantity(productId, delta) {
         const item = this.items.find(item => item.id === productId);
@@ -34,15 +29,15 @@ export class Cart {
                 this.updateUI();
             }
         }
-    }
+    },
 
     save() {
         localStorage.setItem('sac_cart', JSON.stringify(this.items));
-    }
+    },
 
     getTotal() {
         return this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    }
+    },
 
     updateUI() {
         const countElement = document.getElementById('cart-count');
@@ -53,7 +48,7 @@ export class Cart {
         // Dispatch custom event for other components to listen
         window.dispatchEvent(new CustomEvent('cartUpdated', { detail: this.items }));
     }
-}
+};
 
 // Initialize UI count
 document.addEventListener('DOMContentLoaded', () => cart.updateUI());
