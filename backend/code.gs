@@ -145,8 +145,8 @@ function handleSubmitOrder(data) {
   var orderSheet = ss.getSheetByName("Orders");
   if (!orderSheet) {
     orderSheet = ss.insertSheet("Orders");
-    // Set headers if sheet is new - updated to include shipping fields
-    orderSheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Address", "Latitude", "Longitude", "Cart", "Subtotal", "Shipping Fee", "Total Price", "Payment Slip URL", "Status"]);
+    // Set headers if sheet is new
+    orderSheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Address", "Cart", "Total Price", "Payment Slip URL", "Status"]);
   }
   
   // Ensure cart data is string
@@ -158,11 +158,7 @@ function handleSubmitOrder(data) {
     data.email,
     data.phone,
     data.address,
-    data.latitude || '',
-    data.longitude || '',
     cartData,
-    data.subtotal || data.totalPrice - (data.shippingFee || 0),
-    data.shippingFee || 0,
     data.totalPrice,
     data.paymentSlipURL,
     "Pending"
@@ -203,14 +199,10 @@ function handleGetOrders(token) {
           email: row[2] || '',
           phone: row[3] || '',
           address: row[4] || '',
-          latitude: row[5] || '',
-          longitude: row[6] || '',
-          cart: row[7] || '',
-          subtotal: row[8] || '',
-          shippingFee: row[9] || '',
-          totalPrice: row[10] || '',
-          slipUrl: row[11] || '',
-          status: row[12] || 'Pending'
+          cart: row[5] || '',
+          totalPrice: row[6] || '',
+          slipUrl: row[7] || '',
+          status: row[8] || 'Pending'
         });
       }
     }
@@ -239,10 +231,11 @@ function handleMarkOrderDone(token, rowIndex) {
     }
     
     // Update status to "Done"
-    // Update status to "Done" in column 13 (Status) using robust integer conversion
+    // Update status to "Done" in column 9 (Status)
+    // Update status to "Done" in column 9 (Status) using robust integer conversion
     var row = parseInt(rowIndex);
     if (!isNaN(row) && row > 1) {
-      sheet.getRange(row, 13).setValue("Done");
+      sheet.getRange(row, 9).setValue("Done");
     } else {
       throw new Error("Invalid row index: " + rowIndex);
     }

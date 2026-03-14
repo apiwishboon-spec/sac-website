@@ -36,7 +36,17 @@ export const cart = {
     },
 
     getTotal() {
+        const subtotal = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const shipping = this.items.length > 0 ? 45 : 0; // 45 THB shipping fee for any order
+        return subtotal + shipping;
+    },
+
+    getSubtotal() {
         return this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    },
+
+    getShipping() {
+        return this.items.length > 0 ? 45 : 0;
     },
 
     updateUI() {

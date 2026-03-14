@@ -100,7 +100,7 @@
                                     Total Amount: <span id="payment-total" style="color: var(--secondary);">฿0.00</span>
                                 </p>
                                 <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); font-style: italic; display: none;" id="fee-note">
-                                    Note: 70 THB shipping fee has been included in total amount.
+                                    Note: Shopping fee has been included in total amount.
                                 </p>
                             </div>
 
@@ -133,6 +133,14 @@
                             <!-- Items go here -->
                         </div>
                         <div style="border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">฿0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Shipping</span>
+                                <span id="summary-shipping">฿0</span>
+                            </div>
                             <div
                                 style="display: flex; justify-content: space-between; font-weight: 600; font-size: 1.1rem;">
                                 <span>Grand Total</span>
@@ -163,6 +171,8 @@
 
         const form = document.getElementById('order-form');
         const summaryItems = document.getElementById('summary-items');
+        const summarySubtotal = document.getElementById('summary-subtotal');
+        const summaryShipping = document.getElementById('summary-shipping');
         const summaryTotal = document.getElementById('summary-total');
         const paymentTotal = document.getElementById('payment-total');
         const qrImg = document.getElementById('promptpay-qr');
@@ -250,207 +260,19 @@
             getCurrentLocation();
         });
 
-        // Enhanced Name Validation
+        // Simplified Name Validation - only block specific words
         function validateName(name) {
             const n = name.toLowerCase().trim();
 
-            // Enhanced banned words and phrases
+            // Banned words list
             const banned = [
-                // Admin/staff impersonation (expanded)
-                "admin","administrator","moderator","mod","owner","system","root","support","staff","official","realadmin","superuser","adminhere","realowner","officialaccount","staffaccount","moderatoraccount","dev","developer","manager","helper","assistant","operator","maintainer","founder","creator","executive","director","ceo","cto","cfo","cmo",
-                // Generic/placeholder names (expanded)
-                "unknown","null","none","guest","user","test","testing","example","sample","demo","name","yourname","me","you","someone","nobody","anonymous","default","username","account","profile","person","individual","customer","client","member","player","user123","testuser","demoaccount","placeholder","temp","temporary",
-                // Explicit content (comprehensive)
-                "fuck","fucker","fucking","shit","shitty","bitch","bastard","ass","asshole","damn","wtf","crap","sex","sexy","sexual","porn","porno","pornhub","nsfw","nude","naked","boobs","boob","tits","penis","dick","cock","pussy","cum","horny","fetish","onlyfans","sugarbaby","sugardaddy","xxx","adult","erotic","strip","stripper","hooker","prostitute","condom","viagra","cialis",
-                // Recent trends/memes (updated)
-                "diddy","skibidi","sus","sigma","rizz","gyatt","kai cenat","fanum tax","bussin","cap","no cap","bet","slay","periodt","sheesh","ohio","grimace shake","baby gronk","livvy dunne","tate","andrew tate","tristan tate","top g",
-                // Phrases and combinations
-                "i am","you are","admin here","real admin","official admin","the admin","your admin","our admin","system admin","site admin","server admin","game admin","forum admin","discord admin","telegram admin","i own","i run","i control","i manage",
-                // Numbers and sequences
-                "123","1234","000","111","69","420","666","777","999","101","2024","2025","2026","1337","8008","5318008",
-                // Symbols and special characters
-                "-","_",".","...","---","___","///","\\\\\\","***","+++","===","@@@","###","$$$","!!!","???",
-                // Harmful/offensive content
-                "kill","die","death","murder","suicide","hate","racist","nazi","hitler","terror","bomb","gun","knife","weapon","drug","cocaine","heroin","meth","weed","marijuana","alcohol","drunk",
-                // Spam/abuse patterns
-                "spam","scam","fake","bot","robot","cheat","hack","exploit","glitch","bug","virus","malware","phishing","fraud","steal","rob","burglar","thief"
+                "admin","administrator","moderator","mod","owner","system","root","support","staff","unknown","null","none","guest","user","test","testing","example","sample","demo","name","yourname","me","you","someone","nobody","anonymous","-","_",".","123","1234","000","111","69","420","666","fuck","bitch","shit","asshole","wtf","diddy","skibidi","sus","i am","you are","admin here","real admin","official admin","official","realadmin","superuser","default","username","fucker","fucking","shitty","bastard","ass","damn","crap","sex","sexy","sexual","porn","porno","pornhub","nsfw","nude","naked","boobs","boob","tits","penis","dick","cock","pussy","cum","horny","fetish","onlyfans","sugarbaby","sugardaddy","sigma","adminhere","realowner","officialaccount","staffaccount","moderatoraccount"
             ];
 
-            // Enhanced banned patterns (regex)
-            const bannedPatterns = [
-                // Admin impersonation patterns (expanded)
-                /admin/i,
-                /mod/i,
-                /staff/i,
-                /support/i,
-                /system/i,
-                /owner/i,
-                /root/i,
-                /dev/i,
-                /manager/i,
-                /helper/i,
-                /assistant/i,
-                /operator/i,
-                /maintainer/i,
-                /founder/i,
-                /creator/i,
-                /executive/i,
-                /director/i,
-                // Explicit content patterns (enhanced)
-                /fu+ck/i,
-                /sh+i+t/i,
-                /b+i+tch/i,
-                /a+ss/i,
-                /d+i+ck/i,
-                /p+en+i+s/i,
-                /p+u+ss+y/i,
-                /c+u+m/i,
-                /t+i+ts/i,
-                /b+o+ob/i,
-                /n+ud+e/i,
-                /n+ak+ed/i,
-                /p+or+n/i,
-                /s+ex+y/i,
-                /h+or+ny/i,
-                // Recent meme patterns
-                /skibidi/i,
-                /diddy/i,
-                /sus/i,
-                /sigma/i,
-                /rizz/i,
-                /gyatt/i,
-                /kai cenat/i,
-                /fanum tax/i,
-                /bussin/i,
-                /no cap/i,
-                /periodt/i,
-                /sheesh/i,
-                /ohio/i,
-                // Harmful content patterns
-                /kill/i,
-                /die/i,
-                /death/i,
-                /murder/i,
-                /suicide/i,
-                /hate/i,
-                /racist/i,
-                /nazi/i,
-                /hitler/i,
-                /terror/i,
-                /bomb/i,
-                /gun/i,
-                /weapon/i,
-                /drug/i,
-                // Spam/abuse patterns
-                /spam/i,
-                /scam/i,
-                /fake/i,
-                /bot/i,
-                /cheat/i,
-                /hack/i,
-                /exploit/i,
-                /virus/i,
-                /phishing/i,
-                /fraud/i,
-                /steal/i,
-                // Advanced garbage patterns
-                /^[0-9]+$/,                    // only numbers
-                /^[-_.]+$/,                    // only symbols
-                /(.)\1{4,}/,                   // repeating letters like aaaaa
-                /(.)\1{6,}/i,                  // case-insensitive repeating
-                /^\s+/,                        // starts with space
-                /\s+$/,                        // ends with space
-                /\s{3,}/,                      // 3+ consecutive spaces
-                /[^\w\s\-_.,]/,               // invalid characters
-                /\d{4,}/,                      // 4+ consecutive numbers
-                /[\-_]{3,}/,                   // 3+ consecutive symbols
-                /(\w)\1{2,}/i,                 // repeated characters (case-insensitive)
-                /^[a-z]+\d+$/,                 // letters followed by numbers (spam pattern)
-                /^\d+[a-z]+$/i,                // numbers followed by letters (spam pattern)
-                // Leet speak patterns
-                /4dmin/i,                      // leet for admin
-                /4dm1n/i,
-                /h4ck/i,                       // leet for hack
-                /h4x/i,
-                /pr0n/i,                       // leet for porn
-                /s3x/i,                        // leet for sex
-                /w+h+o+r+e/i,                  // whore variations
-                /f+u+c+k+/i                    // fuck variations
-            ];
-
-            // Enhanced automatic rules
-            if (n.length < 2) {
-                alert('Name must be at least 2 characters long.');
-                return false;
-            }
-
-            if (n.length > 50) {
-                alert('Name must be less than 50 characters long.');
-                return false;
-            }
-
-            if (/^[0-9]+$/.test(n)) {
-                alert('Name cannot contain only numbers.');
-                return false;
-            }
-
-            if (/^[-_.,]+$/.test(n)) {
-                alert('Name cannot contain only symbols.');
-                return false;
-            }
-
-            if (/^\s|\s$/.test(name)) {
-                alert('Name cannot start or end with spaces.');
-                return false;
-            }
-
-            if (/\s{3,}/.test(n)) {
-                alert('Name cannot contain 3 or more consecutive spaces.');
-                return false;
-            }
-
-            if (/(.)\1{4,}/.test(n)) {
-                alert('Name cannot contain repeated characters (e.g., "aaaaa").');
-                return false;
-            }
-
-            if (/\d{4,}/.test(n)) {
-                alert('Name cannot contain 4 or more consecutive numbers.');
-                return false;
-            }
-
-            if (/[\-_]{3,}/.test(n)) {
-                alert('Name cannot contain 3 or more consecutive symbols.');
-                return false;
-            }
-
-            if (/[^\w\s\-_.,]/.test(n)) {
-                alert('Name contains invalid characters. Please use letters, numbers, spaces, hyphens, underscores, periods, or commas only.');
-                return false;
-            }
-
-            // Check for leet speak and common variations
-            if (/4dmin|4dm1n|h4ck|h4x|pr0n|s3x/i.test(n)) {
-                alert('Name contains inappropriate content. Please use a different name.');
-                return false;
-            }
-
-            // Check for spam patterns
-            if (/^[a-z]+\d+$|^\d+[a-z]+$/i.test(n)) {
-                alert('Name appears to be auto-generated. Please use a real name.');
-                return false;
-            }
-
-            // Check banned words
-            if (banned.includes(n)) {
-                alert('This name is not allowed. Please use a different name.');
-                return false;
-            }
-
-            // Check banned patterns
-            for (const pattern of bannedPatterns) {
-                if (pattern.test(n)) {
-                    alert('This name contains inappropriate content. Please use a different name.');
+            // Check if name contains any banned word
+            for (const word of banned) {
+                if (n.includes(word)) {
+                    alert('This name is not allowed. Please use a different name.');
                     return false;
                 }
             }
@@ -466,31 +288,16 @@
             }
 
             const total = cart.getTotal();
-            const shippingFee = 70; // 70 THB shipping fee
-            const grandTotal = total + shippingFee;
+            const subtotal = cart.getSubtotal();
+            const shipping = cart.getShipping();
             
-            // Update summary with shipping fee breakdown
-            summaryItems.innerHTML = cart.items.map(item => `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
-                    <span>${item.name} x ${item.quantity}</span>
-                    <span>฿${item.price * item.quantity}</span>
-                </div>
-            `).join('') + `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem; padding-top: 0.5rem; border-top: 1px solid var(--glass-border);">
-                    <span>Subtotal</span>
-                    <span>฿${total}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
-                    <span>Shipping Fee</span>
-                    <span>฿${shippingFee}</span>
-                </div>
-            `;
-            
-            summaryTotal.textContent = `฿${grandTotal}`;
-            paymentTotal.textContent = `฿${grandTotal.toFixed(2)}`;
+            summarySubtotal.textContent = `฿${subtotal}`;
+            summaryShipping.textContent = `฿${shipping}`;
+            summaryTotal.textContent = `฿${total}`;
+            paymentTotal.textContent = `฿${total.toFixed(2)}`;
 
             try {
-                const qrUrl = await getPromptPayQR(grandTotal);
+                const qrUrl = await getPromptPayQR(total);
                 qrImg.src = qrUrl;
 
                 // Show elements once loaded
@@ -506,6 +313,14 @@
                 document.getElementById('qr-loader').innerHTML = '<i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i><p style="margin-top: 1rem;">QR loading failed. Refresh the page.</p>';
                 alert('Connection to payment gateway failed. Please refresh.');
             }
+
+            summaryItems.innerHTML = cart.items.map(item => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>฿${item.price * item.quantity}</span>
+                </div>
+            `).join('');
+        });
 
         // OTP Handling
         sendOtpBtn.onclick = async () => {
@@ -616,10 +431,6 @@
                 const slipUrl = await uploadToImgBB(slipInput.files[0]);
 
                 // 3. Prepare Data
-                const total = cart.getTotal();
-                const shippingFee = 70; // 70 THB shipping fee
-                const grandTotal = total + shippingFee;
-                
                 const orderData = {
                     name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
@@ -627,9 +438,7 @@
                     address: document.getElementById('address').value,
                     latitude: document.getElementById('latitude').value,
                     longitude: document.getElementById('longitude').value,
-                    totalPrice: grandTotal,
-                    subtotal: total,
-                    shippingFee: shippingFee,
+                    totalPrice: cart.getTotal(),
                     paymentSlipURL: slipUrl,
                     cart: cart.items.map(item => `${item.name} (${item.quantity})`).join(', '),
                     turnstileToken: turnstileResponse
@@ -644,7 +453,7 @@
                 const orderDate = new Date().toLocaleDateString();
                 
                 // Store order data for success page
-                const totalAmount = grandTotal;
+                const totalAmount = cart.getTotal();
                 localStorage.setItem('lastOrderId', orderId);
                 localStorage.setItem('lastOrderDate', orderDate);
                 localStorage.setItem('lastOrderTotal', totalAmount);
