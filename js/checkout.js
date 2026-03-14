@@ -26,27 +26,82 @@ export async function uploadToImgBB(file) {
 }
 
 export async function sendOTP(email) {
-    const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'sendOTP', email })
-    });
-    return response.json();
+    try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: 'sendOTP', email })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('sendOTP result:', result);
+        return result;
+    } catch (error) {
+        console.error('sendOTP error:', error);
+        // Return error object for consistent handling
+        return {
+            result: 'error',
+            error: error.message || 'Network error occurred'
+        };
+    }
 }
 
 export async function verifyOTP(email, otp) {
-    const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'verifyOTP', email, otp })
-    });
-    return response.json();
+    try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: 'verifyOTP', email, otp })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('verifyOTP result:', result);
+        return result;
+    } catch (error) {
+        console.error('verifyOTP error:', error);
+        return {
+            result: 'error',
+            error: error.message || 'Network error occurred'
+        };
+    }
 }
 
 export async function submitOrder(orderData) {
-    const response = await fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ ...orderData, action: 'submitOrder' })
-    });
-    return response.json();
+    try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ...orderData, action: 'submitOrder' })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('submitOrder result:', result);
+        return result;
+    } catch (error) {
+        console.error('submitOrder error:', error);
+        return {
+            result: 'error',
+            error: error.message || 'Network error occurred'
+        };
+    }
 }
 
 // PromptPay QR generation - now handled by Backend

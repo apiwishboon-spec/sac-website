@@ -354,6 +354,7 @@
 
             try {
                 const res = await sendOTP(email);
+                console.log('OTP response:', res); // Debug log
                 
                 if (res.result === 'success') {
                     otpMsg.style.color = 'var(--secondary)';
@@ -362,7 +363,7 @@
                     otpInput.focus(); // Auto-focus the OTP input
                 } else {
                     // If backend fails, show test mode for development
-                    if (res.error && res.error.includes('backend')) {
+                    if (res.error && (res.error.includes('backend') || res.error.includes('Gmail') || res.error.includes('service'))) {
                         otpMsg.style.color = '#fbbf24';
                         otpMsg.textContent = 'Test mode: Use code "123456" for testing';
                         sendOtpBtn.textContent = 'Resend Code';
@@ -370,14 +371,14 @@
                         window.testMode = true;
                     } else {
                         otpMsg.style.color = '#ef4444';
-                        otpMsg.textContent = res.error || 'Failed to send code';
+                        otpMsg.textContent = res.error || 'Failed to send code. Please try again.';
                         sendOtpBtn.textContent = 'Send Code';
                     }
                     // Keep OTP field visible for retry
                 }
             } catch (error) {
                 console.error('OTP sending error:', error);
-                // If network fails, enable test mode
+                // If network fails or any other error, enable test mode
                 otpMsg.style.color = '#fbbf24';
                 otpMsg.textContent = 'Test mode: Use code "123456" for testing';
                 sendOtpBtn.textContent = 'Resend Code';
