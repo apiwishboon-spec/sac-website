@@ -84,7 +84,10 @@ export function initNewsPreview(containerId, limit = 3) {
         console.log('News data fetched:', news);
         const previewNews = news.slice(0, limit);
         console.log('Preview news:', previewNews);
-        container.innerHTML = previewNews.map(item => renderNewsItem(item)).join('');
+        const renderedHTML = previewNews.map(item => renderNewsItem(item)).join('');
+        console.log('Rendered HTML:', renderedHTML.substring(0, 200) + '...');
+        container.innerHTML = renderedHTML;
+        console.log('Container innerHTML set. New content length:', container.innerHTML.length);
         initNewsEvents(container, news);
     }).catch(error => {
         console.error('Error fetching news:', error);

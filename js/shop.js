@@ -40,7 +40,10 @@ export function initShopPreview(containerId, limit = 4) {
         console.log('Products data fetched:', products);
         const previewProducts = products.slice(0, limit);
         console.log('Preview products:', previewProducts);
-        container.innerHTML = previewProducts.map(p => renderProductItem(p)).join('');
+        const renderedHTML = previewProducts.map(p => renderProductItem(p)).join('');
+        console.log('Rendered HTML:', renderedHTML.substring(0, 200) + '...');
+        container.innerHTML = renderedHTML;
+        console.log('Container innerHTML set. New content length:', container.innerHTML.length);
 
         // Add event listeners
         container.querySelectorAll('.add-to-cart').forEach(btn => {
