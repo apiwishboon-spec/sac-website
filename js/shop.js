@@ -31,11 +31,15 @@ export function renderProductItem(product) {
 }
 
 export function initShopPreview(containerId, limit = 4) {
+    console.log('initShopPreview called with:', containerId, limit);
     const container = document.getElementById(containerId);
+    console.log('Container found:', container);
     if (!container) return;
 
     fetchProducts().then(products => {
+        console.log('Products data fetched:', products);
         const previewProducts = products.slice(0, limit);
+        console.log('Preview products:', previewProducts);
         container.innerHTML = previewProducts.map(p => renderProductItem(p)).join('');
 
         // Add event listeners
@@ -46,5 +50,7 @@ export function initShopPreview(containerId, limit = 4) {
                 if (product) cart.add(product);
             };
         });
+    }).catch(error => {
+        console.error('Error fetching products:', error);
     });
 }

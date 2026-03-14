@@ -8,12 +8,22 @@ import { initShopPreview } from './shop.js';
 import { cart } from './cart.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Main.js loaded - DOM ready');
+    
     // Initialize Preview Sections if they exist
     const newsGrid = document.getElementById('news-preview-grid');
-    if (newsGrid) initNewsPreview('news-preview-grid', 3);
+    console.log('News grid found:', newsGrid);
+    if (newsGrid) {
+        console.log('Initializing news preview...');
+        initNewsPreview('news-preview-grid', 3);
+    }
 
     const shopGrid = document.getElementById('product-preview-grid');
-    if (shopGrid) initShopPreview('product-preview-grid', 4);
+    console.log('Shop grid found:', shopGrid);
+    if (shopGrid) {
+        console.log('Initializing shop preview...');
+        initShopPreview('product-preview-grid', 4);
+    }
 
     // Smooth Scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

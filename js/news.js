@@ -75,12 +75,18 @@ export function initNewsEvents(container, newsData) {
 }
 
 export function initNewsPreview(containerId, limit = 3) {
+    console.log('initNewsPreview called with:', containerId, limit);
     const container = document.getElementById(containerId);
+    console.log('Container found:', container);
     if (!container) return;
 
     fetchNews().then(news => {
+        console.log('News data fetched:', news);
         const previewNews = news.slice(0, limit);
+        console.log('Preview news:', previewNews);
         container.innerHTML = previewNews.map(item => renderNewsItem(item)).join('');
         initNewsEvents(container, news);
+    }).catch(error => {
+        console.error('Error fetching news:', error);
     });
 }
