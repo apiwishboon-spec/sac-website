@@ -8,33 +8,132 @@ let previousOrderIds = new Set();
 let notificationsReady = false;
 
 export async function requestNotificationPermission() {
-    if (!('Notification' in window)) return;
+    if (!('Notification' in window)) {
+        showAdminToast('❌ Your browser doesn\'t support notifications');
+        return;
+    }
 
     if (Notification.permission === 'granted') {
         notificationsReady = true;
+        showAdminToast('🔔 Order notifications are active!');
     } else if (Notification.permission !== 'denied') {
-        const perm = await Notification.requestPermission();
-        notificationsReady = (perm === 'granted');
-        if (notificationsReady) showAdminToast('🔔 Order notifications enabled!');
+        // Create custom permission request UI
+        const permissionDialog = document.createElement('div');
+        permissionDialog.style.cssText = `
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 2rem; z-index: 10000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center; min-width: 350px;
+        `;
+        
+        permissionDialog.innerHTML = `
+            <h3 style="margin-bottom: 1rem; color: var(--secondary);">🔔 Enable Order Notifications</h3>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                Get instant alerts when customers place orders!<br>
+                <strong>Benefits:</strong><br>
+                • Real-time order alerts<br>
+                • Customer details & total amount<br>
+                • Quick access to order management<br>
+                • Vibration alerts on mobile
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button id="allow-notifications" style="background: var(--secondary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    ✅ Enable Notifications
+                </button>
+                <button id="deny-notifications" style="background: transparent; color: var(--text-muted); border: 1px solid var(--glass-border); padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+                    Maybe Later
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(permissionDialog);
+        
+        return new Promise((resolve) => {
+            const allowBtn = document.getElementById('allow-notifications');
+            const denyBtn = document.getElementById('deny-notifications');
+            
+            const cleanup = () => {
+                document.body.removeChild(permissionDialog);
+                allowBtn.onclick = null;
+                denyBtn.onclick = null;
+            };
+            
+            allowBtn.onclick = async () => {
+                cleanup();
+                try {
+                    const perm = await Notification.requestPermission();
+                    notificationsReady = (perm === 'granted');
+                    if (notificationsReady) {
+                        showAdminToast('🎉 Order notifications enabled successfully!');
+                    } else {
+                        showAdminToast('⚠️ Notification permission denied');
+                    }
+                } catch (error) {
+                    showAdminToast('❌ Failed to enable notifications');
+                }
+                resolve();
+            };
+            
+            denyBtn.onclick = () => {
+                cleanup();
+                showAdminToast('ℹ️ Notifications disabled. You can enable them later in settings.');
+                resolve();
+            };
+            
+            // Auto-close after 30 seconds
+            setTimeout(cleanup, 30000);
+        });
+    } else {
+        showAdminToast('ℹ️ Notifications are blocked. Please enable them in browser settings.');
     }
 }
 
 export function showOrderNotification(newOrders) {
     if (!notificationsReady) return;
+    
     newOrders.forEach((o, i) => {
         setTimeout(() => {
-            const n = new Notification('🛍️ New Order!', {
-                body: `${o.item || 'New Item'} – ฿${o.totalPrice}\nFrom: ${o.email}`,
+            // Create enhanced notification with more details
+            const notification = new Notification('🛍️ New SAC Order!', {
+                body: `${o.name || 'Customer'} ordered ${o.itemCount || 'items'}\n💰 Total: ฿${o.totalPrice}\n📍 ${o.address || 'Delivery available'}\n📧 ${o.email}`,
                 icon: 'images/favicon.ico',
                 tag: `order-${o.orderId || o.rowIndex}`,
+                requireInteraction: true,
+                silent: false,
+                badge: newOrders.length.toString(),
+                vibrate: [200, 100, 200], // Vibration pattern
+                timestamp: Date.now()
             });
-            n.onclick = () => {
+            
+            // Enhanced click handler with more options
+            notification.onclick = () => {
                 window.focus();
-                n.close();
-                document.getElementById('orders-nav-link')?.click();
+                notification.close();
+                
+                // Show quick action dialog
+                const action = confirm(`New Order Alert:\n\nCustomer: ${o.name || 'Unknown'}\nEmail: ${o.email}\nTotal: ฿${o.totalPrice}\n\nClick OK to view orders, or Cancel to dismiss`);
+                if (action) {
+                    document.getElementById('orders-nav-link')?.click();
+                }
             };
-        }, i * 1000);
+            
+            // Auto-close after 10 seconds
+            setTimeout(() => {
+                if (notification.close) {
+                    notification.close();
+                }
+            }, 10000);
+            
+        }, i * 500); // Faster staggered notifications
     });
+    
+    // Show summary toast for multiple orders
+    if (newOrders.length > 1) {
+        setTimeout(() => {
+            showAdminToast(`🔔 ${newOrders.length} new orders received! Total: ฿${newOrders.reduce((sum, o) => sum + (o.totalPrice || 0), 0)}`);
+        }, newOrders.length * 500 + 1000);
+    }
 }
 
 export function checkForNewOrders(currentOrders) {
