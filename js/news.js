@@ -12,8 +12,8 @@ export async function fetchNews() {
 export function renderNewsItem(item) {
     return `
         <article class="news-card" data-id="${item.id}" style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: var(--transition);">
-            <div class="news-thumb" style="height: 200px; overflow: hidden; cursor: pointer;">
-                <img src="${item.thumbnail}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; transition: var(--transition);" loading="lazy">
+            <div class="news-thumb" style="min-height: 200px; overflow: hidden; cursor: pointer;">
+                <img src="${item.thumbnail}" alt="${item.title}" style="width: 100%; height: auto; object-fit: contain; transition: var(--transition);" loading="lazy">
             </div>
             <div class="news-content" style="padding: 1.5rem;">
                 <div class="news-meta" style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
@@ -45,7 +45,7 @@ export function openNewsModal(item) {
     modal.innerHTML = `
         <div class="modal-content">
             <button class="modal-close">&times;</button>
-            <img src="${item.thumbnail}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 1.5rem;">
+            <img src="${item.thumbnail}" style="width: 100%; height: auto; object-fit: contain; border-radius: 12px; margin-bottom: 1.5rem;">
             <div class="news-meta" style="margin-bottom: 1rem; color: var(--text-muted);">
                 <span>${new Date(item.date).toLocaleDateString()}</span> | <span>${item.author}</span>
             </div>

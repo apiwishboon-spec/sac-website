@@ -13,8 +13,8 @@ export async function fetchProducts() {
 export function renderProductItem(product) {
     return `
         <div class="product-card" style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 16px; padding: 1.5rem; text-align: center; transition: var(--transition);">
-            <div class="product-img" style="height: 180px; margin-bottom: 1.5rem; overflow: hidden; border-radius: 8px;">
-                <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; transition: var(--transition);">
+            <div class="product-img" style="min-height: 180px; margin-bottom: 1.5rem; overflow: hidden; border-radius: 8px;">
+                <img src="${product.image}" alt="${product.name}" style="width: 100%; height: auto; object-fit: contain; transition: var(--transition);">
             </div>
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${product.name}</h3>
             <p style="color: var(--secondary); font-weight: 700; font-size: 1.25rem; margin-bottom: 1rem;">฿${product.price}</p>
