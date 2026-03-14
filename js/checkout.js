@@ -25,14 +25,45 @@ export async function uploadToImgBB(file) {
     return result.url;
 }
 
-export async function sendOTP(email) {
+// Health check function to test backend availability
+export async function checkBackendHealth() {
     try {
         const response = await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ action: 'sendOTP', email })
+            body: JSON.stringify({ action: 'healthCheck' }),
+            signal: AbortSignal.timeout(5000) // 5 second timeout
+        });
+        return response.ok;
+    } catch (error) {
+        console.error('Backend health check failed:', error);
+        return false;
+    }
+}
+
+export async function sendOTP(email) {
+    console.log('Attempting to send OTP to:', email);
+    
+    // First check if backend is available
+    const isBackendAvailable = await checkBackendHealth();
+    if (!isBackendAvailable) {
+        console.log('Backend unavailable, enabling test mode');
+        return {
+            result: 'error',
+            error: 'Backend unavailable - enabling test mode'
+        };
+    }
+    
+    try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ action: 'sendOTP', email }),
+            signal: AbortSignal.timeout(10000) // 10 second timeout
         });
         
         if (!response.ok) {
@@ -44,11 +75,24 @@ export async function sendOTP(email) {
         return result;
     } catch (error) {
         console.error('sendOTP error:', error);
-        // Return error object for consistent handling
-        return {
-            result: 'error',
-            error: error.message || 'Network error occurred'
-        };
+        
+        // Handle specific network errors
+        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+            return {
+                result: 'error',
+                error: 'Network error - unable to reach backend service'
+            };
+        } else if (error.name === 'AbortError') {
+            return {
+                result: 'error',
+                error: 'Request timeout - please try again'
+            };
+        } else {
+            return {
+                result: 'error',
+                error: error.message || 'Network error occurred'
+            };
+        }
     }
 }
 

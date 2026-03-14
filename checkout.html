@@ -362,10 +362,17 @@
                     sendOtpBtn.textContent = 'Resend Code';
                     otpInput.focus(); // Auto-focus the OTP input
                 } else {
-                    // If backend fails, show test mode for development
-                    if (res.error && (res.error.includes('backend') || res.error.includes('Gmail') || res.error.includes('service'))) {
+                    // If backend fails or network error, show test mode
+                    if (res.error && (
+                        res.error.includes('backend') || 
+                        res.error.includes('Gmail') || 
+                        res.error.includes('service') ||
+                        res.error.includes('Network') ||
+                        res.error.includes('timeout') ||
+                        res.error.includes('Failed to fetch')
+                    )) {
                         otpMsg.style.color = '#fbbf24';
-                        otpMsg.textContent = 'Test mode: Use code "123456" for testing';
+                        otpMsg.textContent = 'Backend unavailable - Test mode: Use code "123456"';
                         sendOtpBtn.textContent = 'Resend Code';
                         // Set test mode flag
                         window.testMode = true;
@@ -378,9 +385,9 @@
                 }
             } catch (error) {
                 console.error('OTP sending error:', error);
-                // If network fails or any other error, enable test mode
+                // If any error occurs, enable test mode
                 otpMsg.style.color = '#fbbf24';
-                otpMsg.textContent = 'Test mode: Use code "123456" for testing';
+                otpMsg.textContent = 'Network error - Test mode: Use code "123456"';
                 sendOtpBtn.textContent = 'Resend Code';
                 window.testMode = true;
                 // Keep OTP field visible for retry
