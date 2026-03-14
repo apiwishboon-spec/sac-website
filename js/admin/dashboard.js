@@ -260,8 +260,6 @@ export async function updateStatus(rowIndex, status, btn) {
 }
 
 export async function markOrderDone(rowIndex, btn) {
-  if (!confirm('Mark as completely done? It will be HIDDEN from this view but kept in database.')) return;
-
   btn.disabled = true;
   btn.textContent = '…';
 
