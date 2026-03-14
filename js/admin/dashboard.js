@@ -1,3 +1,8 @@
+/**
+ * Admin dashboard functionality for Suankularb Astronomy Club
+ * Author: Apiwish Anutaravanichkul
+ */
+
 import { ADMIN_API, getAdminToken, showAdminToast } from './utils.js';
 import { checkForNewOrders } from './auth.js';
 
@@ -218,7 +223,8 @@ export async function loadIncompleteOrders() {
       panel.innerHTML = `<p style="color:#f87171;">Error: ${result.error}</p>`;
     }
   } catch (e) {
-    panel.innerHTML = `<p style="color:#f87171;">Network error: ${e.message}</p>`;
+    console.error('Fetch Error:', e);
+    panel.innerHTML = `<p style="color:#f87171;">Network error: ${e.message}<br><small>Check console for details.</small></p>`;
   }
 }
 

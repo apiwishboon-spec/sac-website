@@ -1,3 +1,8 @@
+/**
+ * Admin utilities for Suankularb Astronomy Club
+ * Author: Apiwish Anutaravanichkul
+ */
+
 export const ADMIN_API = "https://script.google.com/macros/s/AKfycbwoFSAy3M8v3wI-HPeFYXwDo6AIhFCZN-iFBG0xYcVMDK1Poqb0B-luCnWLOtGFRqYWxQ/exec";
 
 export function getAdminToken() {

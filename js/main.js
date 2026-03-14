@@ -1,3 +1,8 @@
+/**
+ * Main JavaScript for Suankularb Astronomy Club
+ * Author: Apiwish Anutaravanichkul
+ */
+
 import { initNewsPreview } from './news.js';
 import { initShopPreview } from './shop.js';
 import { cart } from './cart.js';

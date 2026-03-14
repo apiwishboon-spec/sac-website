@@ -1,3 +1,8 @@
+/**
+ * Admin application entry point for Suankularb Astronomy Club
+ * Author: Apiwish Anutaravanichkul
+ */
+
 import { initAdminTabs } from './tabs.js';
 import { attemptAdminLogin, cancelLogin, logout, requestNotificationPermission } from './auth.js';
 import {

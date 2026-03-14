@@ -1,3 +1,8 @@
+/**
+ * Checkout functionality for Suankularb Astronomy Club
+ * Author: Apiwish Anutaravanichkul
+ */
+
 import { cart } from './cart.js';
 
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwoFSAy3M8v3wI-HPeFYXwDo6AIhFCZN-iFBG0xYcVMDK1Poqb0B-luCnWLOtGFRqYWxQ/exec'; // Updated API URL

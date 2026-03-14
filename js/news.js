@@ -1,3 +1,8 @@
+/**
+ * News functionality for Suankularb Astronomy Club
+ * Author: Apiwish Anutaravanichkul
+ */
+
 export async function fetchNews() {
     try {
         const response = await fetch('data/news.json');

@@ -1,3 +1,8 @@
+/**
+ * Shop functionality for Suankularb Astronomy Club
+ * Author: Apiwish Anutaravanichkul
+ */
+
 import { cart } from './cart.js';
 
 export async function fetchProducts() {
