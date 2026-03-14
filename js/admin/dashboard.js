@@ -193,7 +193,13 @@ export async function loadIncompleteOrders() {
           <td>${o.name || '—'}<br><small style="color:var(--text-muted)">${o.email || ''}</small></td>
           <td>${o.phone || '—'}</td>
           <td><div style="max-width:200px;font-size:0.75rem;color:var(--text-muted);word-wrap:break-word">${o.cart || '—'}</div></td>
-          <td><strong>฿${o.totalPrice || '—'}</strong></td>
+          <td>
+            <div style="font-size:0.8rem;">
+              <div>Subtotal: <strong>฿${o.subtotal || '—'}</strong></div>
+              <div>Shipping: <strong>฿${o.shippingFee || '—'}</strong></div>
+              <div style="border-top:1px solid var(--glass-border);padding-top:0.25rem;margin-top:0.25rem;">Total: <strong style="color:var(--secondary);">฿${o.totalPrice || '—'}</strong></div>
+            </div>
+          </td>
           <td>${slip}</td>
           <td><span style="background:rgba(255,255,255,0.05);color:${statusColor};padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;border:1px solid ${statusColor}44;">${o.status || 'Pending'}</span></td>
           <td>
@@ -212,7 +218,7 @@ export async function loadIncompleteOrders() {
         <table class="orders-tbl">
           <thead><tr>
             <th>#</th><th>Time</th><th>Customer</th><th>Phone</th>
-            <th>Items</th><th>Total</th>
+            <th>Items</th><th>Order Total (Breakdown)</th>
             <th>Slip</th><th>Status</th><th>Actions</th>
           </tr></thead>
           <tbody>${rows}</tbody>

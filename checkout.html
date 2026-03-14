@@ -100,7 +100,7 @@
                                     Total Amount: <span id="payment-total" style="color: var(--secondary);">฿0.00</span>
                                 </p>
                                 <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); font-style: italic; display: none;" id="fee-note">
-                                    Note: Shopping fee has been included in total amount.
+                                    Note: 70 THB shipping fee has been included in total amount.
                                 </p>
                             </div>
 
@@ -466,11 +466,31 @@
             }
 
             const total = cart.getTotal();
-            summaryTotal.textContent = `฿${total}`;
-            paymentTotal.textContent = `฿${total.toFixed(2)}`;
+            const shippingFee = 70; // 70 THB shipping fee
+            const grandTotal = total + shippingFee;
+            
+            // Update summary with shipping fee breakdown
+            summaryItems.innerHTML = cart.items.map(item => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>฿${item.price * item.quantity}</span>
+                </div>
+            `).join('') + `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem; padding-top: 0.5rem; border-top: 1px solid var(--glass-border);">
+                    <span>Subtotal</span>
+                    <span>฿${total}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                    <span>Shipping Fee</span>
+                    <span>฿${shippingFee}</span>
+                </div>
+            `;
+            
+            summaryTotal.textContent = `฿${grandTotal}`;
+            paymentTotal.textContent = `฿${grandTotal.toFixed(2)}`;
 
             try {
-                const qrUrl = await getPromptPayQR(total);
+                const qrUrl = await getPromptPayQR(grandTotal);
                 qrImg.src = qrUrl;
 
                 // Show elements once loaded
@@ -486,14 +506,6 @@
                 document.getElementById('qr-loader').innerHTML = '<i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444;"></i><p style="margin-top: 1rem;">QR loading failed. Refresh the page.</p>';
                 alert('Connection to payment gateway failed. Please refresh.');
             }
-
-            summaryItems.innerHTML = cart.items.map(item => `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
-                    <span>${item.name} x ${item.quantity}</span>
-                    <span>฿${item.price * item.quantity}</span>
-                </div>
-            `).join('');
-        });
 
         // OTP Handling
         sendOtpBtn.onclick = async () => {
@@ -604,6 +616,10 @@
                 const slipUrl = await uploadToImgBB(slipInput.files[0]);
 
                 // 3. Prepare Data
+                const total = cart.getTotal();
+                const shippingFee = 70; // 70 THB shipping fee
+                const grandTotal = total + shippingFee;
+                
                 const orderData = {
                     name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
@@ -611,7 +627,9 @@
                     address: document.getElementById('address').value,
                     latitude: document.getElementById('latitude').value,
                     longitude: document.getElementById('longitude').value,
-                    totalPrice: cart.getTotal(),
+                    totalPrice: grandTotal,
+                    subtotal: total,
+                    shippingFee: shippingFee,
                     paymentSlipURL: slipUrl,
                     cart: cart.items.map(item => `${item.name} (${item.quantity})`).join(', '),
                     turnstileToken: turnstileResponse
@@ -626,7 +644,7 @@
                 const orderDate = new Date().toLocaleDateString();
                 
                 // Store order data for success page
-                const totalAmount = cart.getTotal();
+                const totalAmount = grandTotal;
                 localStorage.setItem('lastOrderId', orderId);
                 localStorage.setItem('lastOrderDate', orderDate);
                 localStorage.setItem('lastOrderTotal', totalAmount);
