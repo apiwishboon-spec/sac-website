@@ -345,9 +345,6 @@
                 return;
             }
 
-            // Show loader for OTP sending
-            showLoader('Sending verification code...');
-
             otpGroup.style.display = 'block';
             otpMsg.style.color = 'var(--text-muted)';
             otpMsg.textContent = 'Sending verification code...';
@@ -357,7 +354,6 @@
 
             try {
                 const res = await sendOTP(email);
-                hideLoader(); // Hide loader after OTP is sent
                 
                 if (res.result === 'success') {
                     otpMsg.style.color = 'var(--secondary)';
@@ -380,8 +376,6 @@
                     // Keep OTP field visible for retry
                 }
             } catch (error) {
-                hideLoader(); // Hide loader on error
-                
                 console.error('OTP sending error:', error);
                 // If network fails, enable test mode
                 otpMsg.style.color = '#fbbf24';
