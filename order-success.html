@@ -3,29 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Successful - SAC Shop</title>
+    <meta name="author" content="Apiwish Anutaravanichkul">
+    <title>Order Successful | Suankularb Astronomy Club</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
-    <nav class="navbar">
+    <div class="stars"></div>
+
+    <nav>
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <h1>SAC</h1>
+            <a href="index.html" class="logo">
+                <i class="fas fa-meteor"></i> SAC
             </a>
-            <ul class="nav-menu">
+            <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="planetarium.html">Planetarium</a></li>
-                <li><a href="shop.html" class="active">Shop</a></li>
+                <li>
+                    <a href="about.html">About <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></a>
+                    <div class="dropdown-content">
+                        <a href="planetarium.html">Sirindhorn Planetarium</a>
+                        <a href="about.html#who-we-are">Who We Are</a>
+                        <a href="about.html#actions">Our Actions</a>
+                    </div>
+                </li>
                 <li><a href="news.html">News</a></li>
-                <li><a href="get-involved.html">Get Involved</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li>
+                    <a href="get-involved.html">Get Involved <i class="fas fa-chevron-down"
+                            style="font-size: 0.7rem;"></i></a>
+                    <div class="dropdown-content">
+                        <a href="get-involved.html#join">Join Staff</a>
+                        <a href="get-involved.html#donate">Donate</a>
+                    </div>
+                </li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="nav-actions">
+                <a href="shop.html" class="btn btn-outline" style="padding: 0.5rem 1rem; position: relative;">
+                    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+                </a>
+                <button class="mobile-nav-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -122,28 +142,54 @@
     </main>
 
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>SAC (Suankularb Astronomy Club)</h3>
-                <p>88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200</p>
-                <div class="social-links">
-                    <a href="#">Facebook</a>
-                    <a href="#">Instagram</a>
-                    <a href="#">Twitter</a>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-meteor"></i> Suankularb Astronomy Club
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        ชุมนุมดาราศาสตร์ โรงเรียนสวนกุหลาบวิทยาลัย<br>
+                        88 ถนนตรีเพชร แขวงวังบูรพาภิรมย์ เขตพระนคร กรุงเทพมหานคร 10200
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="news.html">News</a></li>
+                        <li><a href="get-involved.html">Get Involved</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="get-involved.html#join">Join Staff</a></li>
+                        <li><a href="get-involved.html#donate">Donate</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="https://www.facebook.com/SuankularbAstronomyClub" target="_blank"
+                            title="Suankularb Astronomy Club"><i class="fab fa-facebook fa-xl"></i></a>
+                        <a href="https://www.instagram.com/skastronomy_official" target="_blank"
+                            title="skastronomy_official"><i class="fab fa-instagram fa-xl"></i></a>
+                    </div>
                 </div>
             </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="planetarium.html">Planetarium</a></li>
-                    <li><a href="shop.html">Shop</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
+            <div class="footer-bottom">
+                &copy; 2026 Suankularb Astronomy Club. All rights reserved.<br>
+                <small style="color: var(--text-muted); font-size: 0.8rem;">Developed by Apiwish Anutaravanichkul</small>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Suankularb Astronomy Club. All rights reserved.</p>
         </div>
     </footer>
 
@@ -411,5 +457,6 @@
             }
         }
     </style>
+    <script src="js/main.js" type="module"></script>
 </body>
 </html>
