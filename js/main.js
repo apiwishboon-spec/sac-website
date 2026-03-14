@@ -5,6 +5,45 @@ import { initNewsPreview } from './news.js';
 import { initShopPreview } from './shop.js';
 import { cart } from './cart.js';
 
+// Loader utility functions
+export function showLoader(message = 'Processing your order...') {
+    // Remove any existing loader
+    hideLoader();
+    
+    // Create loader overlay
+    const loaderOverlay = document.createElement('div');
+    loaderOverlay.className = 'loader-overlay';
+    loaderOverlay.id = 'loader-overlay';
+    
+    // Create loader animation
+    const loader = document.createElement('div');
+    loader.className = 'lds-roller';
+    loader.innerHTML = `
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
+    `;
+    
+    // Create loading text
+    const loadingText = document.createElement('div');
+    loadingText.className = 'loading-text';
+    loadingText.textContent = message;
+    
+    loaderOverlay.appendChild(loader);
+    loaderOverlay.appendChild(loadingText);
+    document.body.appendChild(loaderOverlay);
+    
+    // Lock body
+    document.body.classList.add('loading');
+}
+
+export function hideLoader() {
+    const loaderOverlay = document.getElementById('loader-overlay');
+    if (loaderOverlay) {
+        loaderOverlay.remove();
+    }
+    document.body.classList.remove('loading');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Preview Sections if they exist
     const newsGrid = document.getElementById('news-preview-grid');

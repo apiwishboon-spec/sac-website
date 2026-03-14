@@ -182,6 +182,7 @@
     <script type="module">
         import { cart } from './js/cart.js';
         import { uploadToImgBB, getPromptPayQR, submitOrder, sendOTP, verifyOTP } from './js/checkout.js';
+        import { showLoader, hideLoader } from './js/main.js';
 
         const form = document.getElementById('order-form');
         const summaryItems = document.getElementById('summary-items');
@@ -344,7 +345,9 @@
                 return;
             }
 
-            // Show OTP field immediately for better UX
+            // Show loader for OTP sending
+            showLoader('Sending verification code...');
+
             otpGroup.style.display = 'block';
             otpMsg.style.color = 'var(--text-muted)';
             otpMsg.textContent = 'Sending verification code...';
@@ -354,6 +357,8 @@
 
             try {
                 const res = await sendOTP(email);
+                hideLoader(); // Hide loader after OTP is sent
+                
                 if (res.result === 'success') {
                     otpMsg.style.color = 'var(--secondary)';
                     otpMsg.textContent = 'Check your email for the 6-digit code.';
@@ -374,8 +379,10 @@
                     }
                     // Keep OTP field visible for retry
                 }
-            } catch (err) {
-                console.error('OTP send error:', err);
+            } catch (error) {
+                hideLoader(); // Hide loader on error
+                
+                console.error('OTP sending error:', error);
                 // If network fails, enable test mode
                 otpMsg.style.color = '#fbbf24';
                 otpMsg.textContent = 'Test mode: Use code "123456" for testing';
@@ -510,6 +517,9 @@
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Processing Order...';
+            
+            // Show loader and lock all elements
+            showLoader('Processing your order...');
 
             try {
                 // 2. Upload Slip
@@ -555,6 +565,9 @@
                 window.location.href = `order-success.html?orderId=${orderId}&orderDate=${orderDate}&totalAmount=${totalAmount}&customerName=${encodeURIComponent(orderData.name)}&customerEmail=${encodeURIComponent(orderData.email)}&customerPhone=${encodeURIComponent(orderData.phone)}&items=${encodeURIComponent(JSON.stringify(cart.items))}`;
 
             } catch (error) {
+                // Hide loader on error
+                hideLoader();
+                
                 alert('There was an error processing your order. ' + (error.message || 'Please try again.'));
                 console.error(error);
                 submitBtn.disabled = false;
