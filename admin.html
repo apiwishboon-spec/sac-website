@@ -781,7 +781,14 @@
               <h1 class="page-title">Order Management</h1>
               <p class="page-sub">Process and track all customer orders</p>
             </div>
-            <button class="btn btn-outline" onclick="loadIncompleteOrders()">🔄 Reload</button>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button class="btn btn-outline" onclick="loadIncompleteOrders()">🔄 Reload</button>
+              <button class="btn btn-primary" onclick="startAutoRefresh()" style="background: var(--secondary);">⏰ Auto-Refresh</button>
+              <button class="btn btn-outline" onclick="stopAutoRefresh()">⏸️ Stop</button>
+              <span class="auto-refresh-indicator" style="display: none; color: var(--secondary); font-size: 0.8rem;">
+                <i class="fas fa-sync fa-spin"></i> Updating...
+              </span>
+            </div>
           </div>
           <div class="section-title" style="margin-top:0;">⏳ Pending Orders</div>
           <div id="orders-panel" style="overflow-x:auto;">

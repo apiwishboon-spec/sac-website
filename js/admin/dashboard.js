@@ -374,8 +374,58 @@ export function closeStatModal() {
   document.getElementById('stat-modal-overlay').classList.remove('open');
 }
 
+// ─── Auto-refresh ──────────────────────────────────────────────────────────
+let autoRefreshInterval;
+let isAutoRefreshing = false;
+
+export function startAutoRefresh() {
+  if (isAutoRefreshing) return;
+  
+  isAutoRefreshing = true;
+  showAdminToast('🔄 Auto-refresh started (every 2 minutes)');
+  
+  // Initial load
+  loadDashboard();
+  
+  // Set up auto-refresh every 2 minutes (120,000ms)
+  autoRefreshInterval = setInterval(() => {
+    refreshDataSilently();
+  }, 120000);
+}
+
+export function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+  }
+  isAutoRefreshing = false;
+  showAdminToast('⏸️ Auto-refresh stopped');
+}
+
+async function refreshDataSilently() {
+  try {
+    // Show subtle loading indicator
+    const indicators = document.querySelectorAll('.auto-refresh-indicator');
+    indicators.forEach(el => el.style.display = 'inline-block');
+    
+    // Refresh data without showing toast
+    await Promise.all([updateStats(), loadIncompleteOrders()]);
+    initCharts();
+    
+    // Hide loading indicators
+    setTimeout(() => {
+      indicators.forEach(el => el.style.display = 'none');
+    }, 1000);
+    
+  } catch (error) {
+    console.error('Auto-refresh failed:', error);
+    showAdminToast('⚠️ Auto-refresh failed, will retry in 2 minutes');
+  }
+}
+
 // ─── Load dashboard ──────────────────────────────────────────────────────────
 export async function loadDashboard() {
+  showAdminToast('🔄 Loading dashboard data...');
   await Promise.all([updateStats(), loadIncompleteOrders()]);
   initCharts();
 }

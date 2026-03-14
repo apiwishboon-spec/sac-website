@@ -2,7 +2,7 @@ import { initAdminTabs } from './tabs.js';
 import { attemptAdminLogin, cancelLogin, logout, requestNotificationPermission } from './auth.js';
 import {
   loadDashboard, refreshData, markOrderDone, updateStatus, deleteOrderPermanently,
-  loadIncompleteOrders, openStatModal, closeStatModal,
+  loadIncompleteOrders, openStatModal, closeStatModal, startAutoRefresh, stopAutoRefresh,
 } from './dashboard.js';
 import { getAdminToken } from './utils.js';
 
@@ -17,6 +17,8 @@ window.deleteOrderPermanently = deleteOrderPermanently;
 window.loadIncompleteOrders = loadIncompleteOrders;
 window.openStatModal = openStatModal;
 window.closeStatModal = closeStatModal;
+window.startAutoRefresh = startAutoRefresh;
+window.stopAutoRefresh = stopAutoRefresh;
 
 document.addEventListener('DOMContentLoaded', () => {
   initAdminTabs();

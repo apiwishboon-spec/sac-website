@@ -2,7 +2,7 @@
 // Admin authentication for Suankularb Astronomy Club website
 
 import { getAdminToken, showAdminToast } from './utils.js';
-import { loadDashboard } from './dashboard.js';
+import { loadDashboard, startAutoRefresh } from './dashboard.js';
 
 let previousOrderIds = new Set();
 let notificationsReady = false;
@@ -186,7 +186,7 @@ export function attemptAdminLogin() {
         document.getElementById('admin-layout').style.display = 'block';
         showAdminToast('🎉 Welcome back!');
         requestNotificationPermission();
-        loadDashboard();
+        startAutoRefresh();
     } else {
         errorEl.textContent = 'Incorrect password.';
         pwInput.value = '';
